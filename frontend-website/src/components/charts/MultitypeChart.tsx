@@ -17,6 +17,8 @@ import {
 } from "chart.js"
 import { Chart }  from 'react-chartjs-2'
 import { ChartType } from 'chart.js'
+import { ChartData, Dataset, MultitypeChartDataset, chartAttributes } from '@/types';
+
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(
@@ -31,29 +33,6 @@ ChartJS.register(
   LineController,
   BarController
 )
-
-type MultitypeChartDataset = {
-  label: string
-  data: number[]
-  borderColor: string
-  backgroundColor: string
-  yAxisID: string
-}
-
-
-type ChartData = {
-  responsive: boolean
-  labels: string[]
-  datasets: MultitypeChartDataset[]
-};
-
-type chartAttributes = {
-  type: string
-  title: string
-  chartData: ChartData
-  width: string
-  height: string
-}
 
 export default function MultitypeChart( {type, title, chartData, width, height} : chartAttributes ) {
   const chartType: ChartType = "line" 

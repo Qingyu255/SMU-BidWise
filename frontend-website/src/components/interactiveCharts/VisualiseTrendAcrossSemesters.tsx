@@ -3,29 +3,7 @@ import DropDown from '../DropDown';
 import ErrorPopUp from '../ErrorPopUp';
 import MultitypeChart from '../charts/MultitypeChart'
 import { Spinner } from "@nextui-org/spinner"
-
-type MultitypeChartDataset = {
-    label: string
-    data: number[]
-    borderColor: string
-    backgroundColor: string
-    fill: boolean
-    yAxisID: string
-}
-  
-type ChartData = {
-    responsive: boolean
-    labels: string[]
-    datasets: MultitypeChartDataset[]
-}
-
-type chartAttributes = {
-    type?: string
-    title: string
-    chartData: ChartData
-    width: string
-    height: string
-  }
+import { ChartData, Dataset, MultitypeChartDataset, chartAttributes } from '@/types';
 
 export default function VisualiseTrendAcrossSemesters({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
     

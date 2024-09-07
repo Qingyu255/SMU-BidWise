@@ -11,6 +11,7 @@ import {
   Legend
 } from "chart.js"
 import { Line }  from 'react-chartjs-2'
+import { ChartData, Dataset, chartAttributes } from '@/types';
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(
@@ -23,25 +24,6 @@ ChartJS.register(
   Legend
 )
 
-type Dataset = {
-  label: string
-  data: number[]
-  borderColor: string
-  backgroundColor: string
-}
-
-type ChartData = {
-  responsive: boolean
-  labels: string[]
-  datasets: Dataset[]
-}
-
-type chartAttributes = {
-  title: string
-  chartData: ChartData
-  width: string
-  height: string
-}
 
 export default function LineChart( {title, chartData, width, height} : chartAttributes ) {
 

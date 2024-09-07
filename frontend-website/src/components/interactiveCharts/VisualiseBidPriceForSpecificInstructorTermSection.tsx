@@ -2,29 +2,8 @@ import React, { useState, useEffect } from 'react'
 import DropDown from '../DropDown';
 import ErrorPopUp from '../ErrorPopUp';
 import MultitypeChart from '../charts/MultitypeChart';
+import { ChartData, Dataset, MultitypeChartDataset, chartAttributes } from '@/types';
 
-type MultitypeChartDataset = {
-    label: string
-    data: number[]
-    borderColor: string
-    backgroundColor: string
-    fill: boolean
-    yAxisID: string
-}
-
-type ChartData = {
-    responsive: boolean
-    labels: string[]
-    datasets: MultitypeChartDataset[]
-}
-
-type chartAttributes = {
-    type?: string
-    title: string
-    chartData: ChartData
-    width: string
-    height: string
-  }
 
 export default function VisualiseBidPriceForSpecificInstructorTermSection({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
 
