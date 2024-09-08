@@ -32,11 +32,6 @@ const sidebarItems: SidebarItems = {
       href: '/bid-analytics', 
       icon: ChartArea 
     },
-    { 
-      label: 'VenueVision', 
-      href: 'venues', 
-      icon: Map 
-    },
     {
       label: 'Senior Roadmaps',
       href: '/roadmaps',
@@ -48,7 +43,7 @@ const sidebarItems: SidebarItems = {
       icon: GraduationCap,
     },
     {
-      label: 'Communities',
+      label: 'Community Threads',
       href: '/communities',
       icon: Users,
     },

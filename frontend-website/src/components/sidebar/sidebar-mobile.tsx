@@ -34,7 +34,7 @@ export function SidebarMobile(props: SidebarMobileProps) {
       <SheetContent side='left' className='px-3 py-4 bg-inherit'>
         <SheetHeader className='flex flex-row justify-between items-center space-y-0'>
           <span className='text-lg font-semibold text-foreground mx-3'>
-            SMU BidWise
+            <Link href={"/"}>SMU BidWise</Link>
           </span>
           <SheetClose asChild>
             <Button className='h-7 w-7 p-0' variant='ghost'>

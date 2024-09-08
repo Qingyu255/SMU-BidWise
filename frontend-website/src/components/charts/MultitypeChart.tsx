@@ -40,7 +40,7 @@ export default function MultitypeChart( {type, title, chartData, width, height} 
     maintainAspectRatio: false,
     elements: {
       bar: {
-        borderRadius: 8
+        borderRadius: 3
       }
     },
     tooltips: {
