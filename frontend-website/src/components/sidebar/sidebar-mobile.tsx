@@ -42,11 +42,8 @@ export function SidebarMobile(props: SidebarMobileProps) {
           <span className='text-lg font-semibold text-foreground mx-3'>
             <Link href={"/"}>SMU BidWise</Link>
           </span>
-          <SheetClose asChild>
-            <Button className='h-7 w-7 p-0' variant='ghost'>
-              <X size={15} />
-            </Button>
-          </SheetClose>
+          {/* <SheetClose asChild>
+          </SheetClose> */}
         </SheetHeader>
         <div className='h-full'>
           <div className='mt-5 flex flex-col w-full gap-1'>
@@ -74,8 +71,6 @@ export function SidebarMobile(props: SidebarMobileProps) {
             </SignedOut>
             <SignedIn>
               <Drawer>
-                {/* <DrawerTrigger asChild> */}
-                  {/* <Button variant='ghost' className='w-full justify-start'> */}
                     <div className='flex justify-between items-center w-full'>
                       <div className='flex pl-2 gap-2'>
                         <UserButton 
@@ -88,29 +83,8 @@ export function SidebarMobile(props: SidebarMobileProps) {
                           }}
                           showName
                         />
-                        
-                        {/* <Avatar className='h-5 w-5'>
-                          <AvatarImage src='https://github.com/shadcn.png' />
-                          <AvatarFallback>Kylean</AvatarFallback>
-                        </Avatar>
-                        <span>Kylean</span> */}
                       </div>
-                      {/* <MoreHorizontal size={20} /> */}
                     </div>
-                  {/* </Button> */}
-                {/* </DrawerTrigger>
-                <DrawerContent className='mb-2 p-2'>
-                  <div className='flex flex-col space-y-2 mt-2'>
-                    <Link href='/'>
-                      <SidebarButton size='sm' icon={Settings} className='w-full'>
-                        Account Settings
-                      </SidebarButton>
-                    </Link>
-                    <SidebarButton size='sm' icon={LogOut} className='w-full'>
-                      Log Out
-                    </SidebarButton>
-                  </div>
-                </DrawerContent> */}
               </Drawer>
             </SignedIn>
           </div>

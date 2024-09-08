@@ -2,7 +2,7 @@
 export default function Home() {
   return (
     <div>
-      Hello SMU BidWise
+      Hello SMU BidWise, this is the home page
     </div>
   );
 }

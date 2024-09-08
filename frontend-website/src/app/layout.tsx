@@ -36,7 +36,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100vh]`}>
           <Sidebar />
-          <main className='mx-5 mt-16 sm:ml-[300px] sm:mt-3'>{children}</main>
+          <main className='sm:ml-[270px]'>{children}</main>
         </body>
       </html>
     </ClerkProvider>
