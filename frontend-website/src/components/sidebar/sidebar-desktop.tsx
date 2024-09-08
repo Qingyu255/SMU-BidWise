@@ -15,8 +15,6 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs';
-// import { currentUser } from '@clerk/nextjs/server'
-
 
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;

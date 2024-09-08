@@ -64,8 +64,10 @@ export function SidebarMobile(props: SidebarMobileProps) {
             <Separator className='absolute -top-3 left-0 w-full' />
             <SignedOut>
                 <SignInButton>
-                  <Button className='w-full'>
-                    Sign In
+                  <Button className='w-full p-0'>
+                    <SidebarButton className='w-full flex justify-center hover:text-inherit hover:bg-slate-800'>
+                      Sign In
+                    </SidebarButton>
                   </Button>
                 </SignInButton>
             </SignedOut>
