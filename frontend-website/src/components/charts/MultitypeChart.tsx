@@ -17,7 +17,7 @@ import {
 } from "chart.js"
 import { Chart }  from 'react-chartjs-2'
 import { ChartType } from 'chart.js'
-import { ChartData, Dataset, MultitypeChartDataset, chartAttributes } from '@/types';
+import { chartAttributes } from '@/types';
 
 
 // Register ChartJS components using ChartJS.register

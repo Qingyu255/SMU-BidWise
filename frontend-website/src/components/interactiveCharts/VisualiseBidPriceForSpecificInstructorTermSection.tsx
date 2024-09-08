@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import DropDown from '../DropDown';
 import ErrorPopUp from '../ErrorPopUp';
 import MultitypeChart from '../charts/MultitypeChart';
-import { ChartData, Dataset, MultitypeChartDataset, chartAttributes } from '@/types';
+import { chartAttributes } from '@/types';
 
 
 export default function VisualiseBidPriceForSpecificInstructorTermSection({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
@@ -171,7 +171,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
             ) 
             : (
                 <div className='flex flex-col gap-y-5 pb-5'>
-                    <div className='flex flex-row justify-left items-center gap-x-5'>
+                    <div className='inline items-center'>
                         <DropDown 
                             category='Instructor'
                             onSelect={handleInstructorSelect}

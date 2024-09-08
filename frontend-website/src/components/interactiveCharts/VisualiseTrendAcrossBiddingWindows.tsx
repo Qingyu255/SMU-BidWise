@@ -3,7 +3,7 @@ import DropDown from '../DropDown';
 import ErrorPopUp from '../ErrorPopUp';
 import MultitypeChart from '../charts/MultitypeChart'
 import { Spinner } from "@nextui-org/spinner"
-import { ChartData, Dataset, MultitypeChartDataset, chartAttributes } from '@/types';
+import { chartAttributes } from '@/types';
 
 export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
     
@@ -179,7 +179,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
             : (
                 <div className='flex flex-col gap-y-5 pb-5'>
                     <p className='text-gray-500 text-xs sm:text-sm'>select instructor and term:</p>
-                    <div className='flex flex-row justify-left items-center gap-x-5'>
+                    <div className='inline items-center'>
                         <DropDown 
                             category='Instructor'
                             onSelect={handleInstructorSelect}

@@ -11,7 +11,7 @@ import {
   Legend
 } from "chart.js"
 import { Line }  from 'react-chartjs-2'
-import { ChartData, Dataset, chartAttributes } from '@/types';
+import { chartAttributes } from '@/types';
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(

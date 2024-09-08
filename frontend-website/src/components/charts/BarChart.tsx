@@ -12,7 +12,7 @@ import {
   // elements
 } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
-import { ChartData, Dataset, chartAttributes } from '@/types';
+import { chartAttributes } from '@/types';
 
 
 ChartJS.register(
@@ -68,7 +68,7 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
     maintainAspectRatio: false,
     elements: {
       bar: {
-        borderRadius: 8
+        borderRadius: 3
       }
     },
     plugins: {

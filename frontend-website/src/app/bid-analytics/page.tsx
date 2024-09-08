@@ -106,7 +106,7 @@ export default function Page() {
     return (
         <>
             <div className='flex flex-col px-5 lg:px-20  pb-5'>
-                <div className='pt-10 w-1/2'>
+                <div className='pt-10 lg:w-1/2'>
                     <SearchBox onCourseSelected={handleCourseSelection}/>
                 </div>
                 

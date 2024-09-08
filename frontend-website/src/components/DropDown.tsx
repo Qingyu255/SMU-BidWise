@@ -1,6 +1,16 @@
 "use client"
 import React, { useState, useEffect, useRef } from "react";
-import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { Button } from "@/components/ui/button";
 
 type DropdownProps = {
     // Define onSelect as a function that takes a string as a parameter
@@ -16,7 +26,7 @@ export default function DropDown( props : DropdownProps ) {
     const options = (props.options && props.options.length > 0) ? props.options : [`No ${category} Found`]
 
     const [selectedOption, setSelectedOption] = useState<string>(`Select ${category}`)
-    
+    const [position, setPosition] = useState("bottom");
     // To ensure that the latest state is used in our resize event handler, we can use useRef to keep track of the current values
     const selectedOptionRef = useRef(selectedOption)
 
@@ -24,7 +34,8 @@ export default function DropDown( props : DropdownProps ) {
     useEffect(() => {
         if (options.length > 0 && props.showFirstOption !== false) {
             // if options not empty, set selected to first option in options array
-            setSelectedOption(`${category}: ${options[0]}`)
+            setSelectedOption(`${category}: ${options[0]}`);
+            setPosition(options[0]);
         }
     }, [options, category])
 
@@ -32,53 +43,29 @@ export default function DropDown( props : DropdownProps ) {
         selectedOptionRef.current = selectedOption
     }, [selectedOption])
 
-    // useEffect(() => {
-    //     const handleResize = () => {
-    //         // this strips the `${category}: ` from the selected option displayed is viewport becomes too small
-    //         if (selectedOptionRef.current.split(`${category}: `).length > 1 && selectedOptionRef.current !== `Select ${category}` && window.innerWidth < 500) {
-    //             const string_without_select_word = selectedOptionRef.current.split(`${category}: `)[1]
-    //             setSelectedOption(string_without_select_word)
-    //         }
-    //     }
-    //     window.addEventListener("resize", handleResize)
-    
-    //     handleResize()
-
-    //     return () => {
-    //         window.removeEventListener("resize", handleResize)
-    //     }
-    // }, [selectedOption])
-
     function selectionHandler(option: string) {
         props.onSelect(option)
         setSelectedOption(`${category}: ${option.toUpperCase()}`)
     }    
 
     return (
-        <Dropdown shouldBlockScroll={false}>
-            <DropdownTrigger>
-                <Button variant="bordered" className="text-[10px] sm:text-sm" style={{
-                    whiteSpace: 'normal',
-                    overflowWrap: 'break-word',
-                    wordBreak: 'break-word'
-                }}>
-                    {selectedOption}
-                </Button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Static Actions" className="gap-y-2">
-                {options.map((option, index) => (
-                    <DropdownItem key={index + 1} onPointerDown={() => selectionHandler(option)}>
-                        {/* block: Full Width: Block-level elements expand to occupy the full width of their containing block. This means that they stretch from the left edge to the right edge of their parent container. */}
-                        <div className="block w-full p-1" style={{
-                                whiteSpace: 'normal',
-                                overflowWrap: 'break-word',
-                                wordBreak: 'break-word'
-                            }}>
+        <div className="inline-block m-1">
+            <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="outline">{selectedOption}</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuLabel>{category}</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+                    {options.map((option, index) => (
+                        <DropdownMenuRadioItem value={option} key={index + 1} onPointerDown={() => selectionHandler(option)}>
                             {(options[0] !== `No ${category} Found`)? option.toUpperCase() : option}
-                        </div>
-                    </DropdownItem>
-                ))}
+                        </DropdownMenuRadioItem>
+                    ))}
+                    </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
             </DropdownMenu>
-        </Dropdown>
+        </div>
     )
 }
