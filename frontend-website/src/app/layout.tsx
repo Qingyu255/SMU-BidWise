@@ -1,4 +1,11 @@
 import type { Metadata } from "next";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs'
 import localFont from "next/font/local";
 import "./globals.css";
 import { Sidebar } from "@/components/sidebar/sidebar";
@@ -25,11 +32,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100vh]`}>
-        <Sidebar />
-        <main className='mx-5 mt-16 sm:ml-[300px] sm:mt-3'>{children}</main>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100vh]`}>
+          <Sidebar />
+          <main className='mx-5 mt-16 sm:ml-[300px] sm:mt-3'>{children}</main>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
