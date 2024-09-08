@@ -59,7 +59,7 @@ export default function DropDown( props : DropdownProps ) {
                     <DropdownMenuSeparator />
                     <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
                     {options.map((option, index) => (
-                        <DropdownMenuRadioItem value={option} key={index + 1} onPointerDown={() => selectionHandler(option)}>
+                        <DropdownMenuRadioItem value={option} key={index + 1} onClick={() => selectionHandler(option)}>
                             {(options[0] !== `No ${category} Found`)? option.toUpperCase() : option}
                         </DropdownMenuRadioItem>
                     ))}

@@ -69,10 +69,10 @@ export default function MultitypeChart( {type, title, chartData, width, height} 
         title: {
           display: true,
           text: "Median 'Median Bid' Price",
-          color: 'rgb(0, 0, 0)',  // Color to match the line
+          // color: 'rgb(0, 0, 0)',  // Color to match the line
         },
         ticks: {
-          color: 'rgb(0, 0, 0)',  // Color to match the line
+          // color: 'rgb(0, 0, 0)',  // Color to match the line
         }
       },
       y1: {
@@ -85,7 +85,7 @@ export default function MultitypeChart( {type, title, chartData, width, height} 
         title: {
           display: true,
           text: 'Vacancies',
-          color: 'rgb(0, 0, 0)',  // Color to match the bar
+          // color: 'rgb(0, 0, 0)',  // Color to match the bar
         },
         ticks: {
           color: 'rgb(255, 99, 132)',  // Color to match the bar
