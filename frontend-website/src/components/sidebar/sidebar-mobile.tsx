@@ -39,11 +39,11 @@ export function SidebarMobile(props: SidebarMobileProps) {
       </SheetTrigger>
       <SheetContent side='left' className='px-3 py-4 bg-inherit'>
         <SheetHeader className='flex flex-row justify-between items-center space-y-0'>
-          <span className='text-lg font-semibold text-foreground mx-3'>
-            <Link href={"/"}>SMU BidWise</Link>
-          </span>
-          {/* <SheetClose asChild>
-          </SheetClose> */}
+          <Link href={"/"}>
+            <SidebarButton className='text-lg font-semibold text-foreground mx-3'>
+              SMU BidWise
+            </SidebarButton>
+          </Link>
         </SheetHeader>
         <div className='h-full'>
           <div className='mt-5 flex flex-col w-full gap-1'>
