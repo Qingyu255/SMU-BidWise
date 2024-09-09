@@ -81,7 +81,7 @@ try:
     viewAllSections()
     logging.info("view all sections successfully")
     section_rows =  driver.find_elements(By.XPATH, '//table[@id="ACE_CLASS_TBL_VW5$0"]/tbody//tr')
-    actualSectionsNum = int(driver.find_element(By.XPATH, '//*[@id="win0divCLASS_TBL_VW5GP$0"]/span').text.split("of ")[-1])
+    actualSectionsNum = int(driver.find_element(By.XPATH, '//span[@class="PSGRIDCOUNTER"]').text.split("of ")[-1])
     logging.info("Total sections: " + str(actualSectionsNum))
 
     numRows = len(section_rows)
