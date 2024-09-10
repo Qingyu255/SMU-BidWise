@@ -60,7 +60,7 @@ def loginToBOSS(wait):
 
 def isCourseNumberInvalid(driver):
     try:
-        wait = WebDriverWait(driver, 0.3)
+        wait = WebDriverWait(driver, 0.2)
         wait.until(
             EC.presence_of_element_located((By.ID, 'errorcontent'))
         )
@@ -83,10 +83,11 @@ def scrapeCourseDetails(driver, wait, course_data):
         # Scrape Course Details
         course_data['course_detail'] = {
             "title": wait.until(EC.presence_of_element_located((By.ID, "lblClassSection"))).text.strip(),
-            "career": wait.until(EC.presence_of_element_located((By.ID, "classdetail_left"))).text.strip(),
+            "career": wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="lblAcademic"]'))).text.strip(),
             "units": wait.until(EC.presence_of_element_located((By.ID, "lblUnits"))).text.strip(),
             "grading_basis": wait.until(EC.presence_of_element_located((By.ID, "lblGradingBasis"))).text.strip(),
             "description": wait.until(EC.presence_of_element_located((By.ID, "lblCourseDescription"))).text.strip(),
+            "enrolment_requirements": driver.find_element(By.XPATH, '//*[@id="lblEnrolmentRequirements"]').text.strip()
         }
         logging.info("Course details scraped successfully")
 
