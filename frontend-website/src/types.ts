@@ -37,3 +37,30 @@ export interface chartAttributes {
   width: string
   height: string
 }
+
+export interface seniorsAttributes {
+  id: number
+  name: string
+  email: string
+}
+
+export interface semestersAttributes {
+  id: number
+  senior_id: number
+  semester_name: string
+}
+
+export interface enrollments {
+  id:number
+  senior_id : number
+  semester_id : number
+  course_id : number
+}
+
+export interface courses {
+  id : number
+  course_name : string
+  course_code : string
+  course_info : string
+
+}
