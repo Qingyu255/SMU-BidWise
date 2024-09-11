@@ -26,7 +26,7 @@ export default function CourseSummaryCard({ course_code, title, career, descript
                             <span className="flex items-center">{title}</span>
                         </CardTitle>
                     </Link>
-                    <CardDescription className="text-base lg:text-lg">
+                    <CardDescription className="">
                         Career: {career}
                     </CardDescription>
                     <CardDescription>

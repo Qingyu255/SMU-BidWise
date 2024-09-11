@@ -25,7 +25,6 @@ export function PageToggle({ currentPage, totalPages }: PageToggleProps) {
     pageGroupSize = 7;
   }
   
-
   function handlePageChange(page: number) {
       const params = new URLSearchParams(searchParams);
       params.set('page', page.toString());
@@ -40,13 +39,13 @@ export function PageToggle({ currentPage, totalPages }: PageToggleProps) {
     <Pagination className="py-2 sm:py-4">
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href="#" onClick={() => handlePageChange(Math.max(currentPage - 1, 1))} />
+          <PaginationPrevious onClick={() => handlePageChange(Math.max(currentPage - 1, 1))} />
         </PaginationItem>
 
         {/* Show the group of pages (1,2,3 or 4,5,6 etc.) */}
         {Array.from({ length: currentGroupEnd - currentGroupStart + 1 }, (_, i) => (
           <PaginationItem key={i}>
-            <PaginationLink href="#" isActive={currentGroupStart + i === currentPage} onClick={() => handlePageChange(currentGroupStart + i)}>
+            <PaginationLink isActive={currentGroupStart + i === currentPage} onClick={() => handlePageChange(currentGroupStart + i)}>
               {currentGroupStart + i}
             </PaginationLink>
           </PaginationItem>
@@ -60,7 +59,7 @@ export function PageToggle({ currentPage, totalPages }: PageToggleProps) {
         )}
 
         <PaginationItem>
-          <PaginationNext href="#" onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))} />
+          <PaginationNext onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))} />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
