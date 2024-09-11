@@ -105,14 +105,14 @@ export default function Page() {
 
     return (
         <>
-            <div className='flex flex-col px-5 lg:px-20  pb-5'>
-                <div className='pt-10 lg:w-1/2'>
+            <div className='flex flex-col pb-5'>
+                <div className='lg:w-1/2'>
                     <SearchBox onCourseSelected={handleCourseSelection}/>
                 </div>
                 
                 <p className='py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>{courseCode} - {courseName}</p>
                 {error ? (
-                    <ErrorPopUp error={error}/>
+                    <ErrorPopUp errorMessage={error.message}/>
                 ) 
                 : (chartDataOverview && chartDataInstructorOverview ? (
                     <>

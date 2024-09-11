@@ -1,12 +1,15 @@
 import React from 'react';
-import ClipLoader from 'react-spinners/ClipLoader';
+import {NextUIProvider} from "@nextui-org/react";
+import { Spinner } from '@nextui-org/react';
 
 export default function loading() {
     return (
-        <div className='h-[100vh]'>
-            <div className='h-full flex items-center justify-center'>
-                <ClipLoader loading={true} />
+        <NextUIProvider>
+            <div className='h-[100vh]'>
+                <div className='h-full flex items-center justify-center'>
+                    <Spinner />
+                </div>
             </div>
-        </div>
+        </NextUIProvider>
     )
 }

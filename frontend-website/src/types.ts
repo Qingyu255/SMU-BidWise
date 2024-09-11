@@ -64,3 +64,13 @@ export interface courses {
   course_info : string
 
 }
+
+export interface courseInfo {
+  course_code: string;
+  title: string;
+  career: string;
+  units: string;
+  grading_basis: string;
+  description: string;
+  enrolment_requirements: string;
+};
