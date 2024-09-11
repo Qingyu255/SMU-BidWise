@@ -9,7 +9,7 @@ import {
 
 export default function TopBar() {
   return (
-    <div className='pl-[40px] sm:px-0 w-full flex justify-between items-center my-4'>
+    <div className='pl-[40px] sm:px-0 w-full flex justify-between items-center py-4'>
         {/* TODO: Make term dynamic*/}
         <span id='term' className='font-bold'>2024-25 Term 1</span>
         <div>
