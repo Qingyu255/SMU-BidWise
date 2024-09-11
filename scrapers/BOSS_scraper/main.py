@@ -79,6 +79,7 @@ def scrapeCourseDetails(driver, wait, course_data):
     try:
         courseCode, sectionCode = driver.find_element(By.XPATH, '//*[@id="lblClassInfoHeader"]').text.split(" - ")
         course_data['course_code'] = courseCode
+        course_data['term'] = driver.find_element(By.XPATH, '//*[@id="lblClassInfoSubHeader"]').text.strip()
         course_data['section'] = sectionCode
         # Scrape Course Details
         course_data['course_detail'] = {
@@ -141,9 +142,11 @@ def main():
     driver.get(url)
     loginToBOSS(wait)
 
+    acadTerm = "2410"
+
     for classNumber in range(1000, 3001):
         try:
-            url = f'https://boss.intranet.smu.edu.sg/ClassDetails.aspx?SelectedAcadTerm=2410&SelectedClassNumber={classNumber}'
+            url = f'https://boss.intranet.smu.edu.sg/ClassDetails.aspx?SelectedAcadTerm={acadTerm}&SelectedClassNumber={classNumber}'
             driver.get(url)
             logging.info(f"Opened {url}")
 
@@ -156,7 +159,7 @@ def main():
             scrapeCourseDetails(driver, wait, course_data)
             course_data_json = json.dumps(course_data, indent=4)
             print(course_data_json)
-            filePath = f'scrapedData/course_data_{classNumber}_{course_data["course_code"]}.json'
+            filePath = f'scrapedData/{acadTerm}/course_data_{classNumber}_{course_data["course_code"]}.json'
             with open(filePath, 'w') as json_file:
                 json.dump(course_data, json_file, indent=4)
                 logging.info(f"Data saved to {filePath}")
