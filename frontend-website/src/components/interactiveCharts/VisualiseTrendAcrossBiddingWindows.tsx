@@ -174,7 +174,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
         <>
             <h1 id="VisualiseTrendAcrossBiddingWindows" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Trend Across Bidding Windows For Specified Term</h1>
             {error ? (
-                <ErrorPopUp error={error}/>
+                <ErrorPopUp errorMessage={error.message}/>
             ) 
             : (
                 <div className='flex flex-col gap-y-5 pb-5'>
