@@ -59,13 +59,28 @@ CommandInput.displayName = CommandPrimitive.Input.displayName
 const CommandList = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.List
-    ref={ref}
-    className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
-    {...props}
-  />
-))
+>(({ className, ...props }, ref) => {
+  const listRef: any = React.useRef<HTMLDivElement>(null);
+
+  // UseEffect to ensure it scrolls to the top when content changes
+  React.useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = 0;
+    }
+  }, [props.children]); // Track changes to children
+
+  return (
+    <CommandPrimitive.List
+      ref={(node) => {
+        if (typeof ref === "function") ref(node);
+        else if (ref) ref.current = node;
+        listRef.current = node; // Assign to both ref and listRef
+      }}
+      className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
+      {...props}
+    />
+  );
+});
 
 CommandList.displayName = CommandPrimitive.List.displayName
 

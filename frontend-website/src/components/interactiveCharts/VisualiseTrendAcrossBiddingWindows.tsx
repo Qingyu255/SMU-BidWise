@@ -209,7 +209,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
                         
                     ): (
                         <div className='flex justify-center items-center'>
-                            <Spinner color="primary"/>
+                            <Spinner color="default"/>
                         </div>   
                     )}
                 </div>
