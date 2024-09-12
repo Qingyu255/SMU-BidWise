@@ -167,7 +167,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
         <>
             <h1 id="VisualiseBidPriceForSpecificInstructorTermSection" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Across Bidding Windows For Specified Term and Section</h1>
             {error ? (
-                <ErrorPopUp error={error}/>
+                <ErrorPopUp errorMessage={error.message}/>
             ) 
             : (
                 <div className='flex flex-col gap-y-5 pb-5'>

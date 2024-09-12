@@ -152,7 +152,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
         <>
             <h1 id="VisualiseTrendAcrossSemesters" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Trend Across Semesters For Specified Window</h1>
             {error ? (
-                <ErrorPopUp error={error}/>
+                <ErrorPopUp errorMessage={error.message}/>
             ) 
             : (
                 <div className='flex flex-col gap-y-5 pb-5'>

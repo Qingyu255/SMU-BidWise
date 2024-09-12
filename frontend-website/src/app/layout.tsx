@@ -9,6 +9,7 @@ import {
 import localFont from "next/font/local";
 import "./globals.css";
 import { Sidebar } from "@/components/sidebar/sidebar";
+import TopBar from "@/components/TopBar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -36,7 +37,10 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100vh]`}>
           <Sidebar />
-          <main className='sm:ml-[270px]'>{children}</main>
+          <main className='sm:ml-[290px] mx-5'>
+            <TopBar/>
+            {children}
+          </main>
         </body>
       </html>
     </ClerkProvider>

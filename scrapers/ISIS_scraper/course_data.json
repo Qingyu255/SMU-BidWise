@@ -1,0 +1,33 @@
+{
+    "course_detail": {
+        "title": "ACCT  647 - Accounting",
+        "career": "Graduate - Management (CW)",
+        "units": "1.00",
+        "grading_basis": "Graded",
+        "course_components": "Seminar",
+        "campus": "Main Campus",
+        "academic_group": "Lee Kong Chian Sch of Business",
+        "academic_organization": "LKCSB MMT",
+        "description": "This course provides students with a basic understanding of accounting as \u201cthe language of business\u201d. It introduces students to the basic concepts and principles underlying the accounting process, culminating in analysing financial statements. In addition, coverage of costing, budget and planning provides students with tools to manage business operations."
+    },
+    "sections": [
+        {
+            "section": "G3-SEM (2275)",
+            "day": "Th",
+            "start": "08:15",
+            "end": "11:30",
+            "room": "YPHSL Seminar Room B2-01",
+            "instructor": "AN-PING LIN",
+            "dates": "26/08/2024 - 10/11/2024"
+        },
+        {
+            "section": "G4-SEM (2276)",
+            "day": "Fr",
+            "start": "08:15",
+            "end": "11:30",
+            "room": "YPHSL Seminar Room B2-01",
+            "instructor": "AN-PING LIN",
+            "dates": "26/08/2024 - 10/11/2024"
+        }
+    ]
+}

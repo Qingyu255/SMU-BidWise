@@ -56,7 +56,8 @@ try:
         "campus": wait.until(EC.presence_of_element_located((By.ID, "CAMPUS_TBL_DESCR$0"))).text.strip(),
         "academic_group": wait.until(EC.presence_of_element_located((By.ID, "ACAD_GROUP_TBL_DESCR$0"))).text.strip(),
         "academic_organization": wait.until(EC.presence_of_element_located((By.ID, "ACAD_ORG_TBL_DESCR$0"))).text.strip(),
-        "description": wait.until(EC.presence_of_element_located((By.ID, "SSR_CRSE_OFF_VW_DESCRLONG$0"))).text.strip()
+        "description": wait.until(EC.presence_of_element_located((By.ID, "SSR_CRSE_OFF_VW_DESCRLONG$0"))).text.strip(),
+        "course_areas": ""
     }
     logging.info("Course details scraped successfully")
     
@@ -95,11 +96,12 @@ try:
             sectionDataTable = driver.find_element(By.XPATH, '//table[@id="CLASS_MTGPAT$scroll$' + str(i//4) + '"]/tbody/tr/td/table/tbody')
 
             section['day'] = sectionDataTable.find_element(By.XPATH, "./tr[2]/th[1]").text.strip()
-            section['start'] = sectionDataTable.find_element(By.XPATH, ".//td[1]").text.strip()
-            section['end'] = sectionDataTable.find_element(By.XPATH, ".//td[2]").text.strip()
-            section['room'] = sectionDataTable.find_element(By.XPATH, ".//td[3]").text.strip()
+            section['start_time'] = sectionDataTable.find_element(By.XPATH, ".//td[1]").text.strip()
+            section['end_time'] = sectionDataTable.find_element(By.XPATH, ".//td[2]").text.strip()
+            section['venue'] = sectionDataTable.find_element(By.XPATH, ".//td[3]").text.strip()
             section['instructor'] = sectionDataTable.find_element(By.XPATH, ".//td[4]").text.strip()
-            section['dates'] = sectionDataTable.find_element(By.XPATH, ".//td[5]").text.strip()
+            section['start_date'] = sectionDataTable.find_element(By.XPATH, ".//td[5]").text.strip()
+            section['end_date'] = ""
 
             sections.append(section)
         

@@ -7,7 +7,7 @@ export default function loading() {
         <NextUIProvider>
             <div className='h-[100vh]'>
                 <div className='h-full flex items-center justify-center'>
-                    <Spinner color="primary"/>
+                    <Spinner color="default"/>
                 </div>
             </div>
         </NextUIProvider>

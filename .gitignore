@@ -37,3 +37,4 @@ next-env.d.ts
 
 # ignore scraper venv
 env/
+scrapers/BOSS_scraper/scrapedData
