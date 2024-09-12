@@ -7,12 +7,19 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
 }
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
 
 body {
   color: var(--foreground);
@@ -89,4 +96,28 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+.react-flow__minimap {
+  z-index: 100;     /* Bring it above other elements */
+  width: 150px;     /* Adjust the width of the MiniMap */
+  height: 100px;    /* Adjust the height of the MiniMap */
+  position: relative; /* Ensure it stays in place */
+  bottom: 20px;     /* Position it at the bottom */
+  right: 20px;      /* Position it to the right */
+  border: 1px solid black; /* Add a border for visibility */
+  background-color: white; /* Ensure background color is set */
+}
+
+.react-flow__pane {
+  background-color: white;
+}
+
+.react-flow__panel {
+  color: black;
+}
+
+.react-flow__node {
+  color: black;
 }
