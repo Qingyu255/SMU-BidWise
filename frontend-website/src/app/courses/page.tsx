@@ -1,5 +1,5 @@
 import React from 'react';
-import { createClient } from '@/utils/supabase/server';
+import createClient  from '@/utils/supabase/server';
 import { Spinner } from '@nextui-org/react';
 import { courseInfo } from '@/types';
 import SearchBar from './components/SearchBar';
