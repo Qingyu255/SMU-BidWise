@@ -164,7 +164,7 @@ export default function Page() {
                     </>
                 ) : (
                     <div className='flex justify-center items-center pb-8'>
-                        <Spinner />
+                        <Spinner color="primary"/>
                     </div>   
                 ))}
             </div>

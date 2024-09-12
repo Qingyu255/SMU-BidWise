@@ -187,7 +187,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
                         
                     ): (
                         <div className='flex justify-center items-center'>
-                            <Spinner />
+                            <Spinner color="primary"/>
                         </div>   
                     )}
                 </div>

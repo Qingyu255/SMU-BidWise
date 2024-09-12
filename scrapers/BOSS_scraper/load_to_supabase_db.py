@@ -45,7 +45,7 @@ def upsert_term(term):
         logger.error(f"Error upserting term: {e}")
 
 def upsert_course_section(section_info):
-    """Inserts course section data into the Supabase DB or updates it if it already exists."""
+    """upserts course section data into the Supabase DB or updates it if it already exists."""
     try:
         # Check if the section with the same section_code, course_id, and term_id already exists
         existing_section = supabase.table("sections").select("id")\
@@ -54,18 +54,18 @@ def upsert_course_section(section_info):
             .eq("course_id", section_info['course_id']).execute()
 
         if existing_section.data:
-            logger.warning(f"Section already exists for section: {section_info['section']}, course_id: {section_info['course_id']}, and term {section_info['term']}. Skipping insert.")
+            logger.warning(f"Section already exists for section: {section_info['section']}, course_id: {section_info['course_id']}, and term {section_info['term']}. Skipping upsert.")
             # Optionally, you can update the section instead of skipping if needed
             # supabase.table("sections").update(section_info).eq("id", existing_section.data[0]['id']).execute()
         else:
-            # Insert the new section if it doesn't already exist
+            # upsert the new section if it doesn't already exist
             response = supabase.table("sections").upsert(section_info).execute()
             if response.data:
                 logger.info(f"SUCCESS: upserted course section for section: {section_info['section']}, course_id: {section_info['course_id']} in term {section_info['term']}")
             else:
                 logger.error(f"Failed to upsert section: {response}")
     except Exception as e:
-        logger.error(f"Error inserting section: {e}")
+        logger.error(f"Error upserting section: {e}")
 
 def upsert_course_area(course_id, area_name):
     """Upserts course area into the database."""
@@ -79,7 +79,7 @@ def upsert_course_area(course_id, area_name):
         logger.error(f"Error upserting course area: {e}")
 
 def upsert_course_area_assignment(course_id, area_id):
-    """Inserts course area assignment data."""
+    """upserts course area assignment data."""
     try:
         response = supabase.table("course_area_assignments").upsert({"course_id": course_id, "area_id": area_id}).execute()
         if response.data:
@@ -90,7 +90,7 @@ def upsert_course_area_assignment(course_id, area_id):
         logger.error(f"Error upserting course area assignment: {e}")
 
 def upsert_availability(availability_info):
-    """Inserts availability data for sections into the database."""
+    """upserts availability data for sections into the database."""
     try:
         response = supabase.table("availability").upsert(availability_info).execute()
         if response.data:
@@ -101,7 +101,7 @@ def upsert_availability(availability_info):
         logger.error(f"Error upserting availability: {e}")
 
 def process_json_files(directory):
-    """Processes all JSON files in a directory and inserts/upserts data."""
+    """Processes all JSON files in a directory and upserts/upserts data."""
     for filename in os.listdir(directory):
         if filename.endswith(".json"):
             file_path = os.path.join(directory, filename)
@@ -118,7 +118,7 @@ def process_json_files(directory):
                         "units": data["course_detail"].get("units"),
                         "grading_basis": data["course_detail"].get("grading_basis"),
                         "description": data["course_detail"].get("description"),
-                        # Check if "enrolment_requirements" exists before inserting
+                        # Check if "enrolment_requirements" exists before upserting
                         "enrolment_requirements": data["course_detail"].get("enrolment_requirements", "Not Available")
                     }
                     # upsert_course_info(course_info)
@@ -129,7 +129,7 @@ def process_json_files(directory):
                     }
                     # upsert_term(term_info)
 
-                    # Get course_id and term_id for section insertion
+                    # Get course_id and term_id for section upsertion
                     course_code = data.get("course_code")
                     term_name = data.get("term")
                     course_id = supabase.table("course_info").select("id").eq("course_code", course_code).execute().data[0]["id"]
@@ -152,7 +152,7 @@ def process_json_files(directory):
                         }
                         upsert_course_section(section_info)
 
-                        # Insert availability if available
+                        # upsert availability if available
                         if "availability" in data["section_info"]:
                             availability_info = {
                                 "section_id": supabase.table("sections").select("id").eq("section", data["section_info"]["section"]).execute().data[0]["id"],
@@ -171,7 +171,7 @@ def process_json_files(directory):
                             # upsert_course_area_assignment(course_id, area_id)
                         
                     else:
-                        logger.warning(f"No section_info found in file: {filename}. Skipping section insertion.")
+                        logger.warning(f"No section_info found in file: {filename}. Skipping section upsertion.")
 
                     
 

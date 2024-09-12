@@ -11,7 +11,7 @@ export default function SearchBar() {
     const { replace } = useRouter();
     
     const [searchTerm, setSearchTerm] = useState(searchParams.get('query') || '');
-    const [debouncedSearchTerm] = useDebounce(searchTerm, 350);
+    const [debouncedSearchTerm] = useDebounce(searchTerm, 100);
 
     useEffect(() => {
         if (debouncedSearchTerm !== null) {
