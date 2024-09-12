@@ -22,6 +22,7 @@ import {
   SignedOut,
   UserButton
 } from '@clerk/nextjs';
+import Image from 'next/image';
 
 interface SidebarMobileProps {
   sidebarItems: SidebarItems;
@@ -40,8 +41,17 @@ export function SidebarMobile(props: SidebarMobileProps) {
       <SheetContent side='left' className='px-3 py-4 bg-inherit'>
         <SheetHeader className='flex flex-row justify-between items-center space-y-0'>
           <Link href={"/"}>
-            <SidebarButton className='text-lg font-semibold text-foreground mx-3'>
-              SMU BidWise
+            <SidebarButton className='px-0'>
+              <div className='flex justify-start items-center'>
+                <Image
+                  className='inline'
+                  src="/icon.png"
+                  alt="logo"
+                  width={35}
+                  height={35}
+                />
+                <span className='text-lg font-semibold text-foreground mx-2'>SMU BidWise</span>
+              </div>
             </SidebarButton>
           </Link>
         </SheetHeader>

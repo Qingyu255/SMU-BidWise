@@ -15,6 +15,7 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs';
+import Image from 'next/image';
 
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
@@ -26,7 +27,16 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
   return (
     <aside className='w-[270px] max-w-xs h-screen fixed left-0 top-0 z-40 border-r'>
       <div className='h-full px-3 py-4'>
-        <Link href={"/"} className='mx-3 text-lg font-semibold text-foreground'>SMU BidWise</Link>
+        <div className='flex items-center'>
+          <Image
+            className='ml-1 inline'
+            src="/icon.png"
+            alt="logo"
+            width={35}
+            height={35}
+          />
+          <Link href={"/"} className='mx-1 text-lg font-semibold text-foreground'>SMU BidWise</Link>
+        </div>
         <div className='mt-5'>
           <div className='flex flex-col gap-1 w-full'>
             {props.sidebarItems.links.map((link: any, index: number) => (
