@@ -53,6 +53,17 @@ export function Combobox({category, options, onSelect}: comboboxProps) {
             <CommandList>
                 <CommandEmpty>No framework found.</CommandEmpty>
                 <CommandGroup>
+                    <CommandItem
+                        // value={""}
+                        className="text-gray-400 hover:underline hover:text-gray-500"
+                        onSelect={(option) => {
+                            onSelect("");
+                            setValue("");
+                            setOpen(false);
+                        }}
+                    >
+                    Clear
+                    </CommandItem>
                 {options?.map((option) => (
                     <CommandItem
                     key={option}

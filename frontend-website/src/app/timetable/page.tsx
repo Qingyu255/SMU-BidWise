@@ -21,7 +21,7 @@ interface Professor {
 }
 
 const appStyle: React.CSSProperties = {
-  minWidth: '900px',
+  // minWidth: '900px',
   padding: '20px',
   fontFamily: "'Roboto', sans-serif",
   backgroundColor: 'inherit',

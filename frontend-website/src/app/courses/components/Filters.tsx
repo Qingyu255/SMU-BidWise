@@ -26,7 +26,9 @@ export default function Filters({ careerArr, grading_basisArr, unitsArr, areaArr
         } else {
             params.delete(param);
         }
-        router.push(`${pathname}?${params.toString()}`);
+        startTransition(() => {
+            router.push(`${pathname}?${params.toString()}`);
+        })
     };
 
     const clearFilters = () => {
@@ -60,15 +62,19 @@ export default function Filters({ careerArr, grading_basisArr, unitsArr, areaArr
                     <span className='text-sm font-bold px-1'>Units:</span>
                     <Combobox onSelect={(selectedValue: string) => updateSearchParams('units', selectedValue)} category='Units' options={unitsArr}/>
                 </div>
-                {isPending &&(
-                    <div className="px-2">
-                    <Spinner color="default"/>
-                    </div>
-                )}
-                <div className='mt-2 mx-1'>
-                    <Button onClick={clearFilters} className='text-xs text-gray-500'>
-                        Clear Filters
-                    </Button>
+                <div className='flex flex-row gap-1 h-full'>
+                    <span className='m-1'>
+                        <Button onClick={clearFilters} className='text-xs text-gray-500'>
+                            Clear Filters
+                        </Button>
+                    </span>
+                    <span className='flex h-100 items-center'>
+                        {isPending &&(
+                            <div className="px-2">
+                                <Spinner color="default"/>
+                            </div>
+                        )}
+                    </span>
                 </div>
             </div>
             
