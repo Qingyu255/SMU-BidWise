@@ -31,7 +31,9 @@ export default function Filters({ careerArr, grading_basisArr, unitsArr, areaArr
         } else {
             params.delete(param);
         }
-        startTransition(() => {
+        params.delete("page");
+
+        startTransition(() => {   
             router.push(`${pathname}?${params.toString()}`);
         })
     };
