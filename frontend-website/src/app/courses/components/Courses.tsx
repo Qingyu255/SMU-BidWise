@@ -5,6 +5,7 @@ import ErrorPopUp from '@/components/ErrorPopUp';
 import { CourseSummaryCardProps } from './CourseSummaryCard';
 import PageToggle from './PageToggle';
 import { Separator } from '@/components/ui/separator';
+import NoResultCard from '@/components/NoResultCard';
 
 export async function Courses({ query, page, career, grading_basis, units, area }: { 
     query: string, 
@@ -82,7 +83,9 @@ export async function Courses({ query, page, career, grading_basis, units, area 
 
     // handle no courses found
     if (!courses || courses.length == 0) {
-        return <ErrorPopUp errorMessage="No courses found" />;
+        return (
+            <NoResultCard searchCategory='courses'/>
+        );
     }
 
     return (

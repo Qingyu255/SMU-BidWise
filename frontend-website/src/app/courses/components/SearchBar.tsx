@@ -4,6 +4,8 @@ import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { useDebounce } from 'use-debounce';
+import { useTransition } from 'react';
+import { Spinner } from '@nextui-org/react';
 
 export default function SearchBar() {
     const searchParams = useSearchParams();
@@ -12,6 +14,7 @@ export default function SearchBar() {
     
     const [searchTerm, setSearchTerm] = useState(searchParams.get('query') || '');
     const [debouncedSearchTerm] = useDebounce(searchTerm, 100);
+    const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
         if (debouncedSearchTerm !== null) {
@@ -33,16 +36,23 @@ export default function SearchBar() {
         } else {
             params.delete('query');
         }
-        replace(`${pathname}?${params.toString()}`);
+        startTransition(() => {
+            replace(`${pathname}?${params.toString()}`);
+        })
     }
     return (
         <div>
             <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-                <Input 
+                {isPending ? (
+                    <Spinner className="absolute left-3 top-1/2 transform -translate-y-1/2" color='default'/>
+                ) : (
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                )}
+                
+                <Input
                     type="text"
                     placeholder="Search for course code, title, and descriptions"
-                    className="pl-10" // add padding to the left for the icon
+                    className="pl-11 py-5" // add padding to the left for the icon
                     onChange={(e) => {setSearchTerm(e.target.value)}}
                     value={searchTerm}
                 />

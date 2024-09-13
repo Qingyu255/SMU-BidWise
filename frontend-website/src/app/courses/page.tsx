@@ -9,47 +9,53 @@ import { FilterOptions } from './components/Filters';
   const fetchFilterOptions = async (): Promise<FilterOptions> => {
       const supabase = createClient();
       try {
-          const { data: careerData, error: careerError } = await supabase
-              .from("course_info")
-              .select("career")
-          if (careerError) {
-              throw careerError;
-          }
-          const distinctCareers = [...new Set(careerData.map((item: { career: string }) => item.career))];
-  
-          const { data: gradingData, error: gradingError } = await supabase
-              .from("course_info")
-              .select("grading_basis")
-              .order("grading_basis");
-          if (gradingError) {
-              throw gradingError;
-          }
-          const distinctGradingBasis = [...new Set(gradingData.map((item: { grading_basis: string }) => item.grading_basis))];
-  
-          const { data: unitsData, error: unitsError } = await supabase
-              .from("course_info")
-              .select("units")
-              .order("units");
-          if (unitsError) {
-              throw unitsError;
-          }
-          const distinctUnits = [...new Set(unitsData.map((item: { units: string }) => item.units))];
-  
-          const { data: areaData, error: areaError } = await supabase
-              .from("course_areas")
-              .select("area_name")
-              .order("area_name");
-          if (areaError) {
-              throw areaError;
-          }
-          const distinctAreas = [...new Set(areaData.map((item: { area_name: string }) => item.area_name))];
-  
-          return {
-              careerArr: distinctCareers,
-              grading_basisArr: distinctGradingBasis,
-              unitsArr: distinctUnits,
-              areaArr: distinctAreas
-          };
+        const { data: careerData, error: careerError } = await supabase
+            .from("course_info")
+            .select("career")
+        if (careerError) {
+            throw careerError;
+        }
+        const distinctCareers = [...new Set(careerData
+            .map((item: { career: string }) => item.career))]
+            .filter((item => (item !== "Course Career")));
+
+        const { data: gradingData, error: gradingError } = await supabase
+            .from("course_info")
+            .select("grading_basis")
+            .order("grading_basis");
+        if (gradingError) {
+            throw gradingError;
+        }
+        const distinctGradingBasis = [...new Set(gradingData
+            .map((item: { grading_basis: string }) => item.grading_basis))]
+            .filter((item => (item !== "Not Printed")));
+
+        const { data: unitsData, error: unitsError } = await supabase
+            .from("course_info")
+            .select("units")
+            .order("units");
+        if (unitsError) {
+            throw unitsError;
+        }
+        const distinctUnits = [...new Set(unitsData
+            .map((item: { units: string }) => item.units))];
+
+        const { data: areaData, error: areaError } = await supabase
+            .from("course_areas")
+            .select("area_name")
+            .order("area_name");
+        if (areaError) {
+            throw areaError;
+        }
+        const distinctAreas = [...new Set(areaData
+            .map((item: { area_name: string }) => item.area_name))];
+
+        return {
+            careerArr: distinctCareers,
+            grading_basisArr: distinctGradingBasis,
+            unitsArr: distinctUnits,
+            areaArr: distinctAreas
+        };
       
       } catch (error) {
           console.error("Error fetching filter options: ", error);

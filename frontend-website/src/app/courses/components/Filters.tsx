@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, {useState} from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Combobox } from '@/components/Combobox';
 import { Button } from '@nextui-org/react';
@@ -19,6 +19,11 @@ export default function Filters({ careerArr, grading_basisArr, unitsArr, areaArr
     const searchParams = useSearchParams();
     const [isPending, startTransition] = useTransition();
 
+    const [selectedCareer, setSelectedCareer] = useState<string>('');
+    const [selectedArea, setSelectedArea] = useState<string>('');
+    const [selectedGradingBasis, setSelectedGradingBasis] = useState<string>('');
+    const [selectedUnits, setSelectedUnits] = useState<string>('');
+
     const updateSearchParams = (param: string, value: string) => {
         const params = new URLSearchParams(searchParams);
         if (value) {
@@ -33,13 +38,21 @@ export default function Filters({ careerArr, grading_basisArr, unitsArr, areaArr
 
     const clearFilters = () => {
         const params = new URLSearchParams(searchParams);
-        params.delete('query');
+        // params.delete('query');
         params.delete('career');
         params.delete('grading_basis');
         params.delete('units');
         params.delete('area');
         params.delete('page');
-        router.push(`${pathname}?${params.toString()}`);
+
+        setSelectedCareer('');
+        setSelectedArea('');
+        setSelectedGradingBasis('');
+        setSelectedUnits('');
+
+        startTransition(() => {
+            router.push(`${pathname}?${params.toString()}`);
+        })
     }
 
     return (
@@ -48,23 +61,23 @@ export default function Filters({ careerArr, grading_basisArr, unitsArr, areaArr
             <div>
                 <div className='inline-flex flex-col'>
                     <span className='text-sm font-bold px-1'>Career:</span>
-                    <Combobox onSelect={(selectedValue: string) => updateSearchParams('career', selectedValue)} category='Career' options={careerArr}/>
+                    <Combobox onSelect={(selectedValue: string) => {setSelectedCareer(selectedValue); updateSearchParams('career', selectedValue)}} category='Career' options={careerArr}/>
                 </div>
                 <div className='inline-flex flex-col'>
                     <span className='text-sm font-bold px-1'>Course area:</span>
-                    <Combobox onSelect={(selectedValue: string) => updateSearchParams('area', selectedValue)} category='Course area:' options={areaArr}/>
+                    <Combobox onSelect={(selectedValue: string) => {setSelectedArea(selectedValue); updateSearchParams('area', selectedValue)}} category='Course area:' options={areaArr}/>
                 </div>
                 <div className='inline-flex flex-col'>
                     <span className='text-sm font-bold px-1'>Grading basis:</span>
-                    <Combobox onSelect={(selectedValue: string) => updateSearchParams('grading_basis', selectedValue)} category='Grading basis' options={grading_basisArr}/>
+                    <Combobox onSelect={(selectedValue: string) => {setSelectedGradingBasis(selectedValue); updateSearchParams('grading_basis', selectedValue)}} category='Grading basis' options={grading_basisArr}/>
                 </div>
                 <div className='inline-flex flex-col'>
                     <span className='text-sm font-bold px-1'>Units:</span>
-                    <Combobox onSelect={(selectedValue: string) => updateSearchParams('units', selectedValue)} category='Units' options={unitsArr}/>
+                    <Combobox onSelect={(selectedValue: string) => {setSelectedUnits(selectedValue); updateSearchParams('units', selectedValue)}} category='Units' options={unitsArr}/>
                 </div>
                 <div className='flex flex-row gap-1 h-full'>
                     <span className='m-1'>
-                        <Button onClick={clearFilters} className='text-xs text-gray-500'>
+                        <Button onClick={clearFilters} className='text-xs text-gray-700'>
                             Clear Filters
                         </Button>
                     </span>
