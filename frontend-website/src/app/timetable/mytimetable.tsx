@@ -17,14 +17,14 @@ const fixedTimeSlots = [
   '21:00 - 22:00',
 ];
 
-const parseTime = (time) => {
+const parseTime = (time: any) => {
   const [hours, minutes] = time.split(':').map(Number);
   return hours * 60 + minutes; // Convert to minutes
 };
 
-const MyTimetable = ({ selectedClasses }) => {
+const MyTimetable = ({ selectedClasses }: any) => {
   // Initialize timetable structure
-  const timetable = fixedTimeSlots.map((time) => ({
+  const timetable: any = fixedTimeSlots.map((time) => ({
     time,
     Monday: [],
     Tuesday: [],
@@ -34,7 +34,7 @@ const MyTimetable = ({ selectedClasses }) => {
   }));
 
   // Add selected classes to timetable
-  selectedClasses.forEach((classItem) => {
+  selectedClasses.forEach((classItem: any) => {
     const [classStart, classEnd] = classItem.time.split(' - ');
     const startMinutes = parseTime(classStart);
     const endMinutes = parseTime(classEnd);
@@ -46,7 +46,7 @@ const MyTimetable = ({ selectedClasses }) => {
 
       // Check if the slot overlaps with the class time
       if (startMinutes < slotEnd && endMinutes > slotStart) {
-        const timeSlot = timetable[index];
+        const timeSlot: any = timetable[index];
         if (timeSlot) {
           timeSlot[classItem.day].push({ ...classItem, startMinutes, endMinutes });
         }
@@ -55,7 +55,7 @@ const MyTimetable = ({ selectedClasses }) => {
   });
 
   // Styling
-  const tableStyle = {
+  const tableStyle: React.CSSProperties = {
     width: '100%',
     borderCollapse: 'collapse',
     margin: '20px 0',
@@ -66,7 +66,7 @@ const MyTimetable = ({ selectedClasses }) => {
     fontFamily: "'Roboto', sans-serif",
   };
 
-  const thStyle = {
+  const thStyle: React.CSSProperties = {
     textAlign: 'center',
     padding: '15px',
     backgroundColor: '#0056b3',
@@ -76,7 +76,7 @@ const MyTimetable = ({ selectedClasses }) => {
     letterSpacing: '1px',
   };
 
-  const tdStyle = {
+  const tdStyle: React.CSSProperties = {
     textAlign: 'center',
     padding: '0',
     border: '1px solid #e0e0e0',
@@ -87,7 +87,7 @@ const MyTimetable = ({ selectedClasses }) => {
     position: 'relative',
   };
 
-  const classBlockStyle = {
+  const classBlockStyle: React.CSSProperties = {
     position: 'absolute',
     width: '100%',
     backgroundColor: '#28a745',
@@ -117,15 +117,15 @@ const MyTimetable = ({ selectedClasses }) => {
           </tr>
         </thead>
         <tbody>
-          {timetable.map((entry, rowIndex) => (
+          {timetable.map((entry: any, rowIndex: number) => (
             <tr key={rowIndex}>
               <td style={tdStyle}>{entry.time}</td>
-              {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => {
-                const classes = timetable[rowIndex][day];
+              {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day: string) => {
+                const classes: any = timetable[rowIndex][day];
 
                 return (
                   <td key={day} style={tdStyle}>
-                    {classes.map((classItem, index) => {
+                    {classes.map((classItem: any, index: number) => {
                       const { startMinutes, endMinutes } = classItem;
 
                       // Calculate start and end positions within the slot

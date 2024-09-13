@@ -3,6 +3,8 @@ import React from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Combobox } from '@/components/Combobox';
 import { Button } from '@nextui-org/react';
+import { useTransition } from 'react';
+import { Spinner } from '@nextui-org/react';
 
 export interface FilterOptions {
     careerArr: string[];
@@ -15,7 +17,7 @@ export default function Filters({ careerArr, grading_basisArr, unitsArr, areaArr
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
-
+    const [isPending, startTransition] = useTransition();
 
     const updateSearchParams = (param: string, value: string) => {
         const params = new URLSearchParams(searchParams);
@@ -58,6 +60,11 @@ export default function Filters({ careerArr, grading_basisArr, unitsArr, areaArr
                     <span className='text-sm font-bold px-1'>Units:</span>
                     <Combobox onSelect={(selectedValue: string) => updateSearchParams('units', selectedValue)} category='Units' options={unitsArr}/>
                 </div>
+                {isPending &&(
+                    <div className="px-2">
+                    <Spinner color="default"/>
+                    </div>
+                )}
                 <div className='mt-2 mx-1'>
                     <Button onClick={clearFilters} className='text-xs text-gray-500'>
                         Clear Filters

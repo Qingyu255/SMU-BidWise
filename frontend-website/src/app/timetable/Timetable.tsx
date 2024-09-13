@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
-
-
-const Timetable = ({ professorClasses, onClassSelect }) => {
+const Timetable = ({ professorClasses, onClassSelect }: any) => {
   const [selectedClasses, setSelectedClasses] = useState(new Set());
 
   // Define fixed time slots
@@ -24,7 +22,7 @@ const Timetable = ({ professorClasses, onClassSelect }) => {
   ];
 
   // Convert time to a comparable format
-  const parseTime = (time) => {
+  const parseTime = (time: string) => {
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes; // Convert to minutes
   };
@@ -33,7 +31,7 @@ const Timetable = ({ professorClasses, onClassSelect }) => {
   const rowHeight = 50; // Adjust this value as needed
 
   // Initialize timetable structure
-  const timetable = fixedTimeSlots.map((time) => ({
+  const timetable: any = fixedTimeSlots.map((time) => ({
     time,
     Monday: [],
     Tuesday: [],
@@ -43,7 +41,7 @@ const Timetable = ({ professorClasses, onClassSelect }) => {
   }));
 
   // Add classes to timetable
-  professorClasses.forEach((classItem) => {
+  professorClasses.forEach((classItem: any) => {
     const [classStart, classEnd] = classItem.time.split(' - ');
     const startMinutes = parseTime(classStart);
     const endMinutes = parseTime(classEnd);
@@ -55,7 +53,7 @@ const Timetable = ({ professorClasses, onClassSelect }) => {
 
       // Check if the slot overlaps with the class time
       if (startMinutes < slotEnd && endMinutes > slotStart) {
-        const timeSlot = timetable[index];
+        const timeSlot: any = timetable[index];
         if (timeSlot) {
           timeSlot[classItem.day].push({ ...classItem, startMinutes, endMinutes });
         }
@@ -64,7 +62,7 @@ const Timetable = ({ professorClasses, onClassSelect }) => {
   });
 
   // Define styles
-  const tableStyle = {
+  const tableStyle: React.CSSProperties = {
     width: '100%',
     borderCollapse: 'collapse',
     margin: '20px 0',
@@ -75,7 +73,7 @@ const Timetable = ({ professorClasses, onClassSelect }) => {
     fontFamily: "'Roboto', sans-serif",
   };
 
-  const thStyle = {
+  const thStyle: React.CSSProperties = {
     textAlign: 'center',
     padding: '15px',
     backgroundColor: '#0056b3',
@@ -85,7 +83,7 @@ const Timetable = ({ professorClasses, onClassSelect }) => {
     letterSpacing: '1px',
   };
 
-  const tdStyle = {
+  const tdStyle: React.CSSProperties = {
     textAlign: 'center',
     padding: '0',
     border: '1px solid #e0e0e0',
@@ -96,7 +94,7 @@ const Timetable = ({ professorClasses, onClassSelect }) => {
     position: 'relative',
   };
 
-  const buttonStyle = {
+  const buttonStyle: React.CSSProperties = {
     backgroundColor: '#28a745',
     color: '#ffffff',
     border: 'none',
@@ -114,11 +112,11 @@ const Timetable = ({ professorClasses, onClassSelect }) => {
     justifyContent: 'center',
   };
 
-  const buttonHoverStyle = {
+  const buttonHoverStyle: React.CSSProperties = {
     backgroundColor: '#218838',
   };
 
-  const handleClassSelect = (classItem) => {
+  const handleClassSelect = (classItem: any) => {
     if (!selectedClasses.has(classItem.id)) { // Assuming classItem has a unique `id`
       setSelectedClasses(new Set(selectedClasses.add(classItem.id)));
       onClassSelect(classItem);
@@ -143,11 +141,11 @@ const Timetable = ({ professorClasses, onClassSelect }) => {
             <tr key={rowIndex}>
               <td style={tdStyle}>{slot}</td>
               {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => {
-                const classes = timetable[rowIndex][day];
+                const classes: any = timetable[rowIndex][day];
 
                 return (
                   <td key={day} style={tdStyle}>
-                    {classes.map((classItem, index) => {
+                    {classes.map((classItem: any, index: number) => {
                       const { startMinutes, endMinutes } = classItem;
 
                       // Calculate start and end positions within the slot
@@ -168,11 +166,11 @@ const Timetable = ({ professorClasses, onClassSelect }) => {
                               height: `${buttonHeight}px`,
                               backgroundColor: selectedClasses.has(classItem.id) ? '#6c757d' : buttonStyle.backgroundColor,
                             }}
-                            onMouseEnter={(e) => {
+                            onMouseEnter={(e: any) => {
                               e.target.style.backgroundColor = buttonHoverStyle.backgroundColor;
                               e.target.style.transform = 'translateY(-3px)';
                             }}
-                            onMouseLeave={(e) => {
+                            onMouseLeave={(e: any) => {
                               e.target.style.backgroundColor = selectedClasses.has(classItem.id) ? '#6c757d' : buttonStyle.backgroundColor;
                               e.target.style.transform = 'translateY(0)';
                             }}

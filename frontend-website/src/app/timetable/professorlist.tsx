@@ -3,7 +3,7 @@ import React from 'react';
 
 
 
-const professorListStyle = {
+const professorListStyle: React.CSSProperties = {
   backgroundColor: '#fff',
   borderRadius: '8px',
   padding: '20px',
@@ -13,24 +13,24 @@ const professorListStyle = {
   textAlign: 'center',
 };
 
-const headingStyle = {
+const headingStyle: React.CSSProperties = {
   fontSize: '24px',
   fontWeight: '600',
   color: '#333',
   marginBottom: '20px',
 };
 
-const listStyle = {
+const listStyle: React.CSSProperties = {
   listStyle: 'none',
   padding: 0,
   margin: 0,
 };
 
-const listItemStyle = {
+const listItemStyle: React.CSSProperties = {
   marginBottom: '15px',
 };
 
-const buttonStyle = {
+const buttonStyle: React.CSSProperties = {
   backgroundColor: '#007BFF',
   color: '#fff',
   border: 'none',
@@ -41,16 +41,16 @@ const buttonStyle = {
   transition: 'background-color 0.3s ease',
 };
 
-const buttonHoverStyle = {
+const buttonHoverStyle: React.CSSProperties = {
   backgroundColor: '#0056b3',
 };
 
-function ProfessorList({ professors, onSelect }) {
-  const handleMouseOver = (e) => {
+function ProfessorList({ professors, onSelect }: any) {
+  const handleMouseOver = (e: any) => {
     e.target.style.backgroundColor = buttonHoverStyle.backgroundColor;
   };
 
-  const handleMouseOut = (e) => {
+  const handleMouseOut = (e: any) => {
     e.target.style.backgroundColor = buttonStyle.backgroundColor;
   };
 
@@ -58,7 +58,7 @@ function ProfessorList({ professors, onSelect }) {
     <div style={professorListStyle}>
       <h2 style={headingStyle}>Select a Professor</h2>
       <ul style={listStyle}>
-        {professors.map((professor) => (
+        {professors.map((professor: any) => (
           <li key={professor.id} style={listItemStyle}>
             <button
               style={buttonStyle}

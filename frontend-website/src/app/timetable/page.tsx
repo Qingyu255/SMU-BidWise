@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { professors } from './data';
 import ProfessorList from './professorlist';
 import Timetable from './Timetable';
-import MyTimetable from './myTimetable';
+import MyTimetable from './mytimetable';
 
 // Define types for your state
 interface ClassItem {

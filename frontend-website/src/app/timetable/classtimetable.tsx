@@ -1,7 +1,7 @@
 // src/components/ClassTimetable.js
 import React from 'react';
 
-function ClassTimetable({ classes, onClassSelect }) {
+function ClassTimetable({ classes, onClassSelect }: any) {
   return (
     <div>
       <h2>Class Timetable</h2>
@@ -18,7 +18,7 @@ function ClassTimetable({ classes, onClassSelect }) {
             </tr>
           </thead>
           <tbody>
-            {classes.map((classItem) => (
+            {classes.map((classItem: any) => (
               <tr key={classItem.id}>
                 <td>{classItem.name}</td>
                 <td>{classItem.day}</td>
