@@ -6,28 +6,69 @@ import { CourseSummaryCardProps } from './CourseSummaryCard';
 import PageToggle from './PageToggle';
 import { Separator } from '@/components/ui/separator';
 
-export async function Courses({ query, page }: { query: string, page: number }) {
+export async function Courses({ query, page, career, grading_basis, units, area }: { 
+    query: string, 
+    page: number,
+    career?: string,
+    grading_basis?: string,
+    units?: string,
+    area?: string 
+}) {
     const supabase = createClient();
-
     const currentPage = page || 1;
+
     const limit: number = 10; // Number of items per page
     const from = (currentPage - 1) * limit;
     const to = from + limit - 1;
 
-    const { data: courses, count, error } = await supabase
-        .from("course_info")
-        .select(
-            `
-            course_code,
-            title,
-            career,
-            units,
-            description,
-            enrolment_requirements
-            `, { count: 'exact' } // Fetch total count of records
-        )
-        .or(`course_code.ilike.%${query}%,title.ilike.%${query}%,description.ilike.%${query}%`)
-        .range(from, to); // Pagination support
+    let filterQuery = supabase
+    .from("course_info")
+    .select(
+        `
+        course_code,
+        title,
+        career,
+        units,
+        description,
+        enrolment_requirements
+        `, { count: 'exact' } // Fetch total count of records
+    )
+    .or(`course_code.ilike.%${query}%,title.ilike.%${query}%,description.ilike.%${query}%`)
+    .range(from, to); // Pagination support
+
+    if (career) {
+        filterQuery = filterQuery.eq('career', career)
+    };
+    if (grading_basis) {
+        filterQuery = filterQuery.eq('grading_basis', grading_basis)
+    };
+    if (units) {
+        filterQuery = filterQuery.eq('units', units)
+    };
+
+    if (area) {
+        // below is a subquery due to our not so great database design
+
+        // Fetch the course_ids (UUIDs) from the `course_areas` table where `area_name` matches
+        const { data: areaCourses, error: areaError } = await supabase
+            .from('course_areas')
+            .select('course_id')
+            .eq('area_name', area);
+    
+        if (areaError) {
+            console.error('Error fetching area courses: ' + areaError);
+            return;
+        }
+    
+        // Extract the list of course_ids (UUIDs)
+        const courseIds = areaCourses.map(course => course.course_id);
+    
+        // Use these course_ids to filter the `course_info` table
+        filterQuery = filterQuery.in('id', courseIds); // `id` is the UUID in `course_info`
+    }
+
+    const { data: courses, count, error } = await filterQuery.range(from, to);
+
 
     let totalPages = 1;
     if (count) {

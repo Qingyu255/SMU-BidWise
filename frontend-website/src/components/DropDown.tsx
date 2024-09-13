@@ -18,11 +18,13 @@ type DropdownProps = {
     category: string,
     options : string[] | undefined
     showFirstOption?: boolean // optional
+    hideCategoryAsPrefix?: boolean // optional
 }
 
 export default function DropDown( props : DropdownProps ) {
     // if props.options is null, options = ["No courses Found"]
     const category = props.category
+    const hideCategoryAsPrefix = props.hideCategoryAsPrefix;
     const options = (props.options && props.options.length > 0) ? props.options : [`No ${category} Found`]
 
     const [selectedOption, setSelectedOption] = useState<string>(`Select ${category}`)
@@ -45,7 +47,11 @@ export default function DropDown( props : DropdownProps ) {
 
     function selectionHandler(option: string) {
         props.onSelect(option)
-        setSelectedOption(`${category}: ${option.toUpperCase()}`)
+        {!hideCategoryAsPrefix ? (
+            setSelectedOption(`${category}: ${option.toUpperCase()}`)
+        ) : (
+            setSelectedOption(`${option.toUpperCase()}`)
+        )}
     }    
 
     return (
