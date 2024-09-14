@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge"
 export default function TopBar() {
     const pathName = usePathname();
     let pageName;
-    if (pathName !== "/") {
+    if (pathName) {
         pageName = pathName.split("/")[1];
         switch(pageName) {
             case "timetable":

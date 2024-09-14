@@ -1,8 +1,6 @@
 "use client"
-
-import * as React from "react"
+import React, {useEffect} from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,14 +20,19 @@ import {
 type comboboxProps = {
     category: string,
     options : string[] | undefined,
+    selectedValue: string,
     onSelect: (option: string) => void,
     // showFirstOption?: boolean // optional
     // hideCategoryAsPrefix?: boolean // optional
 }
 
-export function Combobox({category, options, onSelect}: comboboxProps) {
+export function Combobox({category, options, selectedValue, onSelect}: comboboxProps) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const [value, setValue] = React.useState(selectedValue)
+
+  useEffect(() => {
+    setValue(selectedValue);
+  }, [selectedValue]);
 
   return (
     <div className="m-1">
