@@ -1,4 +1,4 @@
-import Cylinder_shape from './cylinder-threejs/cylinder';
+import Cylinder_shape from '../components/cylinder-threejs/cylinder';
 
 export default function Home() {
   return (
@@ -6,7 +6,7 @@ export default function Home() {
       <div>
         Hello SMU BidWise, this is the home page
       </div>
-      <div style={{ width: '100vw', height: '100vh' }}>
+      <div style={{ width: '100%', height: '100vh' }}>
         <Cylinder_shape />
       </div>
     </div>

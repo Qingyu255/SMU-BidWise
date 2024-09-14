@@ -5,7 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 
-// Define the type of ref for the mesh
+// Define the type of ref for the mesh -
 const Cyl: React.FC = () => {
   const tex = useTexture('/images/edited.png') as THREE.Texture;
   const cyl = useRef<THREE.Mesh | null>(null);
@@ -54,4 +54,3 @@ const Cylinder_shape: React.FC = () => {
 };
 
 export default Cylinder_shape;
-
