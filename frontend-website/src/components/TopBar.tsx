@@ -31,6 +31,9 @@ export default function TopBar() {
             case "graduation-progress-tracker":
                 pageName = "Graduation Progress Tracker"
                 break;
+            case "communities":
+                pageName = "Community Threads"
+                break;
             default:
                 pageName = "Home"
           }
