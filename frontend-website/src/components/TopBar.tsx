@@ -9,6 +9,7 @@ import {
 } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
 import { Badge } from "@/components/ui/badge"
+import { ModeToggle } from "@/components/ModeToggle"
 
 export default function TopBar() {
     const pathName = usePathname();
@@ -67,7 +68,11 @@ export default function TopBar() {
             </SignedIn> */}
             <span className='font-bold text-lg sm:text-xl md:text-2xl'>{pageName}</span>
         </div>
-        <Badge id='term' className='font-bold'>2024-25 Term 1</Badge>
+        <div className='flex items-center gap-2'>
+            <Badge id='term' className='font-bold'>2024-25 Term 1</Badge>
+            <ModeToggle/>
+        </div>
+    
     </div>
     )
 }

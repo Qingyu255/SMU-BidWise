@@ -10,6 +10,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Sidebar } from "@/components/sidebar/sidebar";
 import TopBar from "@/components/TopBar";
+import { ThemeProvider } from "@/components/theme-provider"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,15 +35,22 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100vh]`}>
-          <Sidebar />
-          <main className='sm:ml-[290px] mx-5'>
-            <TopBar/>
-            {children}
-          </main>
-        </body>
-      </html>
+        <html lang="en">
+            <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100vh]`}>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+              <Sidebar />
+              <main className='sm:ml-[290px] mx-5'>
+                <TopBar/>
+                {children}
+              </main>
+              </ThemeProvider>
+            </body>
+        </html>
     </ClerkProvider>
   );
 }
