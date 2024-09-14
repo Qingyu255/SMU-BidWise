@@ -9,9 +9,9 @@ export default function CourseSummaryCardSkeleton() {
         <>
             {Array.from({length: 10}).map((_, index) => (
                 <div key={index} className="flex justify-center p-4">
-                    <Card className="w-full bg-background text-foreground">
+                    <Card className="w-full bg-inherit">
                         <CardHeader>
-                            <CardTitle className="text-xl lg:text-2xl flex flex-row cursor-pointer hover:text-slate-500">
+                            <CardTitle className="text-xl lg:text-2xl flex flex-row">
                                 <Skeleton className="h-6 w-1/2" />
                             </CardTitle>
                             <CardDescription>

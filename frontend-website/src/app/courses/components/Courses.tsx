@@ -95,16 +95,16 @@ export async function Courses({ query, page, career, grading_basis, units, area 
             </div>
             <Separator/>
             <div className='py-2 sm:py-4'>
-                    {courses?.map((courseInfo: any, index) => (
-                        <CourseSummaryCard
-                            key={index}
-                            course_code={courseInfo.course_code}
-                            title={courseInfo.title}
-                            career={courseInfo.career}
-                            description={courseInfo.description}
-                            enrolment_requirements={courseInfo.enrolment_requirements}
-                            units={courseInfo.units}
-                        />
+                {courses?.map((courseInfo: any, index) => (
+                    <CourseSummaryCard
+                        key={index}
+                        course_code={courseInfo.course_code}
+                        title={courseInfo.title}
+                        career={courseInfo.career}
+                        description={courseInfo.description}
+                        enrolment_requirements={courseInfo.enrolment_requirements}
+                        units={courseInfo.units}
+                    />
                 ))}
             </div>
             <PageToggle currentPage={currentPage} totalPages={totalPages} />

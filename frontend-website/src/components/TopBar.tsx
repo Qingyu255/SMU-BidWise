@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import { Button } from './ui/button';
 import {
@@ -6,9 +7,35 @@ import {
     SignedOut,
     UserButton
 } from '@clerk/nextjs';
+import { usePathname } from 'next/navigation';
+import { Badge } from "@/components/ui/badge"
 
 export default function TopBar() {
-  return (
+    const pathName = usePathname();
+    let pageName;
+    if (pathName !== "/") {
+        pageName = pathName.split("/")[1];
+        switch(pageName) {
+            case "timetable":
+                pageName = "Timetable"
+                break;
+            case "courses":
+                pageName = "Courses"
+                break;
+            case "bid-analytics":
+                pageName = "Bid Price Analytics"
+                break;
+            case "roadmaps":
+                pageName = "Senior Roadmaps"
+                break;
+            case "graduation-progress-tracker":
+                pageName = "Graduation Progress Tracker"
+                break;
+            default:
+                pageName = "Home"
+          }
+    }
+    return (
     <div className='pl-[40px] sm:px-0 w-full flex justify-between items-center py-4'>
         {/* TODO: Make term dynamic*/}
         <div>
@@ -35,9 +62,9 @@ export default function TopBar() {
                     </div>
                 </div>
             </SignedIn> */}
-            <span>-- feature here --</span>
+            <span className='font-bold text-lg sm:text-xl md:text-2xl'>{pageName}</span>
         </div>
-        <span id='term' className='font-bold'>2024-25 Term 1</span>
+        <Badge id='term' className='font-bold'>2024-25 Term 1</Badge>
     </div>
-  )
+    )
 }
