@@ -79,7 +79,7 @@ export default function Filters({ careerArr, grading_basisArr, unitsArr, areaArr
                 </div>
                 <div className='flex flex-row gap-1 h-full'>
                     <span className='m-1'>
-                        <Button onClick={clearFilters} className='text-xs text-gray-700'>
+                        <Button onClick={clearFilters} className='text-xs '>
                             Clear Filters
                         </Button>
                     </span>
