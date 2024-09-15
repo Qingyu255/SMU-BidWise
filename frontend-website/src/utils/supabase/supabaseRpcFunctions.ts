@@ -1,8 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
+import createClient  from '@/utils/supabase/client';
 
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = createClient();
 
 export const getLatestTerm = async () => {
     const { data: latestTerm, error: latestTermError } = await supabase

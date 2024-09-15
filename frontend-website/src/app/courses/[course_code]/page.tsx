@@ -71,7 +71,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
       setLatestTermId(latestTermIdStr) // right now we are only showing the latest undergrad terms 
 
       console.log('Fetching sections and professors for course_code:' + course_code + "for latest term: " + latestTermStr);
-      const { sections, professors } = await getSectionDetails(course_code, latestTermIdStr);
+      const { sections, professors }: any = await getSectionDetails(course_code, latestTermIdStr);
       setSections(sections);
       setProfessors(professors);
       console.log('Professors:', professors);
