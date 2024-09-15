@@ -1,0 +1,42 @@
+{
+    "class_number": "1050",
+    "course_code": "FNCE6048",
+    "term": "2023-24 January Term",
+    "section": "G4",
+    "course_detail": {
+        "title": "Advanced Equity Analysis and Portfolio Management",
+        "career": "Graduate - Applied Finance",
+        "units": "1.00",
+        "grading_basis": "Graded",
+        "description": "This course is the continuation of Equity Analysis. It aims to provide you with an in-depth understanding of valuation and equity analysis. The course will equip you with conceptual and analytical skills necessary to make valuations on any publicly traded firm and create a value-enhancement strategy for a firm\u2019s management. This module also examines various advanced equity valuation models including contingent claim valuation using Option Pricing Model. This module also builds on and extends Portfolio Management and covers the complete investment process from constructing investment objectives and policies to broad class asset allocation, portfolio selection, revisions, monitoring, and performance measurement and attribution. Practical issues relating to investment management philosophy and style, and active and passive management will also be discussed. Advanced techniques in portfolio construction involving the use of single index, multi-factor and Arbitrage Pricing Theory models are studied.",
+        "enrolment_requirements": "Information is not available."
+    },
+    "section_info": {
+        "section": "G4",
+        "day": "Wed",
+        "start_time": "12:00",
+        "end_time": "15:15",
+        "venue": "YPHSL Seminar Room B2-01",
+        "instructor": "CHAN SOON HUAT",
+        "start_date": "08/01/2024",
+        "end_date": "24/03/2024",
+        "course_areas": [
+            "MAF Programme Core"
+        ],
+        "meeting_info": {
+            "start_date": "08-Jan-2024",
+            "end_date": "24-Mar-2024",
+            "day": "Wed",
+            "start_time": "12:00",
+            "end_time": "15:15",
+            "venue": "YPHSL Seminar Room B2-01",
+            "instructor": "CHAN SOON HUAT"
+        },
+        "availability": {
+            "total": "65",
+            "current_enrolled": "45",
+            "reserved": "65",
+            "available_seats": "0"
+        }
+    }
+}

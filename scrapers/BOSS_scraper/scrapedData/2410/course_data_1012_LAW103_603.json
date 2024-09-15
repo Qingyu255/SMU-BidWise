@@ -1,0 +1,47 @@
+{
+    "class_number": "1012",
+    "course_code": "LAW103_603",
+    "term": "2024-25 Term 1",
+    "section": "G3",
+    "course_detail": {
+        "title": "Criminal Law",
+        "career": "Undergraduate",
+        "units": "1.25",
+        "grading_basis": "Graded",
+        "description": "This course will introduce students to the basic principles and various aspects of criminal law. The criminal law in Singapore is contained in the Penal Code (Cap. 224) and provisions in other statutes. Case law interpreting and applying the elements and provisions of the various offences will also be examined. The student will first approach criminal law from a jurisprudential viewpoint and consider its objectives, functions and theoretical basis. A greater part of the course will be spent examining the various substantive areas of criminal law.",
+        "enrolment_requirements": "Note*: This course is applicable to SMU Undergraduates and students enrolled in an equivalent SMU LLB programme in another university."
+    },
+    "section_info": {
+        "section": "G3",
+        "day": "Thu",
+        "start_time": "09:15",
+        "end_time": "11:30",
+        "venue": "YPHSL Seminar Room 2-04",
+        "instructor": "WALTER WOON",
+        "start_date": "19/08/2024",
+        "end_date": "24/11/2024",
+        "course_areas": [
+            "Legal Studies Electives",
+            "Business Options",
+            "Econ Major Rel/Econ Options",
+            "Business-Oriented Electives",
+            "Social Sciences/PLE Major-related",
+            "Law Core"
+        ],
+        "meeting_info": {
+            "start_date": "19-Aug-2024",
+            "end_date": "24-Nov-2024",
+            "day": "Thu",
+            "start_time": "09:15",
+            "end_time": "11:30",
+            "venue": "YPHSL Seminar Room 2-04",
+            "instructor": "WALTER WOON"
+        },
+        "availability": {
+            "total": "47",
+            "current_enrolled": "46",
+            "reserved": "0",
+            "available_seats": "1"
+        }
+    }
+}
