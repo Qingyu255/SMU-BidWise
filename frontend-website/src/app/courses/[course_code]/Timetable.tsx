@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const Timetable = ({ professorClasses, onClassSelect }: any) => {
-  const [selectedClasses, setSelectedClasses] = useState(new Set());
+  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
 
   // Map short form day names to full names used in timetable
   const dayMapping: { [key: string]: string } = {
@@ -37,8 +37,8 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
   };
 
   const parseTime = (time: string) => {
-    const [hours, minutes,seconds] = time.split(':').map(Number);
-    return hours * 60 + minutes +seconds/60; // Convert to minutes
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    return hours * 60 + minutes + seconds / 60; // Convert to minutes
   };
 
   // Calculate the height of a row in pixels
@@ -58,12 +58,12 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
   professorClasses.forEach((classItem: any) => {
     const startMinutes = parseTime(classItem.start_time);
     const endMinutes = parseTime(classItem.end_time);
-    
+
     // Find relevant time slots for the class
     fixedTimeSlots.forEach((slot, index) => {
       const slotStart = parseTimeSlots(slot.split(' - ')[0]);
       const slotEnd = parseTimeSlots(slot.split(' - ')[1]);
-      
+
       // Check if the slot overlaps with the class time
       if (startMinutes < slotEnd && endMinutes > slotStart) {
         const timeSlot: any = timetable[index];
@@ -134,10 +134,8 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
   };
 
   const handleClassSelect = (classItem: any) => {
-    if (!selectedClasses.has(classItem.id)) { // Assuming classItem has a unique `id`
-      setSelectedClasses(new Set(selectedClasses.add(classItem.id)));
-      onClassSelect(classItem);
-    }
+    setSelectedClassId(classItem.id);
+    onClassSelect(classItem);
   };
 
   return (
@@ -175,21 +173,23 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
                               ...buttonStyle,
                               top: `${startOffset * rowHeight}px`,
                               height: `${buttonHeight}px`,
-                              backgroundColor: selectedClasses.has(classItem.id) ? '#6c757d' : buttonStyle.backgroundColor,
+                              backgroundColor:
+                                selectedClassId === classItem.id ? '#6c757d' : buttonStyle.backgroundColor,
                             }}
                             onMouseEnter={(e: any) => {
                               e.target.style.backgroundColor = buttonHoverStyle.backgroundColor;
                               e.target.style.transform = 'translateY(-3px)';
                             }}
                             onMouseLeave={(e: any) => {
-                              e.target.style.backgroundColor = selectedClasses.has(classItem.id) ? '#6c757d' : buttonStyle.backgroundColor;
+                              e.target.style.backgroundColor =
+                                selectedClassId === classItem.id ? '#6c757d' : buttonStyle.backgroundColor;
                               e.target.style.transform = 'translateY(0)';
                             }}
                             onClick={() => handleClassSelect(classItem)}
-                            disabled={selectedClasses.has(classItem.id)}
+                            disabled={selectedClassId === classItem.id}
                           >
                             {classItem.name}
-                            <div>{`Section: ${classItem.section}`} {`Section: ${classItem.venue}`}</div>
+                            <div>{`Section: ${classItem.section}`} {`Venue: ${classItem.venue}`}</div>
                           </button>
                         </div>
                       );
