@@ -23,9 +23,9 @@ const Cyl: React.FC = () => {
   tex.repeat.set(1, 1); // No repeat to match a single side
 
   return (
-    <group rotation={[0, 1.5, 0.3]}>
+    <group rotation={[0.3, 1.55, 0.35]} position={[0, 8.5, 0]}>
       <mesh ref={cyl}>
-        <cylinderGeometry args={[5, 5, 15, 36, 1, true]} />  {/* Adjusted size */}
+        <cylinderGeometry args={[6, 6, 12, 36, 1, true]} />  {/* Adjusted size */}
         <meshStandardMaterial
           map={tex}
           side={THREE.DoubleSide}
@@ -44,9 +44,9 @@ const Cylinder_shape: React.FC = () => {
     <Canvas 
       dpr={[1, 2]} 
       gl={{ antialias: true }} 
-      camera={{ position: [0, 0, 10], near: 0.1, far: 100 }} // Adjust camera settings
+      camera={{ position: [0, 0, 15], near: 0.1, far: 100 }} // Adjust camera settings
     >
-      <OrbitControls />
+      <OrbitControls enableZoom={false}/>
       <ambientLight intensity={4} />
       <Cyl />
     </Canvas>
