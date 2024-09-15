@@ -3,6 +3,15 @@ import React, { useState } from 'react';
 const Timetable = ({ professorClasses, onClassSelect }: any) => {
   const [selectedClasses, setSelectedClasses] = useState(new Set());
 
+  // Map short form day names to full names used in timetable
+  const dayMapping: { [key: string]: string } = {
+    Mon: 'Monday',
+    Tue: 'Tuesday',
+    Wed: 'Wednesday',
+    Thu: 'Thursday',
+    Fri: 'Friday',
+  };
+
   // Define fixed time slots
   const fixedTimeSlots = [
     '08:00 - 09:00',
@@ -22,13 +31,18 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
   ];
 
   // Convert time to a comparable format
-  const parseTime = (time: string) => {
+  const parseTimeSlots = (time: string) => {
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes; // Convert to minutes
   };
 
+  const parseTime = (time: string) => {
+    const [hours, minutes,seconds] = time.split(':').map(Number);
+    return hours * 60 + minutes +seconds/60; // Convert to minutes
+  };
+
   // Calculate the height of a row in pixels
-  const rowHeight = 50; // Adjust this value as needed
+  const rowHeight = 50; // Height of each row in pixels
 
   // Initialize timetable structure
   const timetable: any = fixedTimeSlots.map((time) => ({
@@ -42,20 +56,25 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
 
   // Add classes to timetable
   professorClasses.forEach((classItem: any) => {
-    const [classStart, classEnd] = classItem.time.split(' - ');
-    const startMinutes = parseTime(classStart);
-    const endMinutes = parseTime(classEnd);
-
+    const startMinutes = parseTime(classItem.start_time);
+    const endMinutes = parseTime(classItem.end_time);
+    
     // Find relevant time slots for the class
     fixedTimeSlots.forEach((slot, index) => {
-      const slotStart = parseTime(slot.split(' - ')[0]);
-      const slotEnd = parseTime(slot.split(' - ')[1]);
-
+      const slotStart = parseTimeSlots(slot.split(' - ')[0]);
+      const slotEnd = parseTimeSlots(slot.split(' - ')[1]);
+      
       // Check if the slot overlaps with the class time
       if (startMinutes < slotEnd && endMinutes > slotStart) {
         const timeSlot: any = timetable[index];
         if (timeSlot) {
-          timeSlot[classItem.day].push({ ...classItem, startMinutes, endMinutes });
+          timeSlot[dayMapping[classItem.day]].push({
+            ...classItem,
+            startMinutes,
+            endMinutes,
+            startOffset: (startMinutes - slotStart) / 60,
+            endOffset: (endMinutes - slotStart) / 60,
+          });
         }
       }
     });
@@ -67,7 +86,6 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
     borderCollapse: 'collapse',
     margin: '20px 0',
     backgroundColor: '#ffffff',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
     borderRadius: '10px',
     overflow: 'hidden',
     fontFamily: "'Roboto', sans-serif",
@@ -90,8 +108,8 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
     fontSize: '14px',
     color: '#333333',
     verticalAlign: 'middle',
-    height: `${rowHeight}px`,
     position: 'relative',
+    height: `${rowHeight}px`,
   };
 
   const buttonStyle: React.CSSProperties = {
@@ -99,12 +117,11 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
     color: '#ffffff',
     border: 'none',
     padding: '0',
-    borderRadius: '0',
+    borderRadius: '5px',
     cursor: 'pointer',
     fontSize: '14px',
     fontWeight: '500',
-    transition: 'background-color 0.3s ease, transform 0.2s ease',
-    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+    transition: 'background-color 0.3s ease',
     position: 'absolute',
     width: '100%',
     display: 'flex',
@@ -146,15 +163,9 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
                 return (
                   <td key={day} style={tdStyle}>
                     {classes.map((classItem: any, index: number) => {
-                      const { startMinutes, endMinutes } = classItem;
+                      const { startOffset, endOffset } = classItem;
 
-                      // Calculate start and end positions within the slot
-                      const slotStartMinutes = parseTime(fixedTimeSlots[rowIndex].split(' - ')[0]);
-                      const slotEndMinutes = parseTime(fixedTimeSlots[rowIndex].split(' - ')[1]);
-
-                      // Calculate proportion of the button's height within the slot
-                      const startOffset = (startMinutes - slotStartMinutes) / 60;
-                      const endOffset = (endMinutes - slotStartMinutes) / 60;
+                      // Calculate the height of the button
                       const buttonHeight = (endOffset - startOffset) * rowHeight;
 
                       return (
@@ -178,6 +189,7 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
                             disabled={selectedClasses.has(classItem.id)}
                           >
                             {classItem.name}
+                            <div>{`Section: ${classItem.section}`} {`Section: ${classItem.venue}`}</div>
                           </button>
                         </div>
                       );

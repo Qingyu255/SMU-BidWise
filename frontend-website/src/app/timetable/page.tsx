@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { professors } from './data';
 import ProfessorList from './professorlist';
-import Timetable from './Timetable';
+import Timetable from '../courses/[course_code]/Timetable';
 import MyTimetable from './mytimetable';
 
 // Define types for your state
