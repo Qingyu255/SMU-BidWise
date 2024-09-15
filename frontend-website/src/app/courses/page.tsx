@@ -45,14 +45,13 @@ const fetchFilterOptions = async (): Promise<FilterOptions> => {
 
     const { data: areaData, error: areaError } = await supabase
         .from("course_areas")
-        .select("area_name")
-        .order("area_name");
+        .select("area_name");
     if (areaError) {
         throw areaError;
     }
     const distinctAreas = [...new Set(areaData
         .map((item: { area_name: string }) => item.area_name))];
-
+    console.log(distinctAreas);
     return {
         careerArr: distinctCareers,
         grading_basisArr: distinctGradingBasis,
