@@ -36,7 +36,7 @@ export default function TopBar() {
                 pageName = "Community Threads"
                 break;
             default:
-                pageName = "Home"
+                pageName = ""
           }
     }
     return (

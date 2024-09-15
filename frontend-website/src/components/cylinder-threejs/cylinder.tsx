@@ -3,29 +3,36 @@
 import React, { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, useTexture } from "@react-three/drei";
+import { motion } from "framer-motion-3d"; // Correct import for 3D elements
 import * as THREE from "three";
+import { container } from "../../../public/motion"; // Ensure you update this path
 
-// Define the type of ref for the mesh -
 const Cyl: React.FC = () => {
   const tex = useTexture('/images/edited.png') as THREE.Texture;
-  const cyl = useRef<THREE.Mesh | null>(null);
+  const cylRef = useRef<THREE.Mesh | null>(null);
 
   useFrame((_, delta) => {
-    const speedFactor = 0.5; // Adjust to control rotation speed
-    if (cyl.current) {
-      cyl.current.rotation.y += delta * speedFactor;
+    const speedFactor = 0.3; // Adjust to control rotation speed
+    if (cylRef.current) {
+      cylRef.current.rotation.y += delta * speedFactor;
     }
   });
 
   // Configure texture wrapping
-  tex.wrapS = THREE.RepeatWrapping; // Repeat the texture horizontally
-  tex.wrapT = THREE.ClampToEdgeWrapping; // Clamp the texture vertically
-  tex.repeat.set(1, 1); // No repeat to match a single side
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.ClampToEdgeWrapping;
+  tex.repeat.set(1, 1);
 
   return (
-    <group rotation={[0.3, 1.55, 0.35]} position={[0, 8.5, 0]}>
-      <mesh ref={cyl}>
-        <cylinderGeometry args={[6, 6, 12, 36, 1, true]} />  {/* Adjusted size */}
+    <motion.group
+      rotation={[0, 0, 0]}
+      position={[0, 0, 0]}
+      variants={container(0.5)} // Apply motion.js animation to the cylinder
+      initial="hidden"
+      animate="visible"
+    >
+      <mesh ref={cylRef}>
+        <cylinderGeometry args={[10, 10, 20, 35, 1, true]} />
         <meshStandardMaterial
           map={tex}
           side={THREE.DoubleSide}
@@ -35,20 +42,28 @@ const Cyl: React.FC = () => {
           metalness={0.5}
         />
       </mesh>
-    </group>
+    </motion.group>
   );
 };
 
 const Cylinder_shape: React.FC = () => {
   return (
-    <Canvas 
-      dpr={[1, 2]} 
-      gl={{ antialias: true }} 
-      camera={{ position: [0, 0, 15], near: 0.1, far: 100 }} // Adjust camera settings
+    <Canvas
+      dpr={[1, 2]}
+      gl={{ antialias: true }}
+      camera={{ position: [0, 0, 15], near: 0.1, far: 100 }}
+      style={{ width: '100%', height: '100%', margin: '0', padding: '0' }}
     >
-      <OrbitControls enableZoom={false}/>
+      <OrbitControls 
+        enableZoom={false} 
+        enablePan={false}
+        enableRotate={false}
+      />
+      
       <ambientLight intensity={4} />
+      
       <Cyl />
+    
     </Canvas>
   );
 };
