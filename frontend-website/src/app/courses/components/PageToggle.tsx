@@ -30,7 +30,11 @@ export default function PageToggle({ currentPage, totalPages }: PageToggleProps)
 
   function handlePageChange(page: number) {
       const params = new URLSearchParams(searchParams);
-      params.set('page', page.toString());
+      if (page === 1) {
+        params.delete("page");
+      }  else {
+        params.set('page', page.toString());
+      }
       startTransition(() => {
         router.push(`${pathname}?${params.toString()}`);
       })
