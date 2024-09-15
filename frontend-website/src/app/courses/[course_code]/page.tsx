@@ -19,18 +19,6 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const [latestTerm, setLatestTerm] = useState<string>(""); // this is normal name eg, 2024-25 Term 1
   const [latestTermId, setLatestTermId] = useState<string>(""); // this is uuid
 
-  const getLatestTerm = async () => {
-    const { data: latestTerm, error: latestTermError } = await supabase
-      .rpc('get_latest_term') // call the custom rpc supabase sql function
-      .single();
-  
-    if (latestTermError) {
-      console.error('Error fetching latest term:', latestTermError.message);
-      return null;
-    }
-    return latestTerm;
-  }
-
   async function getSectionDetails(course_code: string, termId: string) {
     // Step 1: Find the course_id using course_code from the course_info table
     const { data: courseInfo, error: courseInfoError } = await supabase
