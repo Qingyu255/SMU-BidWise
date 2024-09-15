@@ -64,7 +64,7 @@ export default async function Page({ params }: { params: { course_code: string }
       <span>This page should contain other info like maybe a timetable depiction of available sections, section details, availability, etc.</span>
 
       <div>
-        <h2>Available Sections</h2>
+        <h2>Available Sections: - Shows both 23-24 T2 and 24-25T1 - TODO: add filter for term</h2>
         <ul>
           {sections.map((section, index) => (
             <li key={index}>
