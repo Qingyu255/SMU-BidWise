@@ -12,23 +12,26 @@ const fetchFilterOptions = async (): Promise<FilterOptions> => {
     const { data: careerData, error: careerError } = await supabase
         .from("course_info")
         .select("career")
+        .neq('career', 'Course Career');
     if (careerError) {
         throw careerError;
     }
     const distinctCareers = [...new Set(careerData
-        .map((item: { career: string }) => item.career))]
-        .filter((item => (item !== "Course Career")));
+        .map((item: { career: string }) => item.career))];
+        // .filter((item => (item !== "Course Career")));
 
     const { data: gradingData, error: gradingError } = await supabase
         .from("course_info")
         .select("grading_basis")
+        .neq('grading_basis', "Not Printed")
         .order("grading_basis");
+        
     if (gradingError) {
         throw gradingError;
     }
     const distinctGradingBasis = [...new Set(gradingData
-        .map((item: { grading_basis: string }) => item.grading_basis))]
-        .filter((item => (item !== "Not Printed")));
+        .map((item: { grading_basis: string }) => item.grading_basis))];
+        // .filter((item => (item !== "Not Printed")));
 
     const { data: unitsData, error: unitsError } = await supabase
         .from("course_info")
