@@ -1,8 +1,5 @@
 // Import necessary libraries
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client
-const supabase = createClient('https://qwlcflxsmsozzgdmcmco.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3bGNmbHhzbXNvenpnZG1jbWNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU5MzU5NjMsImV4cCI6MjA0MTUxMTk2M30.ANJBVw0uCw4wqsXXpbJbdXm4S6L8KXPbdF8KpNFBvn0');
+import createClient  from '@/utils/supabase/server';
 
 // Function to extract numeric part from section code for sorting
 function extractNumericPart(section: string): number {
@@ -12,6 +9,9 @@ function extractNumericPart(section: string): number {
 
 // Function to get section details by course_code
 async function getSectionDetails(course_code: string) {
+  // initialise supabase client
+  const supabase = createClient();
+
   // Step 1: Find the course_id using course_code from the course_info table
   const { data: courseInfo, error: courseInfoError } = await supabase
     .from('course_info')
