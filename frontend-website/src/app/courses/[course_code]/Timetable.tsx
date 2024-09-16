@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 const Timetable = ({ professorClasses, onClassSelect }: any) => {
-  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
 
+  const [selectedClassSection, setSelectedClassSection] = useState<string | null>(null);
   // Map short form day names to full names used in timetable
   const dayMapping: { [key: string]: string } = {
     Mon: 'Monday',
@@ -129,12 +129,11 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
     justifyContent: 'center',
   };
 
-  const buttonHoverStyle: React.CSSProperties = {
-    backgroundColor: '#218838',
-  };
+  
 
   const handleClassSelect = (classItem: any) => {
-    setSelectedClassId(classItem.id);
+
+    setSelectedClassSection(classItem.section);
     onClassSelect(classItem);
   };
 
@@ -165,6 +164,8 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
 
                       // Calculate the height of the button
                       const buttonHeight = (endOffset - startOffset) * rowHeight;
+                      console.log(selectedClassSection)
+         
 
                       return (
                         <div key={index} style={{ position: 'relative', height: `${rowHeight}px` }}>
@@ -174,19 +175,11 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
                               top: `${startOffset * rowHeight}px`,
                               height: `${buttonHeight}px`,
                               backgroundColor:
-                                selectedClassId === classItem.id ? '#6c757d' : buttonStyle.backgroundColor,
+                                selectedClassSection === classItem.section ? '#6c757d' : buttonStyle.backgroundColor,
                             }}
-                            onMouseEnter={(e: any) => {
-                              e.target.style.backgroundColor = buttonHoverStyle.backgroundColor;
-                              e.target.style.transform = 'translateY(-3px)';
-                            }}
-                            onMouseLeave={(e: any) => {
-                              e.target.style.backgroundColor =
-                                selectedClassId === classItem.id ? '#6c757d' : buttonStyle.backgroundColor;
-                              e.target.style.transform = 'translateY(0)';
-                            }}
+                            
                             onClick={() => handleClassSelect(classItem)}
-                            disabled={selectedClassId === classItem.id}
+                            disabled={selectedClassSection === classItem.section}
                           >
                             {classItem.name}
                             <div>{`Section: ${classItem.section}`} {`Venue: ${classItem.venue}`}</div>
