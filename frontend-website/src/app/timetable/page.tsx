@@ -1,8 +1,6 @@
 "use client"
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { professors } from './data';
-import ProfessorList from './professorlist';
 import Timetable from '../courses/[course_code]/Timetable';
 import MyTimetable from './mytimetable';
 
@@ -41,14 +39,8 @@ export default function Page() {
 
   return (
     <div className="App" style={appStyle}>
-      <h1>Professor Timetable Selector</h1>
-      <ProfessorList professors={professors} onSelect={handleProfessorSelect} />
-      {selectedProfessor && (
-        <Timetable
-          professorClasses={selectedProfessor.classes}
-          onClassSelect={handleClassSelect}
-        />
-      )}
+     
+   
       <MyTimetable selectedClasses={selectedClasses} />
     </div>
   );
