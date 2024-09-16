@@ -33,7 +33,7 @@ const WelcomeMessage = () => {
         fontSize: '2.5rem',
         fontWeight: 'bold',
         lineHeight: '1.2',
-      }}>Welcome to SMOODS</h1>
+      }}>Welcome to SMU BidWise</h1>
       <p style={{
         fontSize: '1.2rem',
         lineHeight: '1.4',

@@ -1,6 +1,7 @@
 import Cylinder_shape from '../components/cylinder-threejs/cylinder';
 import About from '../components/homepage/About';
-import WelcomeMessage from '../components/homepage/Welcome';  // Import the new WelcomeMessage component
+import WelcomeMessage from '../components/homepage/Welcome'; 
+import Cards from '../components/homepage/Cards'
 
 export default function Home() {
   return (
@@ -34,9 +35,12 @@ export default function Home() {
       </div>
 
       {/* About Section without background Cylinder */}
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <About />
-      </div>
+      <About />
+      
+
+      {/* Cards Section */}
+      <Cards />
+
     
     </div>
   );

@@ -32,9 +32,8 @@ const About = () => {
     };
 
     return (
-        <>
+        <div style={{ padding: '2rem', textAlign: 'center' }}> {/* Implemented the styling here */}
             <motion.div>
-                
                 <motion.p 
                     variants={container(1)}
                     initial="hidden"
@@ -52,20 +51,17 @@ const About = () => {
                 >
                     Overview
                 </motion.h2>
-            
             </motion.div>
             
             <motion.p
-                    variants={container(2)}
-                    initial="hidden"
-                    animate="visible"         
+                variants={container(2)}
+                initial="hidden"
+                animate="visible"
             >
-                Welcome to SMOODS, the innovative platform crafted to revolutionize the module bidding experience for Singapore Management University (SMU) students. Designed with cutting-edge technology and user-centric features, SMOODS simplifies and enhances the academic planning process. Our platform offers real-time bid analytics, an intuitive timetable interface, and personalized academic tracking to empower students in making informed decisions. Seamlessly integrate your academic journey with advanced data visualizations, community discussions, and up-to-date information on course availability and bidding trends. SMOODS consolidates essential tools, including visually engaging timetables, senior roadmaps, bid price analytics, and a graduation tracker, into one cohesive experience. Elevate your academic planning and stay on track with SMOODS, where technology meets academic success.
+                Welcome to SMU BidWise, the platform designed to transform the module bidding experience for SMU students. With real-time bid analytics, personalized insights, and an intuitive timetable interface, SMU BidWise simplifies academic planning. Access tools like senior roadmaps, bid price trends, and a graduation tracker to make informed decisions. Stay ahead with up-to-date course availability and data visualizations, all in one seamless experience.
             </motion.p>
-        </>
+        </div>
     );
 }
 
 export default About;
-
-
