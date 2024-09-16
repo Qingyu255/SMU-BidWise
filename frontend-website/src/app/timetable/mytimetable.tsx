@@ -59,7 +59,7 @@ const MyTimetable = ({ selectedClasses }: any) => {
     width: '100%',
     borderCollapse: 'collapse',
     margin: '20px 0',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#d9d7d7',
     boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
     borderRadius: '10px',
     overflow: 'hidden',
@@ -79,7 +79,7 @@ const MyTimetable = ({ selectedClasses }: any) => {
   const tdStyle: React.CSSProperties = {
     textAlign: 'center',
     padding: '0',
-    border: '1px solid #e0e0e0',
+    border: '1px solid #9e9e9e',
     fontSize: '14px',
     color: '#333333',
     verticalAlign: 'middle',
