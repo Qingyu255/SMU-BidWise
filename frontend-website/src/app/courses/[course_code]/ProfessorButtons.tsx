@@ -1,5 +1,6 @@
 import React from 'react';
 import { Combobox } from '@/components/Combobox';
+import { Separator } from '@/components/ui/separator';
 
 interface ProfessorButtonsProps {
   professors: string[];
@@ -9,7 +10,8 @@ interface ProfessorButtonsProps {
 const ProfessorButtons: React.FC<ProfessorButtonsProps> = ({ professors, onProfessorClick }) => {
   return (
     <div>
-      <h2>Select a Professor</h2>
+      <Separator/>
+      <div className='font-semibold py-2'>View Sections by Professor: </div>
       <Combobox selectedValue='' onSelect={(professor: string) => onProfessorClick(professor)} category='Professor' options={professors}/>
       {/* <div>
         {professors.map((professor, index) => (

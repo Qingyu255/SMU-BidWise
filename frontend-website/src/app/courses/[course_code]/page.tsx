@@ -95,9 +95,6 @@ export default function Page({ params }: { params: { course_code: string }}) {
     })();
   }, [course_code]);
 
-
-  
-
   return (
     <>
       {loading? (
@@ -107,6 +104,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
       ) : (
       <div>
         <div>Course Code: {course_code.toUpperCase()}</div>
+        <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} />
         {selectedProfessor && (
           <>
             <div>Selected Professor: {selectedProfessor}</div>
@@ -121,7 +119,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
             <NoResultCard searchCategory={"sections for " + latestTerm}/>
           ) : (
             <div>
-              <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} />
+              {/* <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} /> */}
               <h2>Available Sections for latest term - {latestTerm}:</h2>
               <ul>
                 {sections.map((section, index) => (
