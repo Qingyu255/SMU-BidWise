@@ -55,6 +55,13 @@ export default function Page({ params }: { params: { course_code: string }}) {
   }
 
   const updateTimetable = async (professor: string) => {
+    if (professor == "") { // meaning user cleared professor selection
+      // fetch all again
+      const { sections, professors }: any = await getSectionDetails(course_code, latestTermId);
+      setSections(sections);
+      setSelectedProfessor(professor);
+      return;
+    }
     console.log(`Fetching sections for professor: ${professor}`);
     const { sections } = await getSectionDetails(course_code, latestTermId);
     const filteredSections = sections.filter(section => section.instructor === professor);
