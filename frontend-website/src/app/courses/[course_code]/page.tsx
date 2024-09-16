@@ -5,6 +5,7 @@ import createClient  from '@/utils/supabase/client';
 import ProfessorButtons from './ProfessorButtons'; 
 import Timetable from './Timetable'; // Import Timetable component
 import { getLatestTerm } from '@/utils/supabase/supabaseRpcFunctions';
+import NoResultCard from '@/components/NoResultCard';
 
 const supabase = createClient();
 
@@ -77,14 +78,16 @@ export default function Page({ params }: { params: { course_code: string }}) {
       console.log('Professors:', professors);
     })();
   }, [course_code]);
+
+
   
 
   return (
     <>
       <div>Course Code: {course_code.toUpperCase()}</div>
       {/* <span>This page should contain other info like maybe a timetable depiction of available sections, section details, availability, etc.</span> */}
-      <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} />
-      
+      {/* <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} /> */}
+
       {selectedProfessor && (
         <>
           <div>Selected Professor: {selectedProfessor}</div>
@@ -94,16 +97,24 @@ export default function Page({ params }: { params: { course_code: string }}) {
           />
         </>
       )}
-      <div>
-        <h2>Available Sections for latest term - {latestTerm}:</h2>
-        <ul>
-          {sections.map((section, index) => (
-            <li key={index}>
-              <strong>Section:</strong> {section.section}, <strong>Day:</strong> {section.day}, <strong>Start Time:</strong> {section.start_time}, <strong>End Time:</strong> {section.end_time},  <strong>Professor:</strong> {section.instructor}
-            </li>
-          ))}
-        </ul>
-      </div>
+      {((!sections || sections.length === 0) && latestTerm) ?
+        (
+          <NoResultCard searchCategory={"sections for " + latestTerm}/>
+        ) : (
+          <div>
+            <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} />
+            <h2>Available Sections for latest term - {latestTerm}:</h2>
+            <ul>
+              {sections.map((section, index) => (
+                <li key={index}>
+                  <strong>Section:</strong> {section.section}, <strong>Day:</strong> {section.day}, <strong>Start Time:</strong> {section.start_time}, <strong>End Time:</strong> {section.end_time},  <strong>Professor:</strong> {section.instructor}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+      
     </>
   );
 }
