@@ -1,11 +1,12 @@
 "use client";
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect, use } from 'react'; 
 // import { createClient } from '@supabase/supabase-js';
 import createClient  from '@/utils/supabase/client';
 import ProfessorButtons from './ProfessorButtons'; 
 import Timetable from './Timetable'; // Import Timetable component
 import { getLatestTerm } from '@/utils/supabase/supabaseRpcFunctions';
 import NoResultCard from '@/components/NoResultCard';
+import { Spinner } from '@nextui-org/react';
 
 const supabase = createClient();
 
@@ -17,6 +18,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const [selectedProfessor, setSelectedProfessor] = useState<string | null>(null);
   const [latestTerm, setLatestTerm] = useState<string>(""); // this is normal name eg, 2024-25 Term 1
   const [latestTermId, setLatestTermId] = useState<string>(""); // this is uuid
+  const [loading, setLoading] = useState<boolean>(true);
 
   async function getSectionDetails(course_code: string, termId: string) {
     // Step 1: Find the course_id using course_code from the course_info table
@@ -76,6 +78,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
       setSections(sections);
       setProfessors(professors);
       console.log('Professors:', professors);
+      setLoading(false);
     })();
   }, [course_code]);
 
@@ -84,37 +87,40 @@ export default function Page({ params }: { params: { course_code: string }}) {
 
   return (
     <>
-      <div>Course Code: {course_code.toUpperCase()}</div>
-      {/* <span>This page should contain other info like maybe a timetable depiction of available sections, section details, availability, etc.</span> */}
-      {/* <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} /> */}
-
-      {selectedProfessor && (
-        <>
-          <div>Selected Professor: {selectedProfessor}</div>
-          <Timetable
-            professorClasses={sections} // Make sure sections contain the filtered data
-            onClassSelect={(classItem: any) => console.log('Class selected:', classItem)}
-          />
-        </>
-      )}
-      {((!sections || sections.length === 0) && latestTerm) ?
-        (
-          <NoResultCard searchCategory={"sections for " + latestTerm}/>
-        ) : (
-          <div>
-            <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} />
-            <h2>Available Sections for latest term - {latestTerm}:</h2>
-            <ul>
-              {sections.map((section, index) => (
-                <li key={index}>
-                  <strong>Section:</strong> {section.section}, <strong>Day:</strong> {section.day}, <strong>Start Time:</strong> {section.start_time}, <strong>End Time:</strong> {section.end_time},  <strong>Professor:</strong> {section.instructor}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )
-      }
-      
+      {loading? (
+        <div className='w-100 h-100 flex justify-center items-center'>
+          <Spinner color='default'/>
+        </div>
+      ) : (
+      <div>
+        <div>Course Code: {course_code.toUpperCase()}</div>
+        {selectedProfessor && (
+          <>
+            <div>Selected Professor: {selectedProfessor}</div>
+            <Timetable
+              professorClasses={sections} // Make sure sections contain the filtered data
+              onClassSelect={(classItem: any) => console.log('Class selected:', classItem)}
+            />
+          </>
+        )}
+        {((!sections || sections.length === 0) && latestTerm) ?
+          (
+            <NoResultCard searchCategory={"sections for " + latestTerm}/>
+          ) : (
+            <div>
+              <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} />
+              <h2>Available Sections for latest term - {latestTerm}:</h2>
+              <ul>
+                {sections.map((section, index) => (
+                  <li key={index}>
+                    <strong>Section:</strong> {section.section}, <strong>Day:</strong> {section.day}, <strong>Start Time:</strong> {section.start_time}, <strong>End Time:</strong> {section.end_time},  <strong>Professor:</strong> {section.instructor}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>)}
     </>
   );
 }
