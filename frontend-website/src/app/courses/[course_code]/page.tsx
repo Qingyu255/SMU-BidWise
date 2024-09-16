@@ -67,18 +67,24 @@ export default function Page({ params }: { params: { course_code: string }}) {
   
   useEffect(() => {
     (async () => {
-      const latestTermObj: any = await getLatestTerm();
-      const latestTermStr = latestTermObj.term;
-      const latestTermIdStr = latestTermObj.id;
-      setLatestTerm(latestTermStr)
-      setLatestTermId(latestTermIdStr) // right now we are only showing the latest undergrad terms 
+      try {
+        const latestTermObj: any = await getLatestTerm();
+        const latestTermStr = latestTermObj.term;
+        const latestTermIdStr = latestTermObj.id;
+        setLatestTerm(latestTermStr)
+        setLatestTermId(latestTermIdStr) // right now we are only showing the latest undergrad terms 
 
-      console.log('Fetching sections and professors for course_code:' + course_code + "for latest term: " + latestTermStr);
-      const { sections, professors }: any = await getSectionDetails(course_code, latestTermIdStr);
-      setSections(sections);
-      setProfessors(professors);
-      console.log('Professors:', professors);
-      setLoading(false);
+        console.log('Fetching sections and professors for course_code:' + course_code + "for latest term: " + latestTermStr);
+        const { sections, professors }: any = await getSectionDetails(course_code, latestTermIdStr);
+        setSections(sections);
+        setProfessors(professors);
+        console.log('Professors:', professors);
+        // await setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false)
+      }
     })();
   }, [course_code]);
 
@@ -103,7 +109,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
             />
           </>
         )}
-        {((!sections || sections.length === 0) && latestTerm) ?
+        {((!sections || sections.length === 0)) ?
           (
             <NoResultCard searchCategory={"sections for " + latestTerm}/>
           ) : (
