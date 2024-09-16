@@ -104,24 +104,21 @@ export default function Page({ params }: { params: { course_code: string }}) {
       ) : (
       <div>
         <div>Course Code: {course_code.toUpperCase()}</div>
-        <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} />
-        {selectedProfessor && (
-          <>
-            <div>Selected Professor: {selectedProfessor}</div>
-            <Timetable
-              professorClasses={sections} // Make sure sections contain the filtered data
-              onClassSelect={(classItem: any) => console.log('Class selected:', classItem)}
-            />
-          </>
-        )}
-        {((!sections || sections.length === 0)) ?
-          (
-            <NoResultCard searchCategory={"sections for " + latestTerm}/>
-          ) : (
-            <div>
-              {/* <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} /> */}
-              <h2>Available Sections for latest term - {latestTerm}:</h2>
-              <ul>
+          {((!sections || sections.length === 0)) ?
+            (
+              <NoResultCard searchCategory={"sections for " + latestTerm}/>
+            ) : (
+              <div>
+                <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} />
+                {selectedProfessor && (
+                  <Timetable
+                    professorClasses={sections} // Make sure sections contain the filtered data
+                    onClassSelect={(classItem: any) => console.log('Class selected:', classItem)}
+                  />
+                )}
+                
+                <h2>Available Sections for latest term - {latestTerm}:</h2>
+                <ul>
                 {sections.map((section, index) => (
                   <li key={index}>
                     <strong>Section:</strong> {section.section}, <strong>Day:</strong> {section.day}, <strong>Start Time:</strong> {section.start_time}, <strong>End Time:</strong> {section.end_time},  <strong>Professor:</strong> {section.instructor}
