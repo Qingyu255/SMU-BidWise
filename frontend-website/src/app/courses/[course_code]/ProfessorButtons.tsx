@@ -1,4 +1,5 @@
 import React from 'react';
+import { Combobox } from '@/components/Combobox';
 
 interface ProfessorButtonsProps {
   professors: string[];
@@ -9,7 +10,8 @@ const ProfessorButtons: React.FC<ProfessorButtonsProps> = ({ professors, onProfe
   return (
     <div>
       <h2>Select a Professor</h2>
-      <div>
+      <Combobox selectedValue='' onSelect={(professor: string) => onProfessorClick(professor)} category='Professor' options={professors}/>
+      {/* <div>
         {professors.map((professor, index) => (
           <button key={index} onClick={() => onProfessorClick(professor)} 
           style={{
@@ -26,7 +28,7 @@ const ProfessorButtons: React.FC<ProfessorButtonsProps> = ({ professors, onProfe
             {professor}
           </button>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
