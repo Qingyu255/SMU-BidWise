@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useTimetable } from '../courses/[course_code]/TimetableContext';
+import { useTimetable } from '../../components/timetableProvider';
 import { button } from '@nextui-org/react';
 
 const dayMapping: { [key: string]: string } = {

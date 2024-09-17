@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useTimetable } from './TimetableContext';
+import { useTimetable } from '../../../components/timetableProvider';
 
-const Timetable = ({ professorClasses }: any) => {
-  const { addClass,selectedClasses } = useTimetable();
+const Timetable = ({ professorClasses, onClassSelect }: any) => {
+  const { addClass, removeClass, selectedClasses } = useTimetable();
   
   const [selectedClassSection, setSelectedClassSection] = useState<string | null>(null);
 
@@ -69,7 +69,7 @@ const Timetable = ({ professorClasses }: any) => {
     fixedTimeSlots.forEach((slot, index) => {
       const slotStart = parseTimeSlots(slot.split(' - ')[0]);
       const slotEnd = parseTimeSlots(slot.split(' - ')[1]);
-      console.log(slotStart,slotEnd)
+     
 
       // Check if the slot overlaps with the class time
       if (startMinutes >= slotStart && endMinutes > slotStart && startMinutes < slotEnd) {
@@ -118,6 +118,7 @@ const Timetable = ({ professorClasses }: any) => {
     verticalAlign: 'middle',
     position: 'relative',
     height: `${rowHeight}px`,
+    overflow: 'visible'
   };
 
   const buttonStyle: React.CSSProperties = {
@@ -136,19 +137,27 @@ const Timetable = ({ professorClasses }: any) => {
     alignItems: 'center',
     justifyContent: 'center',
   };
-
-  
+ 
 
   const handleClassSelect = (classItem: any) => {
 
-    setSelectedClassSection(classItem.section);
 
     addClass(classItem);
-    console.log(selectedClasses)
+ 
+    const isSelected = Array.from(selectedClasses).some(
+      (selected: any) => selected.id === classItem.id
+    );
 
+    if (isSelected) {
+      // Remove class if it's already selected
+      removeClass(classItem);
+    } else {
+      // Add class if it's not selected
+      addClass(classItem);
+    }
+    console.log(Array.from(selectedClasses)); 
     
   };
-
   return (
     <div style={{ overflowX: 'auto', padding: '0 10px' }}>
       <table style={tableStyle}>
@@ -176,7 +185,8 @@ const Timetable = ({ professorClasses }: any) => {
 
                       // Calculate the height of the button
                       const buttonHeight = (endOffset - startOffset) * rowHeight;
-                      console.log(`Class: ${classItem.section}, Start Offset: ${startOffset}, End Offset: ${endOffset}, Button Height: ${buttonHeight}, Top Position: ${startOffset * rowHeight}`);
+                      console.log("Selected classes:", selectedClasses);
+
 
          
 
@@ -185,14 +195,17 @@ const Timetable = ({ professorClasses }: any) => {
                           <button
                             style={{
                               ...buttonStyle,
+                              
                               top: `${startOffset * rowHeight}px`,
                               height: `${buttonHeight}px`,
-                              backgroundColor:
-                                selectedClassSection === classItem.section ? '#6c757d' : buttonStyle.backgroundColor,
+                              backgroundColor:Array.from(selectedClasses).some(
+                                (selected: any) => selected === classItem.id
+                              ) ? '#6c757d' : buttonStyle.backgroundColor,
+                             
                             }}
                             
                             onClick={() => handleClassSelect(classItem)}
-                            disabled={selectedClassSection === classItem.section}
+                            disabled={false}
                           >
                             {classItem.name}
                             <div>{`Section: ${classItem.section}`} {`Venue: ${classItem.venue}`}</div>

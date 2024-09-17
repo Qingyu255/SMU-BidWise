@@ -6,7 +6,7 @@ import Timetable from './Timetable'; // Import Timetable component
 import { getLatestTerm } from '@/utils/supabase/supabaseRpcFunctions';
 import NoResultCard from '@/components/NoResultCard';
 import { Spinner } from '@nextui-org/react';
-import { TimetableProvider } from './TimetableContext';
+import { TimetableProvider } from '../../../components/timetableProvider';
 
 const supabase = createClient();
 
@@ -38,15 +38,16 @@ export default function Page({ params }: { params: { course_code: string }}) {
   
     const { data: sections, error: sectionsError } = await supabase
       .from('sections')
-      .select('section, day, start_time, end_time, instructor, venue')
+      .select('id, section, day, start_time, end_time, instructor, venue')
       .eq('course_id', course_id)
       .eq("term", termId);
+      
   
     if (sectionsError) {
       console.error('Error fetching section details:', sectionsError.message);
       return { sections: [], professors: [] };
     }
-  
+    console.log('Fetched sections:', sections); 
     const professors = Array.from(new Set(sections.map(section => section.instructor)));
   
     return { sections, professors };

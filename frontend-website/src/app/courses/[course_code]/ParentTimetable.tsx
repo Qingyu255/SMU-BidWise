@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { TimetableProvider } from './TimetableContext';
+import { TimetableProvider } from '../../../components/timetableProvider';
 import Timetable from './Timetable';
 import MyTimetable from '../../timetable/mytimetable';
 
