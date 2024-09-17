@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useTimetable } from './TimetableContext';
 
-const Timetable = ({ professorClasses, onClassSelect }: any) => {
-
+const Timetable = ({ professorClasses }: any) => {
+  const { addClass,selectedClasses } = useTimetable();
+  
   const [selectedClassSection, setSelectedClassSection] = useState<string | null>(null);
+
   // Map short form day names to full names used in timetable
   const dayMapping: { [key: string]: string } = {
     Mon: 'Monday',
@@ -28,6 +31,7 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
     '19:00 - 20:00',
     '20:00 - 21:00',
     '21:00 - 22:00',
+    '22:00 - 23:00',
   ];
 
   // Convert time to a comparable format
@@ -58,14 +62,17 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
   professorClasses.forEach((classItem: any) => {
     const startMinutes = parseTime(classItem.start_time);
     const endMinutes = parseTime(classItem.end_time);
+    console.log(`Class start: ${startMinutes}, end: ${endMinutes}`);
+
 
     // Find relevant time slots for the class
     fixedTimeSlots.forEach((slot, index) => {
       const slotStart = parseTimeSlots(slot.split(' - ')[0]);
       const slotEnd = parseTimeSlots(slot.split(' - ')[1]);
+      console.log(slotStart,slotEnd)
 
       // Check if the slot overlaps with the class time
-      if (startMinutes < slotEnd && endMinutes > slotStart) {
+      if (startMinutes >= slotStart && endMinutes > slotStart && startMinutes < slotEnd) {
         const timeSlot: any = timetable[index];
         if (timeSlot) {
           timeSlot[dayMapping[classItem.day]].push({
@@ -74,6 +81,7 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
             endMinutes,
             startOffset: (startMinutes - slotStart) / 60,
             endOffset: (endMinutes - slotStart) / 60,
+            
           });
         }
       }
@@ -134,7 +142,11 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
   const handleClassSelect = (classItem: any) => {
 
     setSelectedClassSection(classItem.section);
-    onClassSelect(classItem);
+
+    addClass(classItem);
+    console.log(selectedClasses)
+
+    
   };
 
   return (
@@ -164,7 +176,8 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
 
                       // Calculate the height of the button
                       const buttonHeight = (endOffset - startOffset) * rowHeight;
-                      console.log(selectedClassSection)
+                      console.log(`Class: ${classItem.section}, Start Offset: ${startOffset}, End Offset: ${endOffset}, Button Height: ${buttonHeight}, Top Position: ${startOffset * rowHeight}`);
+
          
 
                       return (

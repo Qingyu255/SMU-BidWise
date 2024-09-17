@@ -7,6 +7,7 @@ import Timetable from './Timetable'; // Import Timetable component
 import { getLatestTerm } from '@/utils/supabase/supabaseRpcFunctions';
 import NoResultCard from '@/components/NoResultCard';
 import { Spinner } from '@nextui-org/react';
+import { TimetableProvider } from './TimetableContext';
 
 const supabase = createClient();
 
@@ -62,11 +63,11 @@ export default function Page({ params }: { params: { course_code: string }}) {
       setSelectedProfessor(professor);
       return;
     }
-    console.log(`Fetching sections for professor: ${professor}`);
+  
     const { sections } = await getSectionDetails(course_code, latestTermId);
     const filteredSections = sections.filter(section => section.instructor === professor);
     
-    console.log('Filtered sections:', filteredSections);
+
   
     setSelectedProfessor(professor);
     setSections(filteredSections); // Update state with filtered sections
@@ -110,11 +111,13 @@ export default function Page({ params }: { params: { course_code: string }}) {
         {selectedProfessor && (
           <>
             <div>Selected Professor: {selectedProfessor}</div>
+            <TimetableProvider>
             <Timetable
               professorClasses={sections} // Make sure sections contain the filtered data
-              onClassSelect={(classItem: any) => console.log('Class selected:', classItem)}
-            />
+              />
+            </TimetableProvider>
           </>
+          
         )}
         {((!sections || sections.length === 0)) ?
           (

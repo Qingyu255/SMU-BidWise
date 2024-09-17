@@ -1,4 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useTimetable } from '../courses/[course_code]/TimetableContext';
+import { button } from '@nextui-org/react';
+
+const dayMapping: { [key: string]: string } = {
+  Mon: 'Monday',
+  Tue: 'Tuesday',
+  Wed: 'Wednesday',
+  Thu: 'Thursday',
+  Fri: 'Friday',
+};
 
 const fixedTimeSlots = [
   '08:00 - 09:00',
@@ -15,15 +25,27 @@ const fixedTimeSlots = [
   '19:00 - 20:00',
   '20:00 - 21:00',
   '21:00 - 22:00',
+  '22:00 - 23:00',
 ];
 
-const parseTime = (time: any) => {
+// Convert time to a comparable format
+const parseTimeSlots = (time: string) => {
   const [hours, minutes] = time.split(':').map(Number);
   return hours * 60 + minutes; // Convert to minutes
 };
 
-const MyTimetable = ({ selectedClasses }: any) => {
+const parseTime = (time: string) => {
+  const [hours, minutes, seconds] = time.split(':').map(Number);
+  return hours * 60 + minutes + seconds / 60; // Convert to minutes
+};
+const rowHeight = 50; // Height of each row in pixels
+
+const MyTimetable: React.FC = () => {
+  const { selectedClasses } = useTimetable();
+  console.log(selectedClasses);
+ 
   // Initialize timetable structure
+  
   const timetable: any = fixedTimeSlots.map((time) => ({
     time,
     Monday: [],
@@ -35,32 +57,36 @@ const MyTimetable = ({ selectedClasses }: any) => {
 
   // Add selected classes to timetable
   selectedClasses.forEach((classItem: any) => {
-    const [classStart, classEnd] = classItem.time.split(' - ');
-    const startMinutes = parseTime(classStart);
-    const endMinutes = parseTime(classEnd);
+    const startMinutes = parseTime(classItem.start_time);
+    const endMinutes = parseTime(classItem.end_time);
 
     // Find relevant time slots for the class
     fixedTimeSlots.forEach((slot, index) => {
-      const slotStart = parseTime(slot.split(' - ')[0]);
-      const slotEnd = parseTime(slot.split(' - ')[1]);
+      const slotStart = parseTimeSlots(slot.split(' - ')[0]);
+      const slotEnd = parseTimeSlots(slot.split(' - ')[1]);
 
       // Check if the slot overlaps with the class time
       if (startMinutes < slotEnd && endMinutes > slotStart) {
         const timeSlot: any = timetable[index];
         if (timeSlot) {
-          timeSlot[classItem.day].push({ ...classItem, startMinutes, endMinutes });
+          timeSlot[dayMapping[classItem.day]].push({
+            ...classItem,
+            startMinutes,
+            endMinutes,
+            startOffset: (startMinutes - slotStart) / 60,
+            endOffset: (endMinutes - slotStart) / 60,
+          });
         }
       }
     });
   });
 
-  // Styling
+  // Define styles
   const tableStyle: React.CSSProperties = {
     width: '100%',
     borderCollapse: 'collapse',
     margin: '20px 0',
     backgroundColor: '#d9d7d7',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
     borderRadius: '10px',
     overflow: 'hidden',
     fontFamily: "'Roboto', sans-serif",
@@ -83,24 +109,27 @@ const MyTimetable = ({ selectedClasses }: any) => {
     fontSize: '14px',
     color: '#333333',
     verticalAlign: 'middle',
-    height: '50px',
     position: 'relative',
+    height: `${rowHeight}px`,
   };
 
-  const classBlockStyle: React.CSSProperties = {
-    position: 'absolute',
-    width: '100%',
+  const buttonStyle: React.CSSProperties = {
     backgroundColor: '#28a745',
     color: '#ffffff',
     border: 'none',
-    borderRadius: '0',
+    padding: '0',
+    borderRadius: '5px',
+    cursor: 'pointer',
     fontSize: '14px',
     fontWeight: '500',
-    textAlign: 'center',
+    transition: 'background-color 0.3s ease',
+    position: 'absolute',
+    width: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   };
+
 
   return (
     <div style={{ overflowX: 'auto', padding: '0 10px' }}>
@@ -117,33 +146,26 @@ const MyTimetable = ({ selectedClasses }: any) => {
           </tr>
         </thead>
         <tbody>
-          {timetable.map((entry: any, rowIndex: number) => (
+        {fixedTimeSlots.map((slot, rowIndex) => (
             <tr key={rowIndex}>
-              <td style={tdStyle}>{entry.time}</td>
-              {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day: string) => {
+              <td style={tdStyle}>{slot}</td>
+              {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => {
                 const classes: any = timetable[rowIndex][day];
 
                 return (
                   <td key={day} style={tdStyle}>
                     {classes.map((classItem: any, index: number) => {
-                      const { startMinutes, endMinutes } = classItem;
-
-                      // Calculate start and end positions within the slot
-                      const slotStartMinutes = parseTime(fixedTimeSlots[rowIndex].split(' - ')[0]);
-                      const slotEndMinutes = parseTime(fixedTimeSlots[rowIndex].split(' - ')[1]);
-
-                      // Calculate proportion of the block's height within the slot
-                      const startOffset = (startMinutes - slotStartMinutes) / 60;
-                      const endOffset = (endMinutes - slotStartMinutes) / 60;
-                      const blockHeight = (endOffset - startOffset) * 50; // Use the same rowHeight
-
+                      const { startOffset, endOffset } = classItem;
+                         // Calculate the height of the button
+                         const buttonHeight = (endOffset - startOffset) * rowHeight;
+                 
                       return (
                         <div key={index} style={{ position: 'relative', height: '50px' }}>
                           <div
                             style={{
-                              ...classBlockStyle,
-                              top: `${startOffset * 50}px`,
-                              height: `${blockHeight}px`,
+                              ...buttonStyle,
+                              top: `${startOffset * rowHeight}px`,
+                              height: `${buttonHeight}px`,
                               backgroundColor: '#28a745', // Set desired color here
                             }}
                           >

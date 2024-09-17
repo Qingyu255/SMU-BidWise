@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import Timetable from '../courses/[course_code]/Timetable';
 import MyTimetable from './mytimetable';
-
+import { TimetableProvider } from '../courses/[course_code]/TimetableContext';
 // Define types for your state
 interface ClassItem {
   id: number;
@@ -39,9 +39,11 @@ export default function Page() {
 
   return (
     <div className="App" style={appStyle}>
-     
+      <TimetableProvider>
+        <MyTimetable/>
+      </TimetableProvider>
    
-      <MyTimetable selectedClasses={selectedClasses} />
+      
     </div>
   );
 }
