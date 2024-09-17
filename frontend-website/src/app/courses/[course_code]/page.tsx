@@ -96,9 +96,6 @@ export default function Page({ params }: { params: { course_code: string }}) {
     })();
   }, [course_code]);
 
-
-  
-
   return (
     <>
       {loading? (
@@ -111,13 +108,11 @@ export default function Page({ params }: { params: { course_code: string }}) {
         {selectedProfessor && (
           <>
             <div>Selected Professor: {selectedProfessor}</div>
-            <TimetableProvider>
             <Timetable
               professorClasses={sections} // Make sure sections contain the filtered data
-              />
-            </TimetableProvider>
+              onClassSelect={(classItem: any) => console.log('Class selected:', classItem)}
+            />
           </>
-          
         )}
         {((!sections || sections.length === 0)) ?
           (
