@@ -4,7 +4,7 @@ export default async function Page() {
 
 
   return (
-    <>
+    <div className='overflow-hidden'>
       <div>
         Hello, this is senior roadmap.
         <br/>
@@ -12,7 +12,7 @@ export default async function Page() {
       </div>
       <Timeline/>
       
-    </>
+    </div>
   );
 }
 

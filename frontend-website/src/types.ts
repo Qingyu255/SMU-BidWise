@@ -1,6 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import { ReactNode } from 'react';
-
+import { Position, XYPosition } from '@xyflow/react';
 export interface SidebarItems {
   links: Array<{
     label: string;
@@ -74,3 +74,22 @@ export interface courseInfo {
   description: string;
   enrolment_requirements: string;
 };
+
+
+export interface NodeData {
+  id: string;
+  position: XYPosition;
+  data: {
+    label: string;
+  };
+  targetPosition?: Position; // Add this property
+  sourcePosition?: Position; // Add this property
+  selected?: boolean;
+  deletable?: boolean;
+  selectable?: boolean;
+  width?: number;
+  height?: number;
+  dragHandle?: string;
+  draggable?: boolean;
+  parentId?: string;
+}

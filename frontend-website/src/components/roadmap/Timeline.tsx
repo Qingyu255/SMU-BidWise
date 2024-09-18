@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
   ReactFlow,
   Controls,
@@ -22,198 +22,191 @@ import {
   type DefaultEdgeOptions,
   type NodeProps
 } from '@xyflow/react';
-import NumberNode from './NumberNode';
-import TextNode from './TextNode';
-import '@xyflow/react/dist/style.css';
-import MultipleConnectionNode from './MultipleConnectionNode';
 
-import '@/app/globals.css'; 
+import '@xyflow/react/dist/style.css';
+import SemNode from './SemNode';
+
+import '@/components/roadmap/roadmap.css'; 
+import createClient from '@/utils/supabase/client';
+
+
+// Colors:
+// edge: #2b78e4
+// node: #fdff00
+// sub-node: #ffe59a
  
-const initialNodes = [
+const initialNodes: Node[] = [
     {
-      id: 'senior_name',
-      sourcePosition: Position.Bottom,
-      data: { label: 'Kylene' },
-      position: { x: 0, y: 80 },
+      id: 'n1',
+      type: 'SemNode',
+      sourcePosition: Position.Left,
+      data: { label: 'Y1S1' },
+      position: { x: 0, y: 0 },
+      style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
     },
     {
-        id: 'y1s1',
-        sourcePosition: Position.Bottom,
-        data: { label: 'Y1S1' },
-        position: { x: 200, y: 200 },
+      id: 's1n1',
+      targetPosition: Position.Right,
+      data: { label: 'IS111' },
+      position: { x: -250, y: -90 },
+      style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
     },
     {
-        id: 'y1s2',
-        targetPosition: Position.Top,
-        sourcePosition: Position.Bottom,
-        data: { label: 'Y1S2' },
-        position: { x: 200, y: 280 },
+      id: 's2n1',
+      targetPosition: Position.Right,
+      data: { label: 'IS114' },
+      position: { x: -250, y: -45 },
+      style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
     },
     {
-        id: 'y2s1',
-        targetPosition: Position.Top,
-        sourcePosition: Position.Bottom,
-        data: { label: 'Y2S1' },
-        position: { x: -200, y: 380 },
+      id: 's3n1',
+      targetPosition: Position.Right,
+      data: { label: 'BGS' },
+      position: { x: -250, y: 0 },
+      style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
     },
     {
-        id: 'y2s2',
-        targetPosition: Position.Top,
-        sourcePosition: Position.Bottom,
-        data: { label: 'Y2S2' },
-        position: { x: -200, y: 460 },
+      id: 's4n1',
+      targetPosition: Position.Right,
+      data: { label: 'MC' },
+      position: { x: -250, y: 45 },
+      style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
     },
     {
-        id: 'y3s1',
-        targetPosition: Position.Top,
-        sourcePosition: Position.Bottom,
-        data: { label: 'Y3S1' },
-        position: { x: 200, y: 560 },
+      id: 's5n1',
+      targetPosition: Position.Right,
+      data: { label: 'STATS' },
+      position: { x: -250, y: 90 },
+      style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+    },
+
+    {
+      id: 'n2',
+      type: 'SemNode',
+      targetPosition: Position.Left,
+      sourcePosition: Position.Left,
+      data: { label: 'Y1S2' },
+      position: { x: 250, y: 200 },
+      style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
     },
     {
-        id: 'y3s2',
-        targetPosition: Position.Top,
-        sourcePosition: Position.Bottom,
-        data: { label: 'Y3S2' },
-        position: { x: 200, y: 640 },
+      id: 's1n2',
+      targetPosition: Position.Right,
+      data: { label: 'IS112' },
+      position: { x: 250, y: -90 },
+      style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
     },
     {
-        id: 'y4s1',
-        targetPosition: Position.Top,
-        sourcePosition: Position.Bottom,
-        data: { label: 'Y4S1' },
-        position: { x: -200, y: 740 },
+      id: 's2n2',
+      targetPosition: Position.Right,
+      data: { label: 'IS113' },
+      position: { x: 250, y: -45 },
+      style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
     },
     {
-        id: 'y4s2',
-        targetPosition: Position.Top,
-        sourcePosition: Position.Bottom,
-        data: { label: 'Y4S2' },
-        position: { x: -200, y: 820 },
+      id: 's3n2',
+      targetPosition: Position.Right,
+      data: { label: 'WR' },
+      position: { x: 250, y: 0 },
+      style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
     },
     {
-        id: 'degree',
-        targetPosition: Position.Top,
-        data: { label: 'Information Systems Major' },
-        position: { x: 0, y: 940 },
-      },
-      // hidden nodes
-    {
-        id: 'y1s1-courses',
-        targetPosition: Position.Left,
-        sourcePosition: Position.Right,
-        data: { label: 'Courses' },
-        position: { x: 450, y: 200 },
-        hidden: true,
+      id: 's4n2',
+      targetPosition: Position.Right,
+      data: { label: 'E&S' },
+      position: { x: 250, y: 45 },
+      style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
     },
     {
-        id: 'is111',
-        targetPosition: Position.Left,
-        data: { label: 'IS111: Intro to Prog' },
-        position: { x: 650, y: 100 },
-        hidden: true,
+      id: 's5n2',
+      targetPosition: Position.Bottom,
+      data: { label: 'BQ' },
+      position: { x: 250, y: 90 },
+      style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
     },
     {
-        id: 'is114',
-        targetPosition: Position.Left,
-        data: { label: 'IS114: Com Fundamentals' },
-        position: { x: 650, y: 200 },
-        hidden: true,
-    }
+      id: 'n3',
+      type: 'SemNode',
+      sourcePosition: Position.Left,
+      data: { label: 'Y2S1' },
+      position: { x: -200, y: 200 },
+      style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+    },
 
 
   ];
   
-  const initialEdges = [
+  const initialEdges: Edge[] = [
     {
-      id: 'senior-y1s1',
-      source: 'senior_name',
-      type: 'smoothstep',
-      target: 'y1s1',
+      id: 'n1-s1n1',
+      source: 'n1',
+      type: 'default',
+      target: 's1n1',
       animated: true,
+      style: { stroke: '#2b78e4', strokeWidth: 2 },
     },
     {
-        id: 'y1s1-y1s2',
-        source: 'y1s1',
-        type: 'smoothstep',
-        target: 'y1s2',
-        animated: true,
-      },
-      {
-        id: 'y1s2-y2s1',
-        source: 'y1s2',
-        type: 'smoothstep',
-        target: 'y2s1',
-        animated: true,
-      },
-      {
-        id: 'y2s1-y2s2',
-        source: 'y2s1',
-        type: 'smoothstep',
-        target: 'y2s2',
-        animated: true,
-      },
-      {
-        id: 'y2s2-y3s1',
-        source: 'y2s2',
-        type: 'smoothstep',
-        target: 'y3s1',
-        animated: true,
-      },
-      {
-        id: 'y3s1-y3s2',
-        source: 'y3s1',
-        type: 'smoothstep',
-        target: 'y3s2',
-        animated: true,
-      },
-      {
-        id: 'y3s2-y4s1',
-        source: 'y3s2',
-        type: 'smoothstep',
-        target: 'y4s1',
-        animated: true,
-      },
-      {
-        id: 'y4s1-y4s2',
-        source: 'y4s1',
-        type: 'smoothstep',
-        target: 'y4s2',
-        animated: true,
-      },
-      {
-        id: 'y4s2-degree',
-        source: 'y4s2',
-        type: 'smoothstep',
-        target: 'degree',
-        animated: true,
-      },
-
-      // hidden edges 
-      {
-        id: 'y1s1-courses-edge',
-        source: 'y1s1',
-        type: 'smoothstep',
-        target: 'y1s1-courses',
-        animated: true,
-        hidden: true,
-      },
-      {
-        id: 'courses-is111',
-        source: 'y1s1-courses',
-        type: 'smoothstep',
-        target: 'is111',
-        animated: true,
-        hidden: true,
-      },
-      {
-        id: 'courses-is114',
-        source: 'y1s1-courses',
-        type: 'smoothstep',
-        target: 'is114',
-        animated: true,
-        hidden: true,
-      },
+      id: 'n1-s2n1',
+      source: 'n1',
+      type: 'default',
+      target: 's2n1',
+      animated: true,
+      style: { stroke: '#2b78e4', strokeWidth: 2 },
+    },
+    {
+      id: 'n1-s3n1',
+      source: 'n1',
+      type: 'default',
+      target: 's3n1',
+      animated: true,
+      style: { stroke: '#2b78e4', strokeWidth: 2 },
+    },
+    {
+      id: 'n1-s4n1',
+      source: 'n1',
+      type: 'default',
+      target: 's4n1',
+      animated: true,
+      style: { stroke: '#2b78e4', strokeWidth: 2 },
+    },
+    {
+      id: 'n1-s5n1',
+      source: 'n1',
+      type: 'default',
+      target: 's5n1',
+      animated: true,
+      style: { stroke: '#2b78e4', strokeWidth: 2 },
+    },
+    {
+      id: 'n1-n2',
+      source: 'n1',
+      type: 'default',
+      target: 'n2',
+      sourceHandle: 'r-src',
+      targetHandle: 'l-target',
+      animated: false,
+      style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+    },
+    {
+      id: 'n2-s5n2',
+      source: 'n2',
+      type: 'default',
+      target: 's5n2',
+      sourceHandle: 't-src',
+      
+      animated: true,
+      style: { stroke: '#2b78e4', strokeWidth: 2 },
+    },
+    {
+      id: 'n2-n3',
+      source: 'n2',
+      type: 'default',
+      target: 'n3',
+      sourceHandle: 'l-src',
+      targetHandle: 'r-target',
+      animated: false,
+      style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+    },
 
    
   ];
@@ -227,9 +220,7 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
 };
  
 const nodeTypes: NodeTypes = {
-  num: NumberNode,
-  txt: TextNode,
-  multiCon: MultipleConnectionNode
+  SemNode: SemNode,
 };
  
 const onNodeDrag: OnNodeDrag = (_, node) => {
@@ -240,7 +231,23 @@ export default function Timeline() {
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
 
+  const supabase = createClient();
+  
+  
+  // Function to fetch data from Supabase
+  const fetchRoadmap = async () => {
+    const { data: seniors, error } = await supabase.from('seniors').select('*');
+    if (error) {
+      console.error('Error fetching data:', error);
+      return;
+    }
+    console.log('seniors', seniors)
+  }
 
+
+  useEffect(() => {
+    fetchRoadmap()
+  });
   
 
   const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
@@ -286,7 +293,7 @@ export default function Timeline() {
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }} >
         <ReactFlow
             nodes={nodes}
-            // nodeTypes={nodeTypes}
+            nodeTypes={nodeTypes}
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
@@ -296,9 +303,10 @@ export default function Timeline() {
             fitView
             fitViewOptions={fitViewOptions}
             defaultEdgeOptions={defaultEdgeOptions}
+            
         >
         <Controls/>
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1}/>
+        <Background variant={BackgroundVariant.Dots}  gap={12} size={1}/>
         </ReactFlow>
     </div>
    
