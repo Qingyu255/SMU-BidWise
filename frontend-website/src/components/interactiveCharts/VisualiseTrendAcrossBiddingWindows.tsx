@@ -26,7 +26,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
 
     const fetchAvailableTermsOfInstructorWhoTeachCourse = async (courseCode: string, instructorName: string) => {
         try {
-            const response = await fetch(`${apiURL}/instructordata/terms_available/${courseCode}/${instructorName}`)
+            const response = await fetch(`${apiURL}/instructordata/terms_available/${courseCode}/${instructorName}`, { next: { revalidate: 86400 } })
             const jsonPayload = await response.json()
             const biddingWindowDropdownOptions = jsonPayload.data
             setTermDropdownArr(biddingWindowDropdownOptions || [])
@@ -55,7 +55,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
     }
     const update_before_after_vacancy_data = async (chartDataInstructorsBiddingWindow: chartAttributes, term: string) => {
         try {
-            const response = await fetch(`${apiURL}/coursedata/bidpriceacrosswindows/vacancies/${courseCode}/${term}/${courseInstructorSelected}`)
+            const response = await fetch(`${apiURL}/coursedata/bidpriceacrosswindows/vacancies/${courseCode}/${term}/${courseInstructorSelected}`, { next: { revalidate: 86400 } })
             // if (!response.ok) {
             //     throw new Error(`${response.status}`)
             // }
@@ -120,7 +120,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
     const handleTermSelect = async (term: string) => {
         setTerm(term)
         try {
-            const response = await fetch(`${apiURL}/coursedata/bidpriceacrosswindows/${courseCode}/${term}/${courseInstructorSelected}`)
+            const response = await fetch(`${apiURL}/coursedata/bidpriceacrosswindows/${courseCode}/${term}/${courseInstructorSelected}`, { next: { revalidate: 86400 } })
             const jsonPayload = await response.json()
             update_before_after_vacancy_data(jsonPayload, term) // state change is made in this update function
             // show charts again
@@ -135,7 +135,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
         // Fetch dropdown options array for select instructor on page refresh
         const fetchInstructorsWhoTeachCourseCode = async () => {
             try {
-                const response = await fetch(`${apiURL}/instructordata/instructor/${courseCode}`)
+                const response = await fetch(`${apiURL}/instructordata/instructor/${courseCode}`, { next: { revalidate: 86400 } })
                 if (!response.ok) {
                     const errorResponse = await response.json()
                     throw new Error(`${response.status}: ${errorResponse.detail}`)

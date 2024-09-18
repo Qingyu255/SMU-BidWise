@@ -11,21 +11,19 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { useDebounce } from 'use-debounce';
+import { useRouter, usePathname } from 'next/navigation';
 
-type searchBoxProps = {
-  onCourseSelected: (courseCode: string) => void
-}
-  
-export function SearchBox({ onCourseSelected }:searchBoxProps) {
+export function SearchBox() {
   const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
-
+  const router = useRouter();
+  const pathname = usePathname();
   const [searchText, setSearchText] = useState<string>("");
   // const [debouncedSearchText] = useDebounce(searchText, 500);
   const [uniqueCourses, setUniqueCourses] = useState<string[]>([])
 
   useEffect(() => {
       const fetchAllCourseCodes = async () => {
-          const response = await fetch(`${apiURL}/uniquecourses`)
+          const response = await fetch(`${apiURL}/uniquecourses`, { next: { revalidate: 86400 } });
           const jsonPayload = await response.json()
           setUniqueCourses(jsonPayload.data)
       }
@@ -38,8 +36,8 @@ export function SearchBox({ onCourseSelected }:searchBoxProps) {
 
   const handleCourseSelection = (fullCourseString: string) => {
     const courseCode = fullCourseString.split(":")[0];
-    onCourseSelected(courseCode);
     setSearchText("");
+    router.push(`${pathname}?courseCode=${courseCode}`);
   }
 
   return (
