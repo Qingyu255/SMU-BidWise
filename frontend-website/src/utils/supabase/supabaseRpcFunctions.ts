@@ -39,7 +39,7 @@ export async function getGradingBasisTypes() {
     const { data, error }: any = await supabase.rpc('get_grading_basis_ordered_by_frequency');
 
     if (error) {
-      console.error("Error fetching careers:", error);
+      console.error("Error fetching grading_basis:", error);
       return [];
     }
 
