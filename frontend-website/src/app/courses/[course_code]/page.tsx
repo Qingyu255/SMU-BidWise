@@ -18,7 +18,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 const supabase = createClient();
 
@@ -33,7 +33,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const [courseInfo, setCourseInfo] = useState<CourseInfoProps>();
   const [courseAreas, setCourseAreas] = useState<string[]>();
   const [loading, setLoading] = useState<boolean>(true);
-
+  const router = useRouter();
   async function getCourseInfoByCourseCode(course_code: string) {
     try {
       const { data, error }: any = await supabase.rpc('get_course_info_by_course_code', { input_course_code: course_code });
@@ -179,7 +179,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
           <Breadcrumb className='pb-2'>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/courses">Courses</BreadcrumbLink>
+                <BreadcrumbLink className='cursor-pointer' onClick={() => router.push("/courses")}>Courses</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
