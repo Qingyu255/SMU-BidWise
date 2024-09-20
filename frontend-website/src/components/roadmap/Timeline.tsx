@@ -9,6 +9,7 @@ import {
   applyNodeChanges,
   applyEdgeChanges,
   Position,
+  BackgroundVariant,
   type Node,
   type Edge,
   type FitViewOptions,
@@ -132,7 +133,7 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
       defaultEdgeOptions={defaultEdgeOptions}
     >
       <Controls />
-      <Background variant="dots" gap={12} size={1} />
+      <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
     </ReactFlow>
   );
 };
