@@ -85,11 +85,11 @@ export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoPr
         <p className="text-base font-semibold  mb-2">Course Areas</p>
         <div>
         {courseAreas.map((area: string, index: number) => (
-        <TooltipProvider>
+        <TooltipProvider key={index}>
           <Tooltip>
             <TooltipTrigger asChild>
               {/* <Button variant="outline"></Button> */}
-              <span key={index} className='mr-2 hover:cursor-pointer' onClick={() => {router.push("/courses?area=" + encodeURI(area))}}>
+              <span className='mr-2 hover:cursor-pointer' onClick={() => {router.push("/courses?area=" + encodeURI(area))}}>
                 <Badge>{area}</Badge>
               </span>
             </TooltipTrigger>
