@@ -180,7 +180,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
             <NoResultCard searchCategory={"sections for " + latestTerm}/>
           ) : (
             <div className='py-2'>
-              <SectionInformationTable sections={sections}/>
+              <SectionInformationTable sections={sections} latestTerm={latestTerm}/>
             </div>
           )}
         </div>

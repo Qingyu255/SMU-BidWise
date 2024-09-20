@@ -29,13 +29,14 @@ export interface SectionProps {
 
 export interface SectionInformationTableProps {
   sections: SectionProps[];
+  latestTerm: string;
 }
 
-export const SectionInformationTable = ({ sections }: SectionInformationTableProps) => {
+export const SectionInformationTable = ({ sections, latestTerm }: SectionInformationTableProps) => {
   return (
     <Card className="rounded-lg">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold">Section Information</CardTitle>
+        <CardTitle className="text-xl font-semibold">Section Information for {latestTerm}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table className="w-full">
