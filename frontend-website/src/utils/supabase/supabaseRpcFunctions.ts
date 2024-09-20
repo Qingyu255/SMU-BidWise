@@ -1,7 +1,5 @@
-import createClient  from '@/utils/supabase/client';
+import createClient  from '@/utils/supabase/server';
 
-const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseAnonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const supabase = createClient();
 
 export const getLatestTerm = async () => {
