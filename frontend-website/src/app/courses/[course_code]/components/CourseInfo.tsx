@@ -28,9 +28,11 @@ export function CourseInfo({courseInfo} : {courseInfo: CourseInfoProps}) {
       <CardHeader>
       <div className='flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0'>
         <CardTitle className="text-xl md:text-2xl font-bold inline">{courseInfo.title}</CardTitle>
+        {(courseInfo.career.toLowerCase() === "undergraduate") && (
           <Button className='text-xs inline font-semibold w-fit' onClick={() => {router.push("/bid-analytics?courseCode=" + courseInfo.course_code)}}>
             View Bid Price Analytics
           </Button>
+        )}
         </div>
         <CardTitle className="text-base md:text-lg">
           <span className="font-semibold">Course Code:</span> {courseInfo.course_code}
