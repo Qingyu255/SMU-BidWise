@@ -1,6 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import { ReactNode } from 'react';
-import { Position, XYPosition } from '@xyflow/react';
+import { Node, Position, XYPosition } from '@xyflow/react';
 export interface SidebarItems {
   links: Array<{
     label: string;
@@ -78,12 +78,13 @@ export interface courseInfo {
 
 export interface NodeData {
   id: string;
+  type: string,
   position: XYPosition;
   data: {
     label: string;
   };
-  targetPosition?: Position; // Add this property
-  sourcePosition?: Position; // Add this property
+  targetPosition: Position; // Add this property
+  sourcePosition: Position; // Add this property
   selected?: boolean;
   deletable?: boolean;
   selectable?: boolean;
@@ -92,6 +93,44 @@ export interface NodeData {
   dragHandle?: string;
   draggable?: boolean;
   parentId?: string;
+  style: {
+    backgroundColor: string;
+    border: string;
+    borderRadius: string;
+    fontWeight: string;
+  };
+}
+
+
+
+export interface NodeProps<T = any> {
+  id: string;
+  data: T;
+  position: XYPosition;
+  sourcePosition: Position;
+  targetPosition: Position;
+  width?: number;
+  height?: number;
+  selected?: boolean;
+  deletable?: boolean;
+  draggable?: boolean;
+  dragging?: boolean; // Ensure this is a boolean
+}
+
+
+export interface edgeData {
+  id: string;
+  source: string;
+  type: string;
+  target: string;
+  animated: boolean;
+  sourceHandle: string;
+  targetHandle: string;
+  style: {
+      stroke: string;
+      strokeWidth: number;
+      strokeDasharray: string;
+  };
 }
 
 
@@ -108,5 +147,13 @@ export interface EnrollmentData {
 }
 
 export interface CourseInfoData {
+  course_code: string;
+}
+
+export interface TimelineProps {
+  seniorName: string;
+}
+
+export interface Course {
   course_code: string;
 }

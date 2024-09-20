@@ -12,7 +12,7 @@ export default async function Page() {
       </div>
       
       <div className='container w-full h-full'>
-        <Timeline/>
+        <Timeline seniorName='Senior3'/>
 
       </div>
         

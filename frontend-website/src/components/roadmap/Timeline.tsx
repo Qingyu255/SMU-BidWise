@@ -18,14 +18,16 @@ import {
   type OnEdgesChange,
   useReactFlow,
   ReactFlowProvider,
-  DefaultEdgeOptions
+  DefaultEdgeOptions,
+  NodeTypes,
+  type NodeProps
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
 import SemNode from './SemNode';
 import createClient from '@/utils/supabase/client';
 import '@/components/roadmap/roadmap.css'; 
-import { SeniorData, seniorsAttributes } from '@/types';
+import { Course, edgeData, NodeData, SeniorData, seniorsAttributes, TimelineProps } from '@/types';
 
 type FlowRendererProps = {
   nodes: Node[];               // Array of Node type
@@ -108,7 +110,7 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
   animated: true,
 };
 
-const nodeTypes = {
+const nodeTypes: NodeTypes = {
   SemNode: SemNode,
 };
 
@@ -138,21 +140,21 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
   );
 };
 
-export default function Timeline() {
+const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const y1s1 = await fetchRoadmap('Senior2', 'Y1S1');
-      const y1s2 = await fetchRoadmap('Senior2', 'Y1S2');
-      const y2s1 = await fetchRoadmap('Senior2', 'Y2S1');
-      const y2s2 = await fetchRoadmap('Senior2', 'Y2S2');
-      const y3s1 = await fetchRoadmap('Senior2', 'Y3S1');
-      const y3s2 = await fetchRoadmap('Senior2', 'Y3S2');
-      const y4s1 = await fetchRoadmap('Senior2', 'Y4S1');
-      const y4s2 = await fetchRoadmap('Senior2', 'Y4S2');
+      const y1s1: Course[] = await fetchRoadmap(seniorName, 'Y1S1') as Course[];
+      const y1s2: Course[] = await fetchRoadmap(seniorName, 'Y1S2') as Course[];
+      const y2s1: Course[] = await fetchRoadmap(seniorName, 'Y2S1') as Course[];
+      const y2s2: Course[] = await fetchRoadmap(seniorName, 'Y2S2') as Course[];
+      const y3s1: Course[] = await fetchRoadmap(seniorName, 'Y3S1') as Course[];
+      const y3s2: Course[] = await fetchRoadmap(seniorName, 'Y3S2') as Course[];
+      const y4s1: Course[] = await fetchRoadmap(seniorName, 'Y4S1') as Course[];
+      const y4s2: Course[] = await fetchRoadmap(seniorName, 'Y4S2') as Course[];
       
       let semArr = [y1s1, y1s2, y2s1, y2s2, y3s1, y3s2, y4s1, y4s2];
 
@@ -165,41 +167,41 @@ export default function Timeline() {
           position: { x: 0, y: 0 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
-        {
-          id: 's1n1',
-          targetPosition: Position.Right,
-          data: { label: y1s1[0].course_code },
-          position: { x: -250, y: -90 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's2n1',
-          targetPosition: Position.Right,
-          data: { label: y1s1[1].course_code },
-          position: { x: -250, y: -45 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's3n1',
-          targetPosition: Position.Right,
-          data: { label: 'BGS' },
-          position: { x: -250, y: 0 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's4n1',
-          targetPosition: Position.Right,
-          data: { label: 'MC' },
-          position: { x: -250, y: 45 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's5n1',
-          targetPosition: Position.Right,
-          data: { label: 'STATS' },
-          position: { x: -250, y: 90 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
+        // {
+        //   id: 's1n1',
+        //   targetPosition: Position.Right,
+        //   data: { label: y1s1[0].course_code },
+        //   position: { x: -250, y: -90 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's2n1',
+        //   targetPosition: Position.Right,
+        //   data: { label: y1s1[1].course_code },
+        //   position: { x: -250, y: -45 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's3n1',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BGS' },
+        //   position: { x: -250, y: 0 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's4n1',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'MC' },
+        //   position: { x: -250, y: 45 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's5n1',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'STATS' },
+        //   position: { x: -250, y: 90 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
     
         {
           id: 'n2',
@@ -210,41 +212,41 @@ export default function Timeline() {
           position: { x: 200, y: 200 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
-        {
-          id: 's1n2',
-          targetPosition: Position.Right,
-          data: { label: 'IS112' },
-          position: { x: 250, y: -90 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's2n2',
-          targetPosition: Position.Right,
-          data: { label: 'IS113' },
-          position: { x: 250, y: -45 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's3n2',
-          targetPosition: Position.Right,
-          data: { label: 'WR' },
-          position: { x: 250, y: 0 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's4n2',
-          targetPosition: Position.Right,
-          data: { label: 'E&S' },
-          position: { x: 250, y: 45 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's5n2',
-          targetPosition: Position.Bottom,
-          data: { label: 'BQ' },
-          position: { x: 250, y: 90 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
+        // {
+        //   id: 's1n2',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'IS112' },
+        //   position: { x: 250, y: -90 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's2n2',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'IS113' },
+        //   position: { x: 250, y: -45 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's3n2',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'WR' },
+        //   position: { x: 250, y: 0 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's4n2',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'E&S' },
+        //   position: { x: 250, y: 45 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's5n2',
+        //   targetPosition: Position.Bottom,
+        //   data: { label: 'BQ' },
+        //   position: { x: 250, y: 90 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
         {
           id: 'n3',
           type: 'SemNode',
@@ -253,34 +255,34 @@ export default function Timeline() {
           position: { x: -40, y: 200 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
-        {
-          id: 's1n3',
-          targetPosition: Position.Right,
-          data: { label: 'BQ' },
-          position: { x: -250, y: 203 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's2n3',
-          targetPosition: Position.Right,
-          data: { label: 'BQ' },
-          position: { x: -250, y: 248 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's3n3',
-          targetPosition: Position.Right,
-          data: { label: 'BQ' },
-          position: { x: -250, y: 293 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's4n3',
-          targetPosition: Position.Right,
-          data: { label: 'BQ' },
-          position: { x: -250, y: 338 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
+        // {
+        //   id: 's1n3',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ' },
+        //   position: { x: -250, y: 203 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's2n3',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ' },
+        //   position: { x: -250, y: 248 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's3n3',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ' },
+        //   position: { x: -250, y: 293 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's4n3',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ' },
+        //   position: { x: -250, y: 338 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
         {
           id: 'n4',
           type: 'SemNode',
@@ -289,34 +291,34 @@ export default function Timeline() {
           position: { x: 80, y: 360 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
-        {
-          id: 's1n4',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 250, y: 300 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's2n4',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 250, y: 345 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's3n4',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 250, y: 390 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's4n4',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 250, y: 435 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
+        // {
+        //   id: 's1n4',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 250, y: 300 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's2n4',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 250, y: 345 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's3n4',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 250, y: 390 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's4n4',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 250, y: 435 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
         {
           id: 'n5',
           type: 'SemNode',
@@ -325,34 +327,34 @@ export default function Timeline() {
           position: { x: 80, y: 480 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
-        {
-          id: 's1n5',
-          targetPosition: Position.Right,
-          data: { label: 'BQ11' },
-          position: { x: -200, y: 435 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's2n5',
-          targetPosition: Position.Right,
-          data: { label: 'BQ11' },
-          position: { x: -200, y: 480 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's3n5',
-          targetPosition: Position.Right,
-          data: { label: 'BQ11' },
-          position: { x: -200, y: 525 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's4n5',
-          targetPosition: Position.Right,
-          data: { label: 'BQ11' },
-          position: { x: -200, y: 570 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
+        // {
+        //   id: 's1n5',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ11' },
+        //   position: { x: -200, y: 435 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's2n5',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ11' },
+        //   position: { x: -200, y: 480 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's3n5',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ11' },
+        //   position: { x: -200, y: 525 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's4n5',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ11' },
+        //   position: { x: -200, y: 570 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
         {
           id: 'n6',
           type: 'SemNode',
@@ -361,34 +363,34 @@ export default function Timeline() {
           position: { x: -120, y: 680 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
-        {
-          id: 's1n6',
-          targetPosition: Position.Right,
-          data: { label: 'BQ11' },
-          position: { x: -250, y: 755 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's2n6',
-          targetPosition: Position.Right,
-          data: { label: 'BQ11' },
-          position: { x: -250, y: 800 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's3n6',
-          targetPosition: Position.Right,
-          data: { label: 'BQ11' },
-          position: { x: -250, y: 845 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's4n6',
-          targetPosition: Position.Right,
-          data: { label: 'BQ11' },
-          position: { x: -250, y: 890 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
+        // {
+        //   id: 's1n6',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ11' },
+        //   position: { x: -250, y: 755 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's2n6',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ11' },
+        //   position: { x: -250, y: 800 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's3n6',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ11' },
+        //   position: { x: -250, y: 845 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's4n6',
+        //   targetPosition: Position.Right,
+        //   data: { label: 'BQ11' },
+        //   position: { x: -250, y: 890 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
         {
           id: 'n7',
           type: 'SemNode',
@@ -397,34 +399,34 @@ export default function Timeline() {
           position: { x: 120, y: 960 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
-        {
-          id: 's1n7',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 250, y: 755 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's2n7',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 250, y: 800 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's3n7',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 250, y: 845 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's4n7',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 250, y: 890 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
+        // {
+        //   id: 's1n7',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 250, y: 755 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's2n7',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 250, y: 800 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's3n7',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 250, y: 845 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's4n7',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 250, y: 890 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
         {
           id: 'n8',
           type: 'SemNode',
@@ -433,400 +435,590 @@ export default function Timeline() {
           position: { x: -120, y: 1050 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
-        {
-          id: 's1n8',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 200, y: 1060 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's2n8',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 200, y: 1105 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's3n8',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 200, y: 1150 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
-        {
-          id: 's4n8',
-          targetPosition: Position.Left,
-          data: { label: 'BQ11' },
-          position: { x: 200, y: 1195 },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-        },
+        // {
+        //   id: 's1n8',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 200, y: 1060 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's2n8',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 200, y: 1105 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's3n8',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 200, y: 1150 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
+        // {
+        //   id: 's4n8',
+        //   targetPosition: Position.Left,
+        //   data: { label: 'BQ11' },
+        //   position: { x: 200, y: 1195 },
+        //   style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        // },
     
     
       ];
 
-      
-        console.log('y4s4', y4s1)
-        y4s1.forEach((course) => {
-          let snCounter = 1
-          let subnode = {
-            id: 's' + snCounter.toString() + 'n1',
-            targetPosition: Position.Right,
-            data: { label: course.course_code },
-            position: { x: -250, y: -90 - (45 * snCounter) },
-            style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-          }
-          fetchedNodes.push(subnode)
-
-          snCounter += 1
-        })
-      
-    
-
       const fetchedEdges = [
-      {
-        id: 'n1-s1n1',
-        source: 'n1',
-        type: 'default',
-        target: 's1n1',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n1-s2n1',
-        source: 'n1',
-        type: 'default',
-        target: 's2n1',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n1-s3n1',
-        source: 'n1',
-        type: 'default',
-        target: 's3n1',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n1-s4n1',
-        source: 'n1',
-        type: 'default',
-        target: 's4n1',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n1-s5n1',
-        source: 'n1',
-        type: 'default',
-        target: 's5n1',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n1-n2',
-        source: 'n1',
-        type: 'default',
-        target: 'n2',
-        sourceHandle: 'r-src',
-        targetHandle: 'l-target',
-        animated: false,
-        style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
-      },
-      {
-        id: 'n2-s5n2',
-        source: 'n2',
-        type: 'default',
-        target: 's5n2',
-        sourceHandle: 't-src',
-        
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n2-n3',
-        source: 'n2',
-        type: 'default',
-        target: 'n3',
-        sourceHandle: 'l-src',
-        targetHandle: 'r-target',
-        animated: false,
-        style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
-      },
-      {
-        id: 'n3-s1n3',
-        source: 'n3',
-        type: 'default',
-        target: 's1n3',
-        sourceHandle: 'l-src',
-        
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n3-s2n3',
-        source: 'n3',
-        type: 'default',
-        target: 's2n3',
-        sourceHandle: 'l-src',
-        
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n3-s3n3',
-        source: 'n3',
-        type: 'default',
-        target: 's3n3',
-        sourceHandle: 'l-src',
-        
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n3-s4n3',
-        source: 'n3',
-        type: 'default',
-        target: 's4n3',
-        sourceHandle: 'l-src',
-        
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n3-n4',
-        source: 'n3',
-        type: 'step',
-        target: 'n4',
-        sourceHandle: 'b-src',
-        targetHandle: 'l-target',
-        animated: false,
-        style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
-      },
-      {
-        id: 'n4-s1n4',
-        source: 'n4',
-        target: 's1n4',
-        sourceHandle: 'r-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n4-s2n4',
-        source: 'n4',
-        target: 's2n4',
-        sourceHandle: 'r-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n4-s3n4',
-        source: 'n4',
-        target: 's3n4',
-        sourceHandle: 'r-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n4-s4n4',
-        source: 'n4',
-        target: 's4n4',
-        sourceHandle: 'r-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n4-n5',
-        source: 'n4',
-        type: 'step',
-        target: 'n5',
-        sourceHandle: 'b-src',
-        targetHandle: 't-target',
-        animated: false,
-        style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
-      },
-      {
-        id: 'n5-s1n5',
-        source: 'n5',
-        target: 's1n5',
-        sourceHandle: 'l-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n5-s2n5',
-        source: 'n5',
-        target: 's2n5',
-        sourceHandle: 'l-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n5-s3n5',
-        source: 'n5',
-        target: 's3n5',
-        sourceHandle: 'l-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n5-s4n5',
-        source: 'n5',
-        target: 's4n5',
-        sourceHandle: 'l-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n5-n6',
-        source: 'n5',
-        type: 'default',
-        target: 'n6',
-        sourceHandle: 'b-src',
-        targetHandle: 'r-target',
-        animated: false,
-        style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
-      },
-      {
-        id: 'n6-s1n6',
-        source: 'n6',
-        target: 's1n6',
-        sourceHandle: 'b-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n6-s2n6',
-        source: 'n6',
-        target: 's2n6',
-        sourceHandle: 'b-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n6-s3n6',
-        source: 'n6',
-        target: 's3n6',
-        sourceHandle: 'b-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n6-s4n6',
-        source: 'n6',
-        target: 's4n6',
-        sourceHandle: 'b-src',
-        type: 'smoothstep',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n6-n7',
-        source: 'n6',
-        type: 'smoothstep',
-        target: 'n7',
-        sourceHandle: 'r-src',
-        targetHandle: 'l-target',
-        animated: false,
-        style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
-      },
-      {
-        id: 'n7-s1n7',
-        source: 'n7',
-        target: 's1n7',
-        sourceHandle: 't-src',
-        type: 'default',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n6-s2n7',
-        source: 'n7',
-        target: 's2n7',
-        sourceHandle: 't-src',
-        type: 'default',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n7-s3n7',
-        source: 'n7',
-        target: 's3n7',
-        sourceHandle: 't-src',
-        type: 'default',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n7-s4n7',
-        source: 'n7',
-        target: 's4n7',
-        sourceHandle: 't-src',
-        type: 'default',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n7-n8',
-        source: 'n7',
-        type: 'smoothstep',
-        target: 'n8',
-        sourceHandle: 'l-src',
-        targetHandle: 't-target',
-        animated: false,
-        style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
-      },
-      {
-        id: 'n8-s1n8',
-        source: 'n8',
-        target: 's1n8',
-        sourceHandle: 'r-src',
-        type: 'default',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n6-s2n8',
-        source: 'n8',
-        target: 's2n8',
-        sourceHandle: 'r-src',
-        type: 'default',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n8-s3n8',
-        source: 'n8',
-        target: 's3n8',
-        sourceHandle: 'r-src',
-        type: 'default',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
-      {
-        id: 'n8-s4n8',
-        source: 'n8',
-        target: 's4n8',
-        sourceHandle: 'r-src',
-        type: 'default',
-        animated: true,
-        style: { stroke: '#2b78e4', strokeWidth: 2 },
-      },
+        // {
+        //   id: 'n1-s1n1',
+        //   source: 'n1',
+        //   type: 'default',
+        //   target: 's1n1',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n1-s2n1',
+        //   source: 'n1',
+        //   type: 'default',
+        //   target: 's2n1',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n1-s3n1',
+        //   source: 'n1',
+        //   type: 'default',
+        //   target: 's3n1',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n1-s4n1',
+        //   source: 'n1',
+        //   type: 'default',
+        //   target: 's4n1',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n1-s5n1',
+        //   source: 'n1',
+        //   type: 'default',
+        //   target: 's5n1',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        {
+          id: 'n1-n2',
+          source: 'n1',
+          type: 'default',
+          target: 'n2',
+          sourceHandle: 'r-src',
+          targetHandle: 'l-target',
+          animated: false,
+          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+        },
+        // {
+        //   id: 'n2-s1n2',
+        //   source: 'n2',
+        //   type: 'default',
+        //   target: 's1n2',
+        //   sourceHandle: 't-src',
+          
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        {
+          id: 'n2-n3',
+          source: 'n2',
+          type: 'default',
+          target: 'n3',
+          sourceHandle: 'l-src',
+          targetHandle: 'r-target',
+          animated: false,
+          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+        },
+        // {
+        //   id: 'n3-s1n3',
+        //   source: 'n3',
+        //   type: 'default',
+        //   target: 's1n3',
+        //   sourceHandle: 'l-src',
+          
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n3-s2n3',
+        //   source: 'n3',
+        //   type: 'default',
+        //   target: 's2n3',
+        //   sourceHandle: 'l-src',
+          
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n3-s3n3',
+        //   source: 'n3',
+        //   type: 'default',
+        //   target: 's3n3',
+        //   sourceHandle: 'l-src',
+          
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n3-s4n3',
+        //   source: 'n3',
+        //   type: 'default',
+        //   target: 's4n3',
+        //   sourceHandle: 'l-src',
+          
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        {
+          id: 'n3-n4',
+          source: 'n3',
+          type: 'step',
+          target: 'n4',
+          sourceHandle: 'b-src',
+          targetHandle: 'l-target',
+          animated: false,
+          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+        },
+        // {
+        //   id: 'n4-s1n4',
+        //   source: 'n4',
+        //   target: 's1n4',
+        //   sourceHandle: 'r-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n4-s2n4',
+        //   source: 'n4',
+        //   target: 's2n4',
+        //   sourceHandle: 'r-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n4-s3n4',
+        //   source: 'n4',
+        //   target: 's3n4',
+        //   sourceHandle: 'r-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n4-s4n4',
+        //   source: 'n4',
+        //   target: 's4n4',
+        //   sourceHandle: 'r-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        {
+          id: 'n4-n5',
+          source: 'n4',
+          type: 'step',
+          target: 'n5',
+          sourceHandle: 'b-src',
+          targetHandle: 't-target',
+          animated: false,
+          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+        },
+        // {
+        //   id: 'n5-s1n5',
+        //   source: 'n5',
+        //   target: 's1n5',
+        //   sourceHandle: 'l-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n5-s2n5',
+        //   source: 'n5',
+        //   target: 's2n5',
+        //   sourceHandle: 'l-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n5-s3n5',
+        //   source: 'n5',
+        //   target: 's3n5',
+        //   sourceHandle: 'l-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n5-s4n5',
+        //   source: 'n5',
+        //   target: 's4n5',
+        //   sourceHandle: 'l-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        {
+          id: 'n5-n6',
+          source: 'n5',
+          type: 'default',
+          target: 'n6',
+          sourceHandle: 'b-src',
+          targetHandle: 'r-target',
+          animated: false,
+          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+        },
+        // {
+        //   id: 'n6-s1n6',
+        //   source: 'n6',
+        //   target: 's1n6',
+        //   sourceHandle: 'b-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n6-s2n6',
+        //   source: 'n6',
+        //   target: 's2n6',
+        //   sourceHandle: 'b-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n6-s3n6',
+        //   source: 'n6',
+        //   target: 's3n6',
+        //   sourceHandle: 'b-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n6-s4n6',
+        //   source: 'n6',
+        //   target: 's4n6',
+        //   sourceHandle: 'b-src',
+        //   type: 'smoothstep',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        {
+          id: 'n6-n7',
+          source: 'n6',
+          type: 'smoothstep',
+          target: 'n7',
+          sourceHandle: 'r-src',
+          targetHandle: 'l-target',
+          animated: false,
+          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+        },
+        // {
+        //   id: 'n7-s1n7',
+        //   source: 'n7',
+        //   target: 's1n7',
+        //   sourceHandle: 't-src',
+        //   type: 'default',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n6-s2n7',
+        //   source: 'n7',
+        //   target: 's2n7',
+        //   sourceHandle: 't-src',
+        //   type: 'default',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n7-s3n7',
+        //   source: 'n7',
+        //   target: 's3n7',
+        //   sourceHandle: 't-src',
+        //   type: 'default',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n7-s4n7',
+        //   source: 'n7',
+        //   target: 's4n7',
+        //   sourceHandle: 't-src',
+        //   type: 'default',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        {
+          id: 'n7-n8',
+          source: 'n7',
+          type: 'smoothstep',
+          target: 'n8',
+          sourceHandle: 'l-src',
+          targetHandle: 't-target',
+          animated: false,
+          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+        },
+        // {
+        //   id: 'n8-s1n8',
+        //   source: 'n8',
+        //   target: 's1n8',
+        //   sourceHandle: 'r-src',
+        //   type: 'default',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n8-s2n8',
+        //   source: 'n8',
+        //   target: 's2n8',
+        //   sourceHandle: 'r-src',
+        //   type: 'default',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n8-s3n8',
+        //   source: 'n8',
+        //   target: 's3n8',
+        //   sourceHandle: 'r-src',
+        //   type: 'default',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+        // {
+        //   id: 'n8-s4n8',
+        //   source: 'n8',
+        //   target: 's4n8',
+        //   sourceHandle: 'r-src',
+        //   type: 'default',
+        //   animated: true,
+        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
+        // },
+      ];
+      
+      // Populate y1s1 courses
+      let snCounter = 1
+      y1s1.forEach((course: { course_code: string }) => {
+        let subnode: NodeData = {
+          id: 's' + snCounter.toString() + 'n1',
+          type: 'default',
+          sourcePosition: Position.Top,
+          targetPosition: Position.Right,
+          data: { label: course.course_code },
+          position: { x: -250, y: -135 + (45 * snCounter) },
+          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        }
+        fetchedNodes.push(subnode)
 
+        let edge: edgeData = {
+          id: 'n1-s' + snCounter.toString() + 'n1',
+          source: 'n1',
+          type: 'default',
+          sourceHandle: 't-src',
+          targetHandle: 'r-src',
+          target: 's' + snCounter.toString() + 'n1',
+          animated: true,
+          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+        }
+
+        fetchedEdges.push(edge)
+
+        snCounter += 1
+      })
+      
+      // Populate y1s2 courses
+      snCounter = 1
+      y1s2.forEach((course: { course_code: string }) => {
+        let subnode: NodeData = {
+          id: 's' + snCounter.toString() + 'n2',
+          type: 'default',
+          sourcePosition: Position.Top,
+          targetPosition: Position.Bottom,
+          data: { label: course.course_code },
+          position: { x: 250, y: 135 - (45 * snCounter) },
+          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        }
+        fetchedNodes.push(subnode)
+
+        snCounter += 1
+      })
+
+      // Populate y2s1 courses
+      snCounter = 1
+      y2s1.forEach((course) => {
+        let subnode = {
+          id: 's' + snCounter.toString() + 'n3',
+          targetPosition: Position.Right,
+          data: { label: course.course_code },
+          position: { x: -250, y: 113 + (45 * snCounter) },
+          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        }
+        fetchedNodes.push(subnode)
+
+        let edge = {
+          id: 'n3-s' + snCounter.toString() + 'n3',
+          source: 'n3',
+          type: 'default',
+          target: 's' + snCounter.toString() + 'n3',
+          animated: true,
+          style: { stroke: '#2b78e4', strokeWidth: 2 },
+        }
+
+        fetchedEdges.push(edge)
+
+        snCounter += 1
+      })
+
+
+      // Populate y2s2 courses
+      snCounter = 1
+      y2s2.forEach((course) => {
+        let subnode = {
+          id: 's' + snCounter.toString() + 'n4',
+          targetPosition: Position.Left,
+          data: { label: course.course_code },
+          position: { x: 250, y: 255 + (45 * snCounter) },
+          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        }
+        fetchedNodes.push(subnode)
+
+        let edge = {
+          id: 'n4-s' + snCounter.toString() + 'n4',
+          source: 'n4',
+          type: 'smoothstep',
+          target: 's' + snCounter.toString() + 'n4',
+          sourceHandle: 'r-src',
+          animated: true,
+          style: { stroke: '#2b78e4', strokeWidth: 2 },
+        }
+
+        fetchedEdges.push(edge)
+
+        snCounter += 1
+      })
     
-    ];
+      // Populate y3s1 courses
+      snCounter = 1
+      y3s1.forEach((course) => {
+        let subnode = {
+          id: 's' + snCounter.toString() + 'n5',
+          targetPosition: Position.Right,
+          data: { label: course.course_code },
+          position: { x: -200, y: 390 + (45 * snCounter) },
+          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        }
+        fetchedNodes.push(subnode)
+
+        let edge = {
+          id: 'n5-s' + snCounter.toString() + 'n5',
+          source: 'n5',
+          type: 'smoothstep',
+          target: 's' + snCounter.toString() + 'n5',
+          sourceHandle: 'l-src',
+          animated: true,
+          style: { stroke: '#2b78e4', strokeWidth: 2 },
+        }
+
+        fetchedEdges.push(edge)
+
+        snCounter += 1
+      })
+
+      // Populate y3s2 courses
+      snCounter = 1
+      y3s2.forEach((course) => {
+        let subnode = {
+          id: 's' + snCounter.toString() + 'n6',
+          targetPosition: Position.Right,
+          data: { label: course.course_code },
+          position: { x: -250, y: 710 + (45 * snCounter) },
+          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        }
+        fetchedNodes.push(subnode)
+
+        let edge = {
+          id: 'n6-s' + snCounter.toString() + 'n6',
+          source: 'n6',
+          type: 'smoothstep',
+          target: 's' + snCounter.toString() + 'n6',
+          sourceHandle: 'b-src',
+          animated: true,
+          style: { stroke: '#2b78e4', strokeWidth: 2 },
+        }
+
+        fetchedEdges.push(edge)
+
+        snCounter += 1
+      })
+
+      // Populate y4s1 courses
+      snCounter = 1
+      y4s1.forEach((course) => {
+        let subnode = {
+          id: 's' + snCounter.toString() + 'n7',
+          targetPosition: Position.Left,
+          data: { label: course.course_code },
+          position: { x: 250, y: 665 + (45 * snCounter) },
+          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        }
+        fetchedNodes.push(subnode)
+
+        let edge = {
+          id: 'n7-s' + snCounter.toString() + 'n7',
+          source: 'n7',
+          type: 'default',
+          target: 's' + snCounter.toString() + 'n7',
+          sourceHandle: 't-src',
+          animated: true,
+          style: { stroke: '#2b78e4', strokeWidth: 2 },
+        }
+
+        fetchedEdges.push(edge)
+
+        snCounter += 1
+      })
+
+      // Populate y4s2 courses
+      snCounter = 1
+      y4s2.forEach((course) => {
+        let subnode = {
+          id: 's' + snCounter.toString() + 'n8',
+          targetPosition: Position.Left,
+          data: { label: course.course_code },
+          position: { x: 200, y: 1015 + (45 * snCounter) },
+          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+        }
+        fetchedNodes.push(subnode)
+
+        let edge = {
+          id: 'n8-s' + snCounter.toString() + 'n8',
+          source: 'n8',
+          type: 'default',
+          target: 's' + snCounter.toString() + 'n8',
+          sourceHandle: 'r-src',
+          animated: true,
+          style: { stroke: '#2b78e4', strokeWidth: 2 },
+        }
+
+        fetchedEdges.push(edge)
+
+        snCounter += 1
+      })
+
 
       setNodes(fetchedNodes);
       setEdges(fetchedEdges);
@@ -868,3 +1060,5 @@ export default function Timeline() {
     </div>
   );
 }
+
+export default Timeline
