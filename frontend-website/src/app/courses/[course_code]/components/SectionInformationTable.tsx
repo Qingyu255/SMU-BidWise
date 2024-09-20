@@ -33,9 +33,18 @@ export interface SectionInformationTableProps {
   singleProfOnly: boolean;
 }
 
+const sortBySection = (sections: SectionProps[]): SectionProps[] => {
+  return sections.sort((a, b) => {
+    const numA = parseInt(a.section.replace(/^\D+/g, ''), 10);
+    const numB = parseInt(b.section.replace(/^\D+/g, ''), 10);
+    
+    return numA - numB; // Sort by numeric value
+  });
+}
+
 export const SectionInformationTable = ({ sections, latestTerm, singleProfOnly }: SectionInformationTableProps) => {
   let temp: string = "";
-
+  const sortedSections = sortBySection(sections);
   return (
     <Card className="rounded-lg">
       <CardHeader>
