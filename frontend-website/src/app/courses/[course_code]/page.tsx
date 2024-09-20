@@ -5,8 +5,20 @@ import ProfessorButtons from './ProfessorButtons';
 import Timetable from './Timetable'; // Import Timetable component
 import { getLatestTerm } from '@/utils/supabase/supabaseRpcFunctions';
 import NoResultCard from '@/components/NoResultCard';
-import { Spinner } from '@nextui-org/react';
 import { TimetableProvider } from '../../../components/timetableProvider';
+import { CourseInfo, CourseInfoProps } from './components/CourseInfo';
+import { Card, CardDescription } from '@/components/ui/card';
+import { CourseInfoSkeleton } from './components/CourseInfoSkeleton';
+import { SectionInformationTable } from './components/SectionInformationTable';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Button } from '@/components/ui/button';
 
 const supabase = createClient();
 
@@ -17,7 +29,24 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const [selectedProfessor, setSelectedProfessor] = useState<string | null>(null);
   const [latestTerm, setLatestTerm] = useState<string>(""); // this is normal name eg, 2024-25 Term 1
   const [latestTermId, setLatestTermId] = useState<string>(""); // this is uuid
+  const [courseInfo, setCourseInfo] = useState<CourseInfoProps>();
   const [loading, setLoading] = useState<boolean>(true);
+
+  async function getCourseInfoByCourseCode(course_code: string) {
+    try {
+      const { data, error }: any = await supabase.rpc('get_course_info_by_course_code', { input_course_code: course_code });
+      
+      if (error) {
+        console.error('Error fetching course info:', error.message);
+        return [];
+      }
+      return data[0];
+
+    } catch (error) {
+      console.error("error in fetching of rpc: getCourseInfoByCourseCode - " + error);
+      return [];
+    }
+  }
 
   async function getSectionDetails(course_code: string, termId: string) {
     const { data: courseInfo, error: courseInfoError } = await supabase
@@ -38,10 +67,24 @@ export default function Page({ params }: { params: { course_code: string }}) {
   
     const { data: sections, error: sectionsError } = await supabase
       .from('sections')
-      .select('id, section, day, start_time, end_time, instructor, venue')
+      // .select('id, section, day, start_time, end_time, instructor, venue')
+      .select(`
+        id,
+        section,
+        day,
+        start_time,
+        end_time,
+        instructor,
+        venue,
+        availability (
+          total_seats,
+          current_enrolled,
+          reserved_seats,
+          available_seats
+        )
+      `)
       .eq('course_id', course_id)
       .eq("term", termId);
-      
   
     if (sectionsError) {
       console.error('Error fetching section details:', sectionsError.message);
@@ -76,8 +119,11 @@ export default function Page({ params }: { params: { course_code: string }}) {
         const latestTermIdStr = latestTermObj.id;
         setLatestTerm(latestTermStr);
         setLatestTermId(latestTermIdStr);
+        console.log(`Fetching data for course_code: ${course_code}`);
+        const courseInfo: any = await getCourseInfoByCourseCode(course_code);
+        setCourseInfo(courseInfo);
 
-        console.log('Fetching sections and professors for course_code:' + course_code + " for latest term: " + latestTermStr);
+        console.log('Fetching sections and professors for course_code: ' + course_code + " for latest term: " + latestTermStr);
         const { sections, professors }: any = await getSectionDetails(course_code, latestTermIdStr);
         setSections(sections);
         setProfessors(professors);
@@ -93,34 +139,48 @@ export default function Page({ params }: { params: { course_code: string }}) {
   return (
     <TimetableProvider>
       {loading ? (
-        <div className='w-100 h-100 flex justify-center items-center'>
-          <Spinner color='default'/>
-        </div>
+        <CourseInfoSkeleton/>
       ) : (
         <div>
-          <div>Course Code: {course_code.toUpperCase()}</div>
-          {selectedProfessor && (
-            <>
-              <div>Selected Professor: {selectedProfessor}</div>
-              <Timetable
-                professorClasses={sections} // Make sure sections contain the filtered data
-                onClassSelect={(classItem: any) => console.log('Class selected:', classItem)}
-              />
-            </>
+          <Breadcrumb className='pb-2'>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/courses">Courses</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{course_code}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          {courseInfo && (
+            <div>
+              <CourseInfo courseInfo={courseInfo}/>
+              {(professors && professors.length > 0) && (
+                <div className='py-2'>
+                  <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} />
+                  {selectedProfessor ? (
+                    <>
+                      <Timetable
+                        professorClasses={sections} // Make sure sections contain the filtered data
+                        onClassSelect={(classItem: any) => console.log('Class selected:', classItem)}
+                      />
+                    </>
+                  ): (
+                    <Card className='rounded-lg mt-2'>
+                      <CardDescription className='py-6 lg:py-10 text-center'>Select a professor to view their sections</CardDescription>
+                    </Card>
+                  )}
+                </div>
+              )}
+            </div>
           )}
+          
           {((!sections || sections.length === 0)) ? (
             <NoResultCard searchCategory={"sections for " + latestTerm}/>
           ) : (
-            <div>
-              <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} />
-              <h2>Available Sections for latest term - {latestTerm}:</h2>
-              <ul>
-                {sections.map((section, index) => (
-                  <li key={index}>
-                    <strong>Section:</strong> {section.section}, <strong>Day:</strong> {section.day}, <strong>Start Time:</strong> {section.start_time}, <strong>End Time:</strong> {section.end_time},  <strong>Professor:</strong> {section.instructor}
-                  </li>
-                ))}
-              </ul>
+            <div className='py-2'>
+              <SectionInformationTable sections={sections}/>
             </div>
           )}
         </div>

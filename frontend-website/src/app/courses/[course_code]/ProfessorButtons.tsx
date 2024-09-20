@@ -10,7 +10,7 @@ interface ProfessorButtonsProps {
 const ProfessorButtons: React.FC<ProfessorButtonsProps> = ({ professors, onProfessorClick }) => {
   return (
     <div>
-      <Separator/>
+      {/* <Separator/> */}
       <div className='font-semibold py-2'>View Sections by Professor: </div>
       <Combobox selectedValue='' onSelect={(professor: string) => onProfessorClick(professor)} category='Professor' options={professors}/>
       {/* <div>

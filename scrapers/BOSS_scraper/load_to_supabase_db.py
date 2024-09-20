@@ -121,13 +121,13 @@ def process_json_files(directory):
                         # Check if "enrolment_requirements" exists before upserting
                         "enrolment_requirements": data["course_detail"].get("enrolment_requirements", "Not Available")
                     }
-                    # upsert_course_info(course_info)
+                    upsert_course_info(course_info)
 
                     # Process term
                     term_info = {
                         "term": data.get("term")
                     }
-                    # upsert_term(term_info)
+                    upsert_term(term_info)
 
                     # Get course_id and term_id for section upsertion
                     course_code = data.get("course_code")
