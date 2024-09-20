@@ -64,7 +64,6 @@ async function fetchRoadmap(name: string, sem: string) {
     .single();
 
   if (semesterError) {
-    console.log('sem', sem)
     console.error('Error fetching semester data:', semesterError);
     return [];
   }
@@ -144,16 +143,15 @@ export default function Timeline() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const y1s1 = await fetchRoadmap('Senior2', 'Y1S1');
-      const y1s2 = await fetchRoadmap('Senior2', 'Y1S2');
-      const y2s1 = await fetchRoadmap('Senior2', 'Y2S1');
-      const y2s2 = await fetchRoadmap('Senior2', 'Y2S2');
-      const y3s1 = await fetchRoadmap('Senior2', 'Y3S1');
-      const y3s2 = await fetchRoadmap('Senior2', 'Y3S2');
-      const y4s1 = await fetchRoadmap('Senior2', 'Y4S1');
-      const y4s2 = await fetchRoadmap('Senior2', 'Y4S2');
+      const y1s1 = await fetchRoadmap('Kylene', 'Y1S1');
+      const y1s2 = await fetchRoadmap('Kylene', 'Y1S2');
+      const y2s1 = await fetchRoadmap('Kylene', 'Y2S1');
+      const y2s2 = await fetchRoadmap('Kylene', 'Y2S2');
+      const y3s1 = await fetchRoadmap('Kylene', 'Y3S1');
+      const y3s2 = await fetchRoadmap('Kylene', 'Y3S2');
+      const y4s1 = await fetchRoadmap('Kylene', 'Y4S1');
+      const y4s2 = await fetchRoadmap('Kylene', 'Y4S2');
       
-      let semArr = [y1s1, y1s2, y2s1, y2s2, y3s1, y3s2, y4s1, y4s2];
 
       const fetchedNodes = [
         {
@@ -463,24 +461,6 @@ export default function Timeline() {
     
     
       ];
-
-      
-        console.log('y4s4', y4s1)
-        y4s1.forEach((course) => {
-          let snCounter = 1
-          let subnode = {
-            id: 's' + snCounter.toString() + 'n1',
-            targetPosition: Position.Right,
-            data: { label: course.course_code },
-            position: { x: -250, y: -90 - (45 * snCounter) },
-            style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
-          }
-          fetchedNodes.push(subnode)
-
-          snCounter += 1
-        })
-      
-    
 
       const fetchedEdges = [
       {

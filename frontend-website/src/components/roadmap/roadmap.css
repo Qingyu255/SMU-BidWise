@@ -9,3 +9,10 @@
   .react-flow__node {
     border: 3px solid;
   }
+
+
+  .react-flow__pane {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }

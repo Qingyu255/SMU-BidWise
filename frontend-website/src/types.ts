@@ -93,3 +93,20 @@ export interface NodeData {
   draggable?: boolean;
   parentId?: string;
 }
+
+
+export interface SeniorData {
+  id: string;
+}
+
+export interface SemesterData {
+  id: string;
+}
+
+export interface EnrollmentData {
+  course_id: string;
+}
+
+export interface CourseInfoData {
+  course_code: string;
+}
