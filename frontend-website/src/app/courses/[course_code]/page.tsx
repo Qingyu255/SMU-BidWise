@@ -214,7 +214,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
             <NoResultCard searchCategory={"sections for " + latestTerm}/>
           ) : (
             <div className='py-2'>
-              <SectionInformationTable sections={sections} latestTerm={latestTerm} singleProfOnly={selectedProfessor !== null}/>
+              <SectionInformationTable sections={sections} latestTerm={latestTerm} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""}/>
             </div>
           )}
         </div>
