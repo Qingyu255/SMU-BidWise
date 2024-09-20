@@ -9,7 +9,13 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-// import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export interface CourseInfoProps {
   course_code: string;
@@ -21,23 +27,33 @@ export interface CourseInfoProps {
   enrolment_requirements: string;
 }
 
-export function CourseInfo({courseInfo} : {courseInfo: CourseInfoProps}) {
+export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoProps, courseAreas: any}) {
   const router = useRouter();
   return (
     <Card className=" rounded-lg">
       <CardHeader>
       <div className='flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0'>
-        <CardTitle className="text-xl md:text-2xl font-bold inline">{courseInfo.title}</CardTitle>
+        <div>
+          <CardTitle className="text-xl md:text-2xl font-bold inline">{courseInfo.title}</CardTitle>
+          <CardTitle className="text-base md:text-lg">
+            <span className="font-semibold">Course Code:</span> {courseInfo.course_code}
+          </CardTitle>
+        </div>
         {(courseInfo.career.toLowerCase() === "undergraduate") && (
-          <Button className='text-xs inline font-semibold w-fit' onClick={() => {router.push("/bid-analytics?courseCode=" + courseInfo.course_code)}}>
-            View Bid Price Analytics
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button className='text-xs inline font-semibold w-fit' onClick={() => {router.push("/bid-analytics?courseCode=" + courseInfo.course_code)}}>
+                  View Bid Price Analytics
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Analyse price trends for {courseInfo.course_code}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )}
         </div>
-        <CardTitle className="text-base md:text-lg">
-          <span className="font-semibold">Course Code:</span> {courseInfo.course_code}
-        </CardTitle>
-        
         
       </CardHeader>
       <CardContent>
@@ -65,6 +81,26 @@ export function CourseInfo({courseInfo} : {courseInfo: CourseInfoProps}) {
         </div>
         <p className="text-base font-semibold  mb-2">Description</p>
         <p className="text-base mb-4">{courseInfo.description}</p>
+
+        <p className="text-base font-semibold  mb-2">Course Areas</p>
+        <div>
+        {courseAreas.map((area: string, index: number) => (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {/* <Button variant="outline"></Button> */}
+              <span key={index} className='mr-2 hover:cursor-pointer' onClick={() => {router.push("/courses?area=" + encodeURI(area))}}>
+                <Badge>{area}</Badge>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>View courses in area: {area}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+          
+        ))}
+        </div>
 
       </CardContent>
       <CardFooter className="text-sm text-gray-500">

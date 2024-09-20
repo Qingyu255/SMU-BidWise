@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export interface AvailabilityProps {
     total_seats: number;
@@ -30,15 +30,27 @@ export interface SectionProps {
 export interface SectionInformationTableProps {
   sections: SectionProps[];
   latestTerm: string;
+  singleProfOnly: boolean;
 }
 
-export const SectionInformationTable = ({ sections, latestTerm }: SectionInformationTableProps) => {
+export const SectionInformationTable = ({ sections, latestTerm, singleProfOnly }: SectionInformationTableProps) => {
+  let temp: string = "";
+
   return (
     <Card className="rounded-lg">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold">Section Information for {latestTerm}</CardTitle>
-      </CardHeader>
+        <CardTitle className="text-xl font-semibold">Section Information ({latestTerm})</CardTitle>
+      </CardHeader>    
       <CardContent>
+        {singleProfOnly ? (
+          <CardDescription className='mb-1'>
+            Showing sections for {sections[0].instructor}
+          </CardDescription>
+        ) : (
+        <CardDescription className='mb-1'>
+          Showing all sections
+        </CardDescription>
+        )}
         <Table className="w-full">
           <TableHeader>
             <TableRow>
