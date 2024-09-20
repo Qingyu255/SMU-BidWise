@@ -5,6 +5,7 @@ import { Courses } from './components/Courses';
 import CourseSummaryCardSkeleton from './components/CourseSummaryCardSkeleton';
 import Filters from './components/Filters';
 import { FilterOptions } from './components/Filters';
+// import { getCareers, getGradingBasisTypes } from '@/utils/supabase/supabaseRpcFunctions';
   
 const fetchFilterOptions = async (): Promise<FilterOptions> => {
     const supabase = createClient();
@@ -19,6 +20,7 @@ const fetchFilterOptions = async (): Promise<FilterOptions> => {
     const distinctCareers = [...new Set(careerData
         .map((item: { career: string }) => item.career))];
         // .filter((item => (item !== "Course Career")));
+    // const distinctCareers = await getCareers();
 
     const { data: gradingData, error: gradingError } = await supabase
         .from("course_info")
@@ -32,6 +34,8 @@ const fetchFilterOptions = async (): Promise<FilterOptions> => {
     const distinctGradingBasis = [...new Set(gradingData
         .map((item: { grading_basis: string }) => item.grading_basis))];
         // .filter((item => (item !== "Not Printed")));
+
+    // const distinctGradingBasis = await getGradingBasisTypes();
 
     const { data: unitsData, error: unitsError } = await supabase
         .from("course_info")
