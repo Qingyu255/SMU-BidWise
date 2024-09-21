@@ -80,6 +80,7 @@ export interface NodeData {
   id: string;
   type: string,
   position: XYPosition;
+  label: React.ReactNode;
   data: {
     label: string;
   };
@@ -102,30 +103,12 @@ export interface NodeData {
 }
 
 
-
-export interface NodeProps<T = any> {
-  id: string;
-  data: T;
-  position: XYPosition;
-  sourcePosition: Position;
-  targetPosition: Position;
-  width?: number;
-  height?: number;
-  selected?: boolean;
-  deletable?: boolean;
-  draggable?: boolean;
-  dragging?: boolean; // Ensure this is a boolean
-}
-
-
 export interface edgeData {
   id: string;
   source: string;
   type: string;
   target: string;
   animated: boolean;
-  sourceHandle: string;
-  targetHandle: string;
   style: {
       stroke: string;
       strokeWidth: number;

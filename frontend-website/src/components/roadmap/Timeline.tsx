@@ -27,7 +27,7 @@ import '@xyflow/react/dist/style.css';
 import SemNode from './SemNode';
 import createClient from '@/utils/supabase/client';
 import '@/components/roadmap/roadmap.css'; 
-import { Course, edgeData, NodeData, SeniorData, seniorsAttributes, TimelineProps } from '@/types';
+import { Course, edgeData,SeniorData, NodeData, seniorsAttributes, TimelineProps } from '@/types';
 
 type FlowRendererProps = {
   nodes: Node[];               // Array of Node type
@@ -158,7 +158,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
       
       let semArr = [y1s1, y1s2, y2s1, y2s2, y3s1, y3s2, y4s1, y4s2];
 
-      const fetchedNodes = [
+      const fetchedNodes: Node[] = [
         {
           id: 'n1',
           type: 'SemNode',
@@ -467,7 +467,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
     
       ];
 
-      const fetchedEdges = [
+      const fetchedEdges: Edge[] = [
         // {
         //   id: 'n1-s1n1',
         //   source: 'n1',
@@ -518,16 +518,16 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           animated: false,
           style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
         },
-        // {
-        //   id: 'n2-s1n2',
-        //   source: 'n2',
-        //   type: 'default',
-        //   target: 's1n2',
-        //   sourceHandle: 't-src',
+        {
+          id: 'n2-s1n2',
+          source: 'n2',
+          type: 'default',
+          target: 's1n2',
+          sourceHandle: 't-src',
           
-        //   animated: true,
-        //   style: { stroke: '#2b78e4', strokeWidth: 2 },
-        // },
+          animated: true,
+          style: { stroke: '#2b78e4', strokeWidth: 2 },
+        },
         {
           id: 'n2-n3',
           source: 'n2',
@@ -812,11 +812,11 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
       
       // Populate y1s1 courses
       let snCounter = 1
-      y1s1.forEach((course: { course_code: string }) => {
-        let subnode: NodeData = {
+      y1s1.forEach((course) => {
+        let subnode = {
           id: 's' + snCounter.toString() + 'n1',
-          type: 'default',
-          sourcePosition: Position.Top,
+          // type: 'default',
+          // sourcePosition: Position.Top,
           targetPosition: Position.Right,
           data: { label: course.course_code },
           position: { x: -250, y: -135 + (45 * snCounter) },
@@ -824,15 +824,13 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
         }
         fetchedNodes.push(subnode)
 
-        let edge: edgeData = {
+        let edge = {
           id: 'n1-s' + snCounter.toString() + 'n1',
           source: 'n1',
           type: 'default',
-          sourceHandle: 't-src',
-          targetHandle: 'r-src',
           target: 's' + snCounter.toString() + 'n1',
           animated: true,
-          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+          style: { stroke: '#2b78e4', strokeWidth: 2 },
         }
 
         fetchedEdges.push(edge)
@@ -843,7 +841,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
       // Populate y1s2 courses
       snCounter = 1
       y1s2.forEach((course: { course_code: string }) => {
-        let subnode: NodeData = {
+        let subnode = {
           id: 's' + snCounter.toString() + 'n2',
           type: 'default',
           sourcePosition: Position.Top,
@@ -874,6 +872,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           source: 'n3',
           type: 'default',
           target: 's' + snCounter.toString() + 'n3',
+          sourceHandle: 'l-src',
           animated: true,
           style: { stroke: '#2b78e4', strokeWidth: 2 },
         }

@@ -3,7 +3,15 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { NodeData } from '@/types';
 
 
-const SemNode: React.FC<NodeProps<NodeData>> = ({ data, dragging }) => {
+
+type SemNodeProps = {
+  data: {
+    label: string
+  }
+}
+
+
+const SemNode = ({ data }: SemNodeProps) => {
     return (
       <div style={{
         padding: '10px 40px',
