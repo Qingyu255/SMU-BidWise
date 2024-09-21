@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTimetable } from '../../components/timetableProvider';
 import { button } from '@nextui-org/react';
 
@@ -30,11 +30,19 @@ const fixedTimeSlots = [
 
 // Convert time to a comparable format
 const parseTimeSlots = (time: string) => {
+  if (typeof time !== 'string') {
+    console.error('Invalid time format, expected a string in hh:mm format:', time);
+    return 0;
+  }
   const [hours, minutes] = time.split(':').map(Number);
   return hours * 60 + minutes; // Convert to minutes
 };
 
 const parseTime = (time: string) => {
+  if (typeof time !== 'string') {
+    console.error('Invalid time format, expected a string in hh:mm:ss format:', time);
+    return 0;
+  }
   const [hours, minutes, seconds] = time.split(':').map(Number);
   return hours * 60 + minutes + seconds / 60; // Convert to minutes
 };
@@ -42,51 +50,54 @@ const rowHeight = 50; // Height of each row in pixels
 
 const MyTimetable: React.FC = () => {
   const { selectedClasses } = useTimetable();
+  const [timetable, setTimetable] = useState<any[]>([]);
   console.log(selectedClasses);
  
   // Initialize timetable structure
-  
-  const timetable: any = fixedTimeSlots.map((time) => ({
-    time,
-    Monday: [],
-    Tuesday: [],
-    Wednesday: [],
-    Thursday: [],
-    Friday: [],
-  }));
+  useEffect(() => {
+    const newTimetable: any = fixedTimeSlots.map((time) => ({
+      time,
+      Monday: [],
+      Tuesday: [],
+      Wednesday: [],
+      Thursday: [],
+      Friday: [],
+    }));
 
-  // Add selected classes to timetable
-  selectedClasses.forEach((classItem: any) => {
-    const startMinutes = parseTime(classItem.start_time);
-    const endMinutes = parseTime(classItem.end_time);
+    // Add selected classes to timetable
+    selectedClasses.forEach((classItem: any) => {
+      const startMinutes = parseTime(classItem.start_time);
+      const endMinutes = parseTime(classItem.end_time);
 
-    // Find relevant time slots for the class
-    fixedTimeSlots.forEach((slot, index) => {
-      const slotStart = parseTimeSlots(slot.split(' - ')[0]);
-      const slotEnd = parseTimeSlots(slot.split(' - ')[1]);
+      // Find relevant time slots for the class
+      fixedTimeSlots.forEach((slot, index) => {
+        const slotStart = parseTimeSlots(slot.split(' - ')[0]);
+        const slotEnd = parseTimeSlots(slot.split(' - ')[1]);
 
-      // Check if the slot overlaps with the class time
-      if (startMinutes < slotEnd && endMinutes > slotStart) {
-        const timeSlot: any = timetable[index];
-        if (timeSlot) {
-          timeSlot[dayMapping[classItem.day]].push({
-            ...classItem,
-            startMinutes,
-            endMinutes,
-            startOffset: (startMinutes - slotStart) / 60,
-            endOffset: (endMinutes - slotStart) / 60,
-          });
+        // Check if the slot overlaps with the class time
+        if (startMinutes < slotEnd && endMinutes > slotStart) {
+          const timeSlot: any = newTimetable[index];
+          if (timeSlot) {
+            timeSlot[dayMapping[classItem.day]].push({
+              ...classItem,
+              startMinutes,
+              endMinutes,
+              startOffset: (startMinutes - slotStart) / 60,
+              endOffset: (endMinutes - slotStart) / 60,
+            });
+          }
         }
-      }
+      });
     });
-  });
+    setTimetable(newTimetable);
+  }, [selectedClasses])
 
   // Define styles
   const tableStyle: React.CSSProperties = {
     width: '100%',
     borderCollapse: 'collapse',
     margin: '20px 0',
-    backgroundColor: '#d9d7d7',
+    // backgroundColor: '#d9d7d7',
     borderRadius: '10px',
     overflow: 'hidden',
     fontFamily: "'Roboto', sans-serif",
@@ -111,6 +122,7 @@ const MyTimetable: React.FC = () => {
     verticalAlign: 'middle',
     position: 'relative',
     height: `${rowHeight}px`,
+    // height: '100%'
   };
 
   const buttonStyle: React.CSSProperties = {

@@ -5,7 +5,7 @@ import { Courses } from './components/Courses';
 import CourseSummaryCardSkeleton from './components/CourseSummaryCardSkeleton';
 import Filters from './components/Filters';
 import { FilterOptions } from './components/Filters';
-// import { getCareers, getGradingBasisTypes } from '@/utils/supabase/supabaseRpcFunctions';
+import { getCareers, getGradingBasisTypes } from '@/utils/supabase/supabaseRpcFunctions';
   
 const fetchFilterOptions = async (): Promise<FilterOptions> => {
     const supabase = createClient();

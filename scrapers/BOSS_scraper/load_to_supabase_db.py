@@ -22,6 +22,29 @@ def convert_date_format(date_str):
         logger.error(f"Invalid date format: {date_str}")
         return None
     
+def get_section_id(section_info):
+    """
+    Helper function to get the section ID based on multiple fields: 
+    venue, instructor, start_date, end_date, and class_number.
+    """
+    try:
+        # Build the query to match all fields
+        response = supabase.table("sections").select("id")\
+            .eq("venue", section_info["venue"])\
+            .eq("instructor", section_info["instructor"])\
+            .eq("start_date", section_info["start_date"])\
+            .eq("end_date", section_info["end_date"])\
+            .eq("class_number", section_info["class_number"]).execute()
+
+        if response.data and len(response.data) > 0:
+            return response.data[0]["id"]
+        else:
+            logger.error(f"No matching section found for provided details: {section_info}")
+            return None
+    except Exception as e:
+        logger.error(f"Error fetching section_id: {e}")
+        return None
+ 
 def upsert_course_info(course_info):
     """Upserts course_info data into the Supabase DB."""
     try:
@@ -121,13 +144,13 @@ def process_json_files(directory):
                         # Check if "enrolment_requirements" exists before upserting
                         "enrolment_requirements": data["course_detail"].get("enrolment_requirements", "Not Available")
                     }
-                    # upsert_course_info(course_info)
+                    upsert_course_info(course_info)
 
                     # Process term
                     term_info = {
                         "term": data.get("term")
                     }
-                    # upsert_term(term_info)
+                    upsert_term(term_info)
 
                     # Get course_id and term_id for section upsertion
                     course_code = data.get("course_code")
@@ -155,7 +178,7 @@ def process_json_files(directory):
                         # upsert availability if available
                         if "availability" in data["section_info"]:
                             availability_info = {
-                                "section_id": supabase.table("sections").select("id").eq("section", data["section_info"]["section"]).execute().data[0]["id"],
+                                "section_id": get_section_id(section_info),
                                 "total_seats": data["section_info"]["availability"].get("total"),
                                 "current_enrolled": data["section_info"]["availability"].get("current_enrolled"),
                                 "reserved_seats": data["section_info"]["availability"].get("reserved"),
@@ -167,8 +190,7 @@ def process_json_files(directory):
                         for area_name in data["section_info"]["course_areas"]:
                             course_id = supabase.table("course_info").select("id").eq("course_code", course_code).execute().data[0]["id"]
                             upsert_course_area(course_id, area_name)
-                            # area_id = supabase.table("course_areas").select("id").eq("area_name", area_name).execute().data[0]["id"]
-                            # upsert_course_area_assignment(course_id, area_id)
+              
                         
                     else:
                         logger.warning(f"No section_info found in file: {filename}. Skipping section upsertion.")

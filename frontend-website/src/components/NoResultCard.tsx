@@ -4,7 +4,7 @@ import { Card, CardTitle } from "@/components/ui/card";
 
 export default function NoResultCard({searchString, searchCategory}: {searchString?: string, searchCategory?: string}) {
     return (
-        <Card className='flex flex-col p-5 mx-2'>
+        <Card className='flex flex-col p-5 my-3'>
             <div className='flex justify-center'>
                 <CircleAlert/>
             </div>
