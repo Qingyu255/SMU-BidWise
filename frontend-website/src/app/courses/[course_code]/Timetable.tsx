@@ -116,7 +116,7 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
     fontSize: '14px',
     color: '#333333',
     verticalAlign: 'middle',
-    position: 'relative',
+    // position: 'relative',
     height: `${rowHeight}px`,
     overflow: 'visible'
   };
@@ -191,7 +191,7 @@ const Timetable = ({ professorClasses, onClassSelect }: any) => {
          
 
                       return (
-                        <div key={index} style={{ position: 'relative', height: `${rowHeight}px` }}>
+                        <div key={index} style={{ position: 'relative', height: `${rowHeight}px` }} className='Z-10'>
                           <button
                             style={{
                               ...buttonStyle,

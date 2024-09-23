@@ -162,7 +162,7 @@ const MyTimetable: React.FC = () => {
             <tr key={rowIndex}>
               <td style={tdStyle}>{slot}</td>
               {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => {
-                const classes: any = timetable[rowIndex][day];
+                 const classes = timetable[rowIndex] ? timetable[rowIndex][day] : []
 
                 return (
                   <td key={day} style={tdStyle}>
