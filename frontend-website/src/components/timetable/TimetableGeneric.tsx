@@ -99,7 +99,7 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
     borderCollapse: 'collapse',
     margin: '20px 0',
     // backgroundColor: '#d9d7d7',
-    borderRadius: '10px',
+    borderRadius: '10px 0',
     overflow: 'hidden',
     fontFamily: "'Roboto', sans-serif",
   };
@@ -107,11 +107,10 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
   const thStyle: React.CSSProperties = {
     textAlign: 'center',
     padding: '15px',
-    backgroundColor: '#0056b3',
+    backgroundColor: '#4e6af0',
     color: '#ffffff',
     fontWeight: '600',
     textTransform: 'uppercase',
-    letterSpacing: '1px',
   };
 
   const tdStyle: React.CSSProperties = {
@@ -171,10 +170,6 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
                       // Calculate the height of the button
                       const buttonHeight = (endOffset - startOffset) * rowHeight;
                       console.log("classes displayed:", classes);
-
-
-         
-
                       return (
                         <div key={index} style={{ position: 'relative', height: `${rowHeight}px` }} className='Z-10'>
                           <button
@@ -182,14 +177,19 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
                               ...buttonStyle,
                               top: `${startOffset * rowHeight}px`,
                               height: `${buttonHeight}px`,
-                              backgroundColor: selectedClasses.has(classItem.id) ? '#6c757d' : buttonStyle.backgroundColor,
+                              backgroundColor: selectedClasses.has(classItem.id) ? '#3283dd' : buttonStyle.backgroundColor,
                             }}
                             
                             onClick={() => (onClassSelect(classItem))}
                             disabled={false}
                           >
-                            {classItem.name}
-                            <div>{`Section: ${classItem.section}`} {`Venue: ${classItem.venue}`}</div>
+                            <div className='flex flex-col px-1'>
+                              {("courseCode" in classItem && (
+                                <div className='font-bold'>{classItem.courseCode}</div>
+                              ))}
+                              <div>Section: {classItem.section}</div>
+                              <div>Venue: {classItem.venue}</div>
+                            </div>
                           </button>
                         </div>
                       );

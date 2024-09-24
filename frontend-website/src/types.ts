@@ -163,4 +163,5 @@ export interface ClassItem {
   endMinutes: number;
   startOffset: number;
   endOffset: number;
+  courseCode?: string;
 }

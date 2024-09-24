@@ -140,6 +140,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
     if (isSelected) {
       removeClass(classItem);
     } else {
+      classItem["courseCode"] = course_code;
       addClass(classItem);
     }
   }
