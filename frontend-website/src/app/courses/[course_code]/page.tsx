@@ -1,11 +1,9 @@
 "use client";
 import { useState, useEffect } from 'react'; 
 import createClient  from '@/utils/supabase/client';
-import ProfessorButtons from './ProfessorButtons'; 
-import Timetable from './Timetable'; // Import Timetable component
+import ProfessorSelection from './components/ProfessorSelection'; 
 import { getLatestTerm } from '@/utils/supabase/supabaseRpcFunctions';
 import NoResultCard from '@/components/NoResultCard';
-import { TimetableProvider } from '../../../components/timetableProvider';
 import { CourseInfo, CourseInfoProps } from './components/CourseInfo';
 import { Card, CardDescription } from '@/components/ui/card';
 import { CourseInfoSkeleton } from './components/CourseInfoSkeleton';
@@ -19,6 +17,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useRouter } from 'next/navigation';
+import TimetableGeneric from '../../../components/timetable/TimetableGeneric';
+import { useTimetable } from '../../../components/timetableProvider';
 
 const supabase = createClient();
 
@@ -34,6 +34,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const [courseAreas, setCourseAreas] = useState<string[]>();
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
+  const { selectedClasses, addClass, removeClass } = useTimetable();
+
   async function getCourseInfoByCourseCode(course_code: string) {
     try {
       const { data, error }: any = await supabase.rpc('get_course_info_by_course_code', { input_course_code: course_code });
@@ -131,6 +133,16 @@ export default function Page({ params }: { params: { course_code: string }}) {
     setSelectedProfessor(professor);
     setSections(filteredSections);
   };
+
+  const handleClassSelect = (classItem: any) => {
+    console.log("Class selected:", classItem);
+    const isSelected = selectedClasses.has(classItem.id);
+    if (isSelected) {
+      removeClass(classItem);
+    } else {
+      addClass(classItem);
+    }
+  }
   
   useEffect(() => {
     (async () => {
@@ -171,7 +183,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
   }, [courseId]);
 
   return (
-    <TimetableProvider>
+    <>
       {loading ? (
         <CourseInfoSkeleton/>
       ) : (
@@ -192,13 +204,10 @@ export default function Page({ params }: { params: { course_code: string }}) {
               <CourseInfo courseInfo={courseInfo} courseAreas={courseAreas}/>
               {(professors && professors.length > 0) && (
                 <div className='py-2'>
-                  <ProfessorButtons professors={professors} onProfessorClick={updateTimetable} />
+                  <ProfessorSelection professors={professors} onProfessorClick={updateTimetable} />
                   {selectedProfessor ? (
                     <>
-                      <Timetable
-                        professorClasses={sections} // Make sure sections contain the filtered data
-                        onClassSelect={(classItem: any) => console.log('Class selected:', classItem)}
-                      />
+                      <TimetableGeneric classes={sections} onClassSelect={handleClassSelect}/>
                     </>
                   ): (
                     <Card className='rounded-lg mt-2'>
@@ -219,6 +228,6 @@ export default function Page({ params }: { params: { course_code: string }}) {
           )}
         </div>
       )}
-    </TimetableProvider>
+    </>
   );
 }

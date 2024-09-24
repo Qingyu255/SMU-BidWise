@@ -140,3 +140,27 @@ export interface TimelineProps {
 export interface Course {
   course_code: string;
 }
+
+
+export interface Availability {
+  total_seats: number;
+  reserved_seats: number;
+  available_seats: number;
+  current_enrolled: number;
+}
+
+// Interface for the class item
+export interface ClassItem {
+  id: string;
+  section: string;
+  day: string;
+  start_time: string;
+  end_time: string;
+  instructor: string;
+  venue: string;
+  availability: Availability; // Nested object representing seat availability
+  startMinutes: number;
+  endMinutes: number;
+  startOffset: number;
+  endOffset: number;
+}

@@ -1,9 +1,9 @@
 "use client"
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { ClassItem } from '@/types';
 
-// Define the shape of the context state
 interface TimetableContextType {
-  selectedClasses: Set<string>;
+  selectedClasses: Map<string, ClassItem>;
   addClass: (classItem: any) => void;
   removeClass: (classItem: any) => void;
 }
@@ -22,28 +22,34 @@ export const useTimetable = () => {
 
 // Create a Provider component
 export const TimetableProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedClasses, setSelectedClasses] = useState<Set<string>>(new Set());
+  // const [selectedClasses, setSelectedClasses] = useState<Set<string>>(new Set());
+  const [selectedClasses, setSelectedClasses] = useState<Map<string, ClassItem>>(new Map());
 
+  // load from local strage
   useEffect(() => {
-    // Load selected classes from local storage on component mount
     const savedClasses = localStorage.getItem('selectedClasses');
     if (savedClasses) {
-      setSelectedClasses(new Set(JSON.parse(savedClasses)));
+      const parsedClasses = JSON.parse(savedClasses);
+      setSelectedClasses(new Map(parsedClasses));
     }
   }, []);
 
+  // save to local storage
   useEffect(() => {
-    // Save selected classes to local storage whenever they change
-    localStorage.setItem('selectedClasses', JSON.stringify(Array.from(selectedClasses)));
+    localStorage.setItem('selectedClasses', JSON.stringify(Array.from(selectedClasses.entries())));
   }, [selectedClasses]);
 
-  const addClass = (classItem: any) => {
-    setSelectedClasses(prev => new Set(prev).add(classItem.id));
+  const addClass = (classItem: ClassItem) => {
+    setSelectedClasses(prev => {
+      const updated = new Map(prev);
+      updated.set(classItem.id, classItem);
+      return updated;
+    });
   };
 
-  const removeClass = (classItem: any) => {
+  const removeClass = (classItem: ClassItem) => {
     setSelectedClasses(prev => {
-      const updated = new Set(prev);
+      const updated = new Map(prev);
       updated.delete(classItem.id);
       return updated;
     });

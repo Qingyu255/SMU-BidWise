@@ -1,22 +1,13 @@
 "use client"
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
-import Timetable from '../courses/[course_code]/Timetable';
-import MyTimetable from './mytimetable';
-import { TimetableProvider } from '../../components/timetableProvider';
-// Define types for your state
-interface ClassItem {
-  id: number;
-  name: string;
-  day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday';
-  time: string;
-}
+import { useTimetable } from '../../components/timetableProvider';
+import TimetableGeneric from '../../components/timetable/TimetableGeneric';
 
-interface Professor {
-  id: number;
-  name: string;
-  classes: ClassItem[];
-}
+// interface Professor {
+//   id: number;
+//   name: string;
+//   classes: ClassItem[];
+// }
 
 const appStyle: React.CSSProperties = {
   // minWidth: '900px',
@@ -26,23 +17,22 @@ const appStyle: React.CSSProperties = {
 };
 
 export default function Page() {
-  const [selectedProfessor, setSelectedProfessor] = useState<Professor | null>(null);
-  const [selectedClasses, setSelectedClasses] = useState<ClassItem[]>([]);
+  // const [selectedProfessor, setSelectedProfessor] = useState<Professor | null>(null);
 
-  const handleProfessorSelect = (professor: Professor) => {
-    setSelectedProfessor(professor);
-  };
+  const { selectedClasses, addClass, removeClass } = useTimetable();
+  const selectedClassItems = Array.from(selectedClasses.values());
 
-  const handleClassSelect = (classItem: ClassItem) => {
-    setSelectedClasses((prevClasses) => [...prevClasses, classItem]);
-  };
+  // const handleProfessorSelect = (professor: Professor) => {
+  //   setSelectedProfessor(professor);
+  // };
 
   return (
     <div className="App" style={appStyle}>
-     
-        <MyTimetable/>
+        {/* delete MyTimetable.tsx soon?*/}
+        {/* <MyTimetable/> */}
 
-   
+        {/* to  convert the selectedClasses map (Map<string, ClassItem>) to an array of ClassItem objects, you can use the Array.from() method  */}
+        <TimetableGeneric classes={selectedClassItems} onClassSelect={() => {}}/>
       
     </div>
   );

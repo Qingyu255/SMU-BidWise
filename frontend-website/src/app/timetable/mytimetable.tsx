@@ -1,3 +1,5 @@
+// deprecated? to delete soon?
+
 import React, { useState, useEffect } from 'react';
 import { useTimetable } from '../../components/timetableProvider';
 import { button } from '@nextui-org/react';
@@ -98,7 +100,7 @@ const MyTimetable: React.FC = () => {
     borderCollapse: 'collapse',
     margin: '20px 0',
     // backgroundColor: '#d9d7d7',
-    borderRadius: '10px',
+    borderRadius: '10px 0',
     overflow: 'hidden',
     fontFamily: "'Roboto', sans-serif",
   };
