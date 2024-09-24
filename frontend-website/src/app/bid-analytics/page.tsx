@@ -9,7 +9,9 @@ import VisualiseTrendAcrossBiddingWindows from '@/components/interactiveCharts/V
 import VisualiseBidPriceForSpecificInstructorTermSection from '@/components/interactiveCharts/VisualiseBidPriceForSpecificInstructorTermSection'
 import { Spinner, user } from '@nextui-org/react'
 import { ChartData, Dataset, chartAttributes } from '@/types';
-import { SearchBox } from './components/SearchBox'
+import { SearchBox } from './components/SearchBox';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link'
 
 
 export default function Page() {
@@ -116,8 +118,17 @@ export default function Page() {
                 <div className='lg:w-1/2'>
                     <SearchBox/>
                 </div>
-                
-                <p className='py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>{courseCode} - {courseName}</p>
+                <div className='flex flex-col md:flex-row md:justify-between md:items-center'>
+                    <div>
+                        <p className='py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>{courseCode} - {courseName}</p>
+                    </div>
+                    <Link href={"/courses/" + courseCode}>
+                        <Button className='text-xs inline font-semibold w-fit'>
+                        View Course Information
+                        </Button>
+                    </Link>       
+                </div>
+                {/* <p className='py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>{courseCode} - {courseName}</p> */}
                 {error ? (
                     <ErrorPopUp errorMessage={error.message}/>
                 ) 
