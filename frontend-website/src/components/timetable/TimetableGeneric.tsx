@@ -1,6 +1,14 @@
-import React from 'react';
+"use client"
+import React, { useState } from 'react';
 import { useTimetable } from '../timetableProvider';
 import { ClassItem } from '@/types';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { Button } from '../ui/button';
 
 export type TimetableProps = {
   classes: ClassItem[];
@@ -171,27 +179,56 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
                       const buttonHeight = (endOffset - startOffset) * rowHeight;
                       console.log("classes displayed:", classes);
                       return (
-                        <div key={index} style={{ position: 'relative', height: `${rowHeight}px` }} className='Z-10'>
-                          <button
-                            style={{
-                              ...buttonStyle,
-                              top: `${startOffset * rowHeight}px`,
-                              height: `${buttonHeight}px`,
-                              backgroundColor: selectedClasses.has(classItem.id) ? '#3283dd' : buttonStyle.backgroundColor,
-                            }}
-                            
-                            onClick={() => (onClassSelect(classItem))}
-                            disabled={false}
-                          >
-                            <div className='flex flex-col px-1'>
-                              {("courseCode" in classItem && (
-                                <div className='font-bold'>{classItem.courseCode}</div>
-                              ))}
-                              <div>Section: {classItem.section}</div>
-                              <div>Venue: {classItem.venue}</div>
-                            </div>
-                          </button>
-                        </div>
+                        <Popover key={index}>
+                          <div key={index} style={{ position: 'relative', height: `${rowHeight}px` }} className='Z-10'>
+                            <PopoverTrigger
+                              style={{
+                                ...buttonStyle,
+                                top: `${startOffset * rowHeight}px`,
+                                height: `${buttonHeight}px`,
+                                backgroundColor: selectedClasses.has(classItem.id) ? '#3283dd' : buttonStyle.backgroundColor,
+                              }}
+                              
+                              // onClick={() => (onClassSelect(classItem))}
+                              disabled={false}
+                            >
+                              <div className='flex flex-col px-1'>
+                                {("courseCode" in classItem && (
+                                  <div className='font-bold'>{classItem.courseCode}</div>
+                                ))}
+                                <div>Section: {classItem.section}</div>
+                                <div>Venue: {classItem.venue}</div>
+                              </div>
+                            </PopoverTrigger>
+                          </div>
+                          <PopoverContent>
+                            {selectedClasses.has(classItem.id) ? (
+                              <div className="text-center">
+                                <h3 className="font-semibold py-2">Remove {classItem.section} from Timetable?</h3>
+                                <PopoverClose asChild>
+                                  <Button onClick={async () => {
+                                    await new Promise(resolve => setTimeout(resolve, 200)); // Wait for 200 ms
+                                    onClassSelect(classItem);
+                                  }}>
+                                    Remove
+                                  </Button>
+                                </PopoverClose>
+                              </div>
+                            ) : (
+                              <div className="text-center">
+                                <h3 className="font-semibold py-2">Add {classItem.section} to Timetable?</h3>
+                                <PopoverClose asChild>
+                                  <Button onClick={async () => {
+                                    await new Promise(resolve => setTimeout(resolve, 200)); // Wait for 200 ms
+                                    onClassSelect(classItem);
+                                  }}>
+                                    Add
+                                  </Button>
+                                </PopoverClose>
+                              </div>
+                            )}
+                          </PopoverContent>
+                        </Popover>
                       );
                     })}
                   </td>
