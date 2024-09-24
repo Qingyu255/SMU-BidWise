@@ -39,7 +39,7 @@ export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoPr
             <span className="font-semibold">Course Code:</span> {courseInfo.course_code}
           </CardTitle>
         </div>
-        {(courseInfo.career.toLowerCase() === "undergraduate") && (
+        {(["undergraduate", "course career"].includes(courseInfo.career.toLowerCase())) && (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>

@@ -13,7 +13,7 @@ const fetchFilterOptions = async (): Promise<FilterOptions> => {
     const { data: careerData, error: careerError } = await supabase
         .from("course_info")
         .select("career")
-        .neq('career', 'Course Career');
+        // .neq('career', 'Course Career');
     if (careerError) {
         throw careerError;
     }
