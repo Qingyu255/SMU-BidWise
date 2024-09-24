@@ -23,6 +23,7 @@ import {
   UserButton
 } from '@clerk/nextjs';
 import Image from 'next/image';
+import { poppins } from '@/utils/fonts';
 
 interface SidebarMobileProps {
   sidebarItems: SidebarItems;
@@ -50,7 +51,7 @@ export function SidebarMobile(props: SidebarMobileProps) {
                   width={35}
                   height={35}
                 />
-                <span className='text-lg font-semibold text-foreground mx-2'>SMU BidWise</span>
+                <span className={`text-lg font-semibold text-foreground mx-2 ${poppins.className}`}>SMU BidWise</span>
               </div>
             </SidebarButton>
           </Link>

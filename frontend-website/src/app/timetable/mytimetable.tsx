@@ -118,7 +118,7 @@ const MyTimetable: React.FC = () => {
     padding: '0',
     border: '1px solid #9e9e9e',
     fontSize: '14px',
-    color: '#333333',
+    // color: '#333333',
     verticalAlign: 'middle',
     position: 'relative',
     height: `${rowHeight}px`,
@@ -145,7 +145,6 @@ const MyTimetable: React.FC = () => {
 
   return (
     <div style={{ overflowX: 'auto', padding: '0 10px' }}>
-      <h2>My Timetable</h2>
       <table style={tableStyle}>
         <thead>
           <tr>
