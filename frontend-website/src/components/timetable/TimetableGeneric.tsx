@@ -204,7 +204,7 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
                           <PopoverContent>
                             {selectedClasses.has(classItem.id) ? (
                               <div className="text-center">
-                                <h3 className="font-semibold py-2">Remove {classItem.section} from Timetable?</h3>
+                                <h3 className="font-semibold py-2">Remove {classItem.courseCode? `${classItem.courseCode} - ` : ""}{classItem.section} from Timetable?</h3>
                                 <PopoverClose asChild>
                                   <Button onClick={async () => {
                                     await new Promise(resolve => setTimeout(resolve, 200)); // Wait for 200 ms
