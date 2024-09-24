@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useTimetable } from '../../components/timetableProvider';
 import TimetableGeneric from '../../components/timetable/TimetableGeneric';
+import { useToast } from "@/hooks/use-toast";
 
 // interface Professor {
 //   id: number;
@@ -21,6 +22,7 @@ export default function Page() {
 
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const selectedClassItems = Array.from(selectedClasses.values());
+  const { toast } = useToast();
 
   // const handleProfessorSelect = (professor: Professor) => {
   //   setSelectedProfessor(professor);
@@ -31,6 +33,9 @@ export default function Page() {
     const isSelected = selectedClasses.has(classItem.id);
     if (isSelected) {
       removeClass(classItem);
+      toast({
+        title: `Removed ${classItem.courseCode} - ${classItem.section} from Timetable`,
+      });
     } else {
       // addClass(classItem);
       console.warn("attempted to remove classItem not in local storage"); // should not happen ever

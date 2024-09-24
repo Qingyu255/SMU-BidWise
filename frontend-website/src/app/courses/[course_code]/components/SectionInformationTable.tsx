@@ -8,6 +8,16 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { CalendarPlus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useTimetable } from '@/components/timetableProvider';
+import { useToast } from "@/hooks/use-toast"
 
 export interface AvailabilityProps {
     total_seats: number;
@@ -31,6 +41,7 @@ export interface SectionInformationTableProps {
   sections: SectionProps[];
   latestTerm: string;
   singleProfOnly: boolean;
+  courseCode: string;
 }
 
 const sortBySection = (sections: SectionProps[]): SectionProps[] => {
@@ -42,9 +53,23 @@ const sortBySection = (sections: SectionProps[]): SectionProps[] => {
   });
 }
 
-export const SectionInformationTable = ({ sections, latestTerm, singleProfOnly }: SectionInformationTableProps) => {
+export const SectionInformationTable = ({ courseCode, sections, latestTerm, singleProfOnly }: SectionInformationTableProps) => {
   let temp: string = "";
   const sortedSections = sortBySection(sections);
+  const { selectedClasses, addClass, removeClass } = useTimetable();
+  const { toast } = useToast();
+
+  const handleClassSelect = (classItem: any) => {
+    console.log("Class selected:", classItem);
+    const isSelected = selectedClasses.has(classItem.id);
+    if (isSelected) {
+      removeClass(classItem);
+    } else {
+      classItem["courseCode"] = courseCode;
+      addClass(classItem);
+    }
+  }
+
   return (
     <Card className="rounded-lg">
       <CardHeader>
@@ -74,6 +99,7 @@ export const SectionInformationTable = ({ sections, latestTerm, singleProfOnly }
               <TableHead>Reserved Seats</TableHead>
               <TableHead>Available Seats</TableHead>
               <TableHead>Current Enrolled</TableHead>
+              <TableHead>Add to Timetable</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -96,6 +122,25 @@ export const SectionInformationTable = ({ sections, latestTerm, singleProfOnly }
                 </TableCell>
                 <TableCell>
                   {section.availability ? section.availability.current_enrolled : 'N/A'}
+                </TableCell>
+                <TableCell className='flex justify-center'>
+                  <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" onClick={() => {
+                        handleClassSelect(section);
+                        toast({
+                          title: `Added ${courseCode} - ${section.section} to Timetable`,
+                        })
+                      }}>
+                        <CalendarPlus className='cursor-pointer mx-1'/>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Add {section.section} to Timetable</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  </TooltipProvider>
                 </TableCell>
               </TableRow>
             ))}

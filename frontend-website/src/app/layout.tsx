@@ -12,6 +12,7 @@ import { Sidebar } from "@/components/sidebar/sidebar";
 import TopBar from "@/components/TopBar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TimetableProvider } from "../components/timetableProvider"; // Import your context provider
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -50,6 +51,7 @@ export default function RootLayout({
                 <TopBar />
                 {children}
               </main>
+              <Toaster />
             </TimetableProvider> {/* Close context provider */}
           </ThemeProvider>
         </body>

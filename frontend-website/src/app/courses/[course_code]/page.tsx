@@ -19,6 +19,7 @@ import {
 import { useRouter } from 'next/navigation';
 import TimetableGeneric from '../../../components/timetable/TimetableGeneric';
 import { useTimetable } from '../../../components/timetableProvider';
+import { useToast } from "@/hooks/use-toast";
 
 const supabase = createClient();
 
@@ -35,6 +36,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const { selectedClasses, addClass, removeClass } = useTimetable();
+  const { toast } = useToast();
 
   async function getCourseInfoByCourseCode(course_code: string) {
     try {
@@ -139,9 +141,15 @@ export default function Page({ params }: { params: { course_code: string }}) {
     const isSelected = selectedClasses.has(classItem.id);
     if (isSelected) {
       removeClass(classItem);
+      toast({
+        title: `Removed ${course_code} - ${classItem.section} from Timetable`,
+      });
     } else {
       classItem["courseCode"] = course_code;
       addClass(classItem);
+      toast({
+        title: `Added ${course_code} - ${classItem.section} to Timetable`,
+      });
     }
   }
   
@@ -224,7 +232,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
             <NoResultCard searchCategory={"sections for " + latestTerm}/>
           ) : (
             <div className='py-2'>
-              <SectionInformationTable sections={sections} latestTerm={latestTerm} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""}/>
+              <SectionInformationTable courseCode={course_code} sections={sections} latestTerm={latestTerm} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""}/>
             </div>
           )}
         </div>
