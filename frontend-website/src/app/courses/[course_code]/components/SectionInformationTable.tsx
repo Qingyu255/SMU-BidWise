@@ -123,7 +123,7 @@ export const SectionInformationTable = ({ courseCode, sections, latestTerm, sing
                 <TableCell>
                   {section.availability ? section.availability.current_enrolled : 'N/A'}
                 </TableCell>
-                <TableCell className='flex justify-center'>
+                <TableCell>
                   <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
