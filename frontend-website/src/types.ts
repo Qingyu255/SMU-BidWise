@@ -142,7 +142,6 @@ export interface Course {
 }
 
 
-<<<<<<< Updated upstream
 export interface Availability {
   total_seats: number;
   reserved_seats: number;
@@ -166,7 +165,6 @@ export interface ClassItem {
   endOffset: number;
   courseCode?: string;
 }
-=======
 export interface SeniorRoadmap {
   name: string;
   title: string;
@@ -183,4 +181,8 @@ export interface RoadmapCardProps {
   description: string;
   onClick: () => void;
 }
->>>>>>> Stashed changes
+
+
+export interface SeniorName {
+  name: string;
+}

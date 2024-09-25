@@ -21,10 +21,11 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ title, description, onClick }
     <Card>
         <CardHeader>
             <CardTitle>{ title }</CardTitle>
-            <CardDescription>{ description }</CardDescription>
+            
         </CardHeader>
         <CardContent>
-            <p>Card Content</p>
+          { description }
+            
         </CardContent>
         <CardFooter>
             <Button onClick={onClick}>View Roadmap</Button>
