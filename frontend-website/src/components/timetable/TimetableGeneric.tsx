@@ -107,7 +107,7 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
     borderCollapse: 'collapse',
     margin: '20px 0',
     // backgroundColor: '#d9d7d7',
-    borderRadius: '10px 0',
+    borderRadius: '10px 10px 0 0',
     overflow: 'hidden',
     fontFamily: "'Roboto', sans-serif",
   };
@@ -177,7 +177,7 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
 
                       // Calculate the height of the button
                       const buttonHeight = (endOffset - startOffset) * rowHeight;
-                      console.log("classes displayed:", classes);
+                      // console.log("classes displayed:", classes);
                       return (
                         <Popover key={index}>
                           <div key={index} style={{ position: 'relative', height: `${rowHeight}px` }} className='Z-10'>
