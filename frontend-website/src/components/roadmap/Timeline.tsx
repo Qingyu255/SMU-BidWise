@@ -527,7 +527,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
     };
 
     fetchData();
-  }, []);
+  }, [seniorName]);
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
