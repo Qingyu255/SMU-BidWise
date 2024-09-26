@@ -119,7 +119,8 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
 
   const tdStyle: React.CSSProperties = {
     textAlign: 'center',
-    padding: '0',
+    // padding: '',
+    minWidth: '120px',
     border: '1px solid #9e9e9e',
     fontSize: '14px',
     verticalAlign: 'middle',
@@ -160,7 +161,7 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
         <tbody>
           {fixedTimeSlots.map((slot, rowIndex) => (
             <tr key={rowIndex} className={`${rowIndex % 2 === 0 && 'bg-gray-300'} bg-opacity-15`}>
-              <td style={tdStyle} id="timeRange">{slot}</td>
+              <td style={tdStyle} id="timeRange" className='px-4 lg:px-0 font-bold bg-white dark:bg-black'>{slot}</td>
               {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => {
                 const classes: any = timetable[rowIndex][day];
 
@@ -182,7 +183,7 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
                                 height: `${buttonHeight}px`,
                                 backgroundColor: selectedClasses.has(classItem.id) ? '#bae6fd' : buttonStyle.backgroundColor,
                               }}
-                              
+                              className='px-2'
                               // onClick={() => (onClassSelect(classItem))}
                               disabled={false}
                             >
