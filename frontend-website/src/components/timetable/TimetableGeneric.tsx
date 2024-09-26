@@ -105,19 +105,15 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
   const tableStyle: React.CSSProperties = {
     width: '100%',
     borderCollapse: 'collapse',
-    margin: '20px 0',
-    // backgroundColor: '#d9d7d7',
-    borderRadius: '10px 10px 0 0',
+    border: '10px 10px 0 0',
     overflow: 'hidden',
-    fontFamily: "'Roboto', sans-serif",
   };
 
   const thStyle: React.CSSProperties = {
     textAlign: 'center',
     padding: '15px',
-    backgroundColor: '#4e6af0',
-    color: '#ffffff',
-    fontWeight: '600',
+    border: '1px solid #9e9e9e',
+    fontWeight: 'bold',
     textTransform: 'uppercase',
   };
 
@@ -126,18 +122,16 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
     padding: '0',
     border: '1px solid #9e9e9e',
     fontSize: '14px',
-    // color: '#333333',
     verticalAlign: 'middle',
-    // position: 'relative',
     height: `${rowHeight}px`,
     overflow: 'visible'
   };
 
   const buttonStyle: React.CSSProperties = {
-    backgroundColor: '#28a745',
-    color: '#ffffff',
+    backgroundColor: '#34d399',
+    color: 'black',
     border: 'none',
-    padding: '0',
+    padding: '0 5px',
     borderRadius: '5px',
     cursor: 'pointer',
     fontSize: '14px',
@@ -155,18 +149,18 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
       <table style={tableStyle}>
         <thead>
           <tr>
-            <th style={thStyle}>Time</th>
-            <th style={thStyle}>Monday</th>
-            <th style={thStyle}>Tuesday</th>
-            <th style={thStyle}>Wednesday</th>
-            <th style={thStyle}>Thursday</th>
-            <th style={thStyle}>Friday</th>
+            <th style={thStyle} className='rounded-tl-lg'></th>
+            <th style={thStyle}>Mon</th>
+            <th style={thStyle}>Tue</th>
+            <th style={thStyle}>Wed</th>
+            <th style={thStyle}>Thu</th>
+            <th style={thStyle}>Fri</th>
           </tr>
         </thead>
         <tbody>
           {fixedTimeSlots.map((slot, rowIndex) => (
-            <tr key={rowIndex}>
-              <td style={tdStyle}>{slot}</td>
+            <tr key={rowIndex} className={`${rowIndex % 2 === 0 && 'bg-gray-300'} bg-opacity-15`}>
+              <td style={tdStyle} id="timeRange">{slot}</td>
               {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => {
                 const classes: any = timetable[rowIndex][day];
 
@@ -186,7 +180,7 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
                                 ...buttonStyle,
                                 top: `${startOffset * rowHeight}px`,
                                 height: `${buttonHeight}px`,
-                                backgroundColor: selectedClasses.has(classItem.id) ? '#3283dd' : buttonStyle.backgroundColor,
+                                backgroundColor: selectedClasses.has(classItem.id) ? '#bae6fd' : buttonStyle.backgroundColor,
                               }}
                               
                               // onClick={() => (onClassSelect(classItem))}
@@ -196,8 +190,8 @@ export default function TimetableGeneric ({ classes, onClassSelect }: TimetableP
                                 {("courseCode" in classItem && (
                                   <div className='font-bold'>{classItem.courseCode}</div>
                                 ))}
-                                <div>Section: {classItem.section}</div>
-                                <div>Venue: {classItem.venue}</div>
+                                <div className='font-semibold'>{classItem.section}</div>
+                                <div>{classItem.venue}</div>
                               </div>
                             </PopoverTrigger>
                           </div>
