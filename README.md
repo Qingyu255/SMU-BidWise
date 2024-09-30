@@ -1,7 +1,7 @@
 # IS216 G2T4 Group Project
 
 ### SMU BidWise
-> SMU students' one-stop solution for course searching and module planning
+> SMU students' one-stop solution for course searching and planning
 
 ### To install and run selenium scraper
 ```
