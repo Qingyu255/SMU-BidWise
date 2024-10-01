@@ -12,7 +12,7 @@ const ProfessorSelection: React.FC<ProfessorSelectionProps> = ({ professors, onP
     <div>
       {/* <Separator/> */}
       <div className='font-semibold py-2'>View Sections by Professor: </div>
-      <Combobox selectedValue='' onSelect={(professor: string) => onProfessorClick(professor)} category='Professor' options={professors}/>
+      <Combobox selectedValue='' onSelect={(professor: string) => onProfessorClick(professor)} category='Professor' options={professors} clearOptionText='Show all'/>
     </div>
   );
 };

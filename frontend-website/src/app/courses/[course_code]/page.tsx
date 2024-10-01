@@ -5,7 +5,7 @@ import ProfessorSelection from './components/ProfessorSelection';
 import { getLatestTerm } from '@/utils/supabase/supabaseRpcFunctions';
 import NoResultCard from '@/components/NoResultCard';
 import { CourseInfo, CourseInfoProps } from './components/CourseInfo';
-import { Card, CardDescription } from '@/components/ui/card';
+import { Card, CardDescription, CardFooter } from '@/components/ui/card';
 import { CourseInfoSkeleton } from './components/CourseInfoSkeleton';
 import { SectionInformationTable } from './components/SectionInformationTable';
 import {
@@ -219,9 +219,13 @@ export default function Page({ params }: { params: { course_code: string }}) {
                       <TimetableGeneric classes={sections} onClassSelect={handleClassSelect}/>
                     </>
                   ): (
-                    <Card className='rounded-lg mt-2'>
-                      <CardDescription className='py-6 lg:py-10 text-center'>Select a professor to view their sections</CardDescription>
-                    </Card>
+                    <div>
+                      <p className='text-gray-400 text-sm py-2'>Showing all sections:</p>
+                      <TimetableGeneric classes={sections} onClassSelect={handleClassSelect}/>
+                    </div>
+                    // <Card className='rounded-lg mt-2'>
+                    //   <CardDescription className='py-6 lg:py-10 text-center'>Select a professor to view their sections</CardDescription>
+                    // </Card>
                   )}
                 </div>
               )}

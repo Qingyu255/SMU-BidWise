@@ -18,7 +18,7 @@ export default function TopBar() {
         pageName = pathName.split("/")[1];
         switch(pageName) {
             case "timetable":
-                pageName = "Timetable"
+                pageName = "My Timetable"
                 break;
             case "courses":
                 pageName = "Courses"
