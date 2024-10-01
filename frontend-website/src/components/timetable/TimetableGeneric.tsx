@@ -200,6 +200,7 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
         {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day, dayIndex) =>
           fixedTimeSlots.slice(0, -1).map((_, timeIndex) => (
             <div
+              className={`${timeIndex % 2 === 0 && 'bg-gray-300'} bg-opacity-15`}
               key={`cell-${dayIndex}-${timeIndex}`}
               style={{
                 gridColumn: `${dayIndex + 2} / ${dayIndex + 3}`,
