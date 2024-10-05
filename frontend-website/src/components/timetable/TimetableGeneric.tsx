@@ -241,6 +241,7 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
                   width: `${100 / numOverlaps - 0.8}%`,
                   left: `${(100 / numOverlaps) * overlapIndex + 0.3}%`,
                 }}
+                key={overlapIndex}
               >
                 <div className='w-full flex justify-end'>
                   <Popover key={classItem.id}>
