@@ -33,7 +33,7 @@ export default function ConflictModal({ open, onResolve }: ConflictModalProps) {
           <Button onClick={() => onResolve("database")}>
             Use Cloud Version
           </Button>
-          <Button variant="secondary" onClick={() => onResolve("local")} className="py-1">
+          <Button variant="secondary" onClick={() => onResolve("local")} className="my-2">
             Use Local Version
           </Button>
           <Button variant="outline" onClick={() => onResolve("merge")}>
