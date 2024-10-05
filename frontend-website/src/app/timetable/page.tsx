@@ -3,30 +3,15 @@ import React, { useState } from 'react';
 import { useTimetable } from '../../components/timetableProvider';
 import TimetableGeneric from '../../components/timetable/TimetableGeneric';
 import { useToast } from "@/hooks/use-toast";
+import { TimetableSummaryTable } from './components/TimetableSummaryTable';
 
-// interface Professor {
-//   id: number;
-//   name: string;
-//   classes: ClassItem[];
-// }
-
-const appStyle: React.CSSProperties = {
-  // minWidth: '900px',
-  padding: '20px',
-  fontFamily: "'Roboto', sans-serif",
-  backgroundColor: 'inherit',
-};
 
 export default function Page() {
-  // const [selectedProfessor, setSelectedProfessor] = useState<Professor | null>(null);
 
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const selectedClassItems = Array.from(selectedClasses.values());
   const { toast } = useToast();
 
-  // const handleProfessorSelect = (professor: Professor) => {
-  //   setSelectedProfessor(professor);
-  // };
   const handleClassSelect = (classItem: any) => {
     // here we will only be removing
     console.log("Class selected:", classItem);
@@ -43,13 +28,11 @@ export default function Page() {
   }
 
   return (
-    <div className="App" style={appStyle}>
-        {/* delete MyTimetable.tsx soon?*/}
-        {/* <MyTimetable/> */}
+    <div>
 
         {/* to  convert the selectedClasses map (Map<string, ClassItem>) to an array of ClassItem objects, you can use the Array.from() method  */}
         <TimetableGeneric classes={selectedClassItems} onClassSelect={handleClassSelect}/>
-      
+        <TimetableSummaryTable sections={selectedClassItems}/>
     </div>
   );
 }

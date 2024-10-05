@@ -15,7 +15,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
+import { ChartNoAxesCombined } from 'lucide-react';
 
 export interface CourseInfoProps {
   course_code: string;
@@ -43,8 +44,8 @@ export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoPr
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button className='text-xs inline font-semibold w-fit' onClick={() => {router.push("/bid-analytics?courseCode=" + courseInfo.course_code)}}>
-                  View Bid Price Analytics
+                <Button className='text-xs font-semibold w-fit' onClick={() => {router.push("/bid-analytics?courseCode=" + courseInfo.course_code)}}>
+                  <ChartNoAxesCombined className='inline'/><span className='inline-block px-2'>Bid Analytics</span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -89,7 +90,7 @@ export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoPr
           <Tooltip>
             <TooltipTrigger asChild>
               {/* <Button variant="outline"></Button> */}
-              <span className='mr-2 hover:cursor-pointer' onClick={() => {router.push("/courses?area=" + encodeURI(area))}}>
+              <span className='mr-2 hover:cursor-pointer' onClick={() => {router.push("/courses?area=" + encodeURIComponent(area))}}>
                 <Badge>{area}</Badge>
               </span>
             </TooltipTrigger>

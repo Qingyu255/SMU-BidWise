@@ -14,10 +14,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { CalendarPlus, CalendarMinus } from 'lucide-react';
+import { CalendarPlus, CalendarMinus, ChartNoAxesCombined } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTimetable } from '@/components/timetableProvider';
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { useRouter } from 'next/navigation';
 
 export interface AvailabilityProps {
     total_seats: number;
@@ -27,6 +29,7 @@ export interface AvailabilityProps {
   }
   
 export interface SectionProps {
+  courseCode?: string,
   id: string;
   section: string;
   day: string;
@@ -37,11 +40,8 @@ export interface SectionProps {
   availability: AvailabilityProps | null; // availability can be null
 }
 
-export interface SectionInformationTableProps {
+export interface TimetableSummaryTableProps {
   sections: SectionProps[];
-  latestTerm: string;
-  singleProfOnly: boolean;
-  courseCode: string;
 }
 
 const sortBySection = (sections: SectionProps[]): SectionProps[] => {
@@ -53,30 +53,30 @@ const sortBySection = (sections: SectionProps[]): SectionProps[] => {
   });
 }
 
-export const SectionInformationTable = ({ courseCode, sections, latestTerm, singleProfOnly }: SectionInformationTableProps) => {
+export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) => {
   let temp: string = "";
   const sortedSections = sortBySection(sections);
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const { toast } = useToast();
-
-  const handleClassSelect = (classItem: any) => {
+  const router = useRouter();
+  
+  const handleRemoveClass = (classItem: any) => {
     console.log("Class selected:", classItem);
     const isSelected = selectedClasses.has(classItem.id);
     if (isSelected) {
       removeClass(classItem);
     } else {
-      classItem["courseCode"] = courseCode;
-      addClass(classItem);
+      console.error("Attempting to remove class not selected in timetable provider");
     }
   }
 
   return (
-    <Card className="rounded-lg">
+    <Card className="rounded-lg my-2">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold">Section Information ({latestTerm})</CardTitle>
+        <CardTitle className="text-xl xl:text-2xl font-semibold">Timetable Summary</CardTitle>
       </CardHeader>    
       <CardContent>
-        {singleProfOnly ? (
+        {/* {singleProfOnly ? (
           <CardDescription className='mb-1'>
             Showing sections for {sections[0].instructor}
           </CardDescription>
@@ -84,10 +84,11 @@ export const SectionInformationTable = ({ courseCode, sections, latestTerm, sing
         <CardDescription className='mb-1'>
           Showing all sections
         </CardDescription>
-        )}
+        )} */}
         <Table className="w-full">
           <TableHeader>
             <TableRow>
+              <TableHead>Course Code</TableHead>
               <TableHead>Section</TableHead>
               <TableHead>Day</TableHead>
               <TableHead>Start Time</TableHead>
@@ -99,12 +100,15 @@ export const SectionInformationTable = ({ courseCode, sections, latestTerm, sing
               <TableHead>Reserved Seats</TableHead>
               <TableHead>Available Seats</TableHead>
               <TableHead>Current Enrolled</TableHead>
-              <TableHead>Add to Timetable</TableHead>
+              <TableHead>Planned Bid</TableHead>
+              <TableHead>View Bid Analytics</TableHead>
+              <TableHead>Remove From Timetable</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {sections.map((section) => (
               <TableRow key={section.id}>
+                <TableCell className='font-semibold'>{section.courseCode}</TableCell>
                 <TableCell>{section.section}</TableCell>
                 <TableCell>{section.day}</TableCell>
                 <TableCell>{section.start_time}</TableCell>
@@ -124,29 +128,41 @@ export const SectionInformationTable = ({ courseCode, sections, latestTerm, sing
                   {section.availability ? section.availability.current_enrolled : 'N/A'}
                 </TableCell>
                 <TableCell>
+                  <div className='flex flex-row items-center'>
+                    <Input type='number' placeholder='10.00'/>
+                    <span className='text-gray-600 px-1 ps-2'>e$</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button className='text-xs font-semibold w-fit' onClick={() => {router.push("/bid-analytics?courseCode=" + section.courseCode)}}>
+                          <ChartNoAxesCombined/>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Analyse price trends for {section.courseCode}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </TableCell>
+                <TableCell>
                   <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button onClick={() => {
-                        handleClassSelect(section);
+                        handleRemoveClass(section);
                         toast({
-                          title: `${selectedClasses.has(section.id) ? `Removed ${courseCode} - ${section.section} from Timetable` : `Added ${courseCode} - ${section.section} to Timetable`}`,
+                          title: `Removed ${"courseCode"} - ${section.section} to Timetable`,
                         })
                       }}>
-                        {selectedClasses.has(section.id) ? (
-                          <CalendarMinus/>
-                        ) : (
-                          <CalendarPlus/>
-                        )}
+                        <CalendarMinus/>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
-                        {selectedClasses.has(section.id) ? (
-                          `Remove ${section.section} from Timetable`
-                        ) : (
-                          `Add ${section.section} to Timetable`
-                        )} 
+                        {`Remove ${section.section} from Timetable`}
                       </p>
                     </TooltipContent>
                   </Tooltip>

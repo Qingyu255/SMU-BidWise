@@ -12,7 +12,7 @@ import { ChartData, Dataset, chartAttributes } from '@/types';
 import { SearchBox } from './components/SearchBox';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link'
-
+import { BookText } from 'lucide-react';
 
 export default function Page() {
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
@@ -123,8 +123,9 @@ export default function Page() {
                         <p className='py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>{courseCode} - {courseName}</p>
                     </div>
                     <Link href={"/courses/" + courseCode}>
-                        <Button className='text-xs inline font-semibold w-fit'>
-                        View Course Information
+                        <Button className='text-xs font-semibold w-fit'>
+                            <BookText/>
+                            <span className='px-2'>Course Information</span>
                         </Button>
                     </Link>       
                 </div>
