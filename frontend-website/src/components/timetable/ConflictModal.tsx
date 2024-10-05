@@ -26,15 +26,15 @@ export default function ConflictModal({ open, onResolve }: ConflictModalProps) {
             <DialogTitle>Data Conflict Detected</DialogTitle>
           </div>
           <DialogDescription>
-            Your local timetable is different from the one saved in the cloud. Which version would you like to use?
+            Your current timetable is different from the latest one saved in the cloud. Which version would you like to use?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button onClick={() => onResolve("database")}>
-            Use Cloud Version
+            Use latest Cloud Version
           </Button>
           <Button variant="secondary" onClick={() => onResolve("local")} className="my-2">
-            Use Local Version
+            Use Current Version
           </Button>
           <Button variant="outline" onClick={() => onResolve("merge")}>
             Merge Timetables
