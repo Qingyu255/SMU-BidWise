@@ -8,7 +8,7 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import {
   Tooltip,
@@ -17,6 +17,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ChartNoAxesCombined } from 'lucide-react';
+import Rating from '@/components/Rating';
 
 export interface CourseInfoProps {
   course_code: string;
@@ -29,7 +30,7 @@ export interface CourseInfoProps {
 }
 
 export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoProps, courseAreas: any}) {
-  const router = useRouter();
+
   return (
     <Card className=" rounded-lg">
       <CardHeader>
@@ -44,9 +45,11 @@ export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoPr
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button className='text-xs font-semibold w-fit' onClick={() => {router.push("/bid-analytics?courseCode=" + courseInfo.course_code)}}>
-                  <ChartNoAxesCombined className='inline'/><span className='inline-block px-2'>Bid Analytics</span>
-                </Button>
+                <Link href={"/bid-analytics?courseCode=" + courseInfo.course_code}>
+                  <Button className='text-xs font-semibold w-fit'>
+                    <ChartNoAxesCombined className='inline'/><span className='inline-block px-2'>Bid Analytics</span>
+                  </Button>
+                </Link>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Analyse price trends for {courseInfo.course_code}</p>
@@ -85,23 +88,41 @@ export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoPr
 
         <p className="text-base font-semibold  mb-2">Course Areas</p>
         <div>
-        {courseAreas.map((area: string, index: number) => (
-        <TooltipProvider key={index}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              {/* <Button variant="outline"></Button> */}
-              <span className='mr-2 hover:cursor-pointer' onClick={() => {router.push("/courses?area=" + encodeURIComponent(area))}}>
-                <Badge>{area}</Badge>
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>View courses in area: {area}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-          
-        ))}
+          {courseAreas.map((area: string, index: number) => (
+            <TooltipProvider key={index}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  {/* <Button variant="outline"></Button> */}
+                  <Link className='mr-2 hover:cursor-pointer' href={"/courses?area=" + encodeURIComponent(area)}>
+                    <Badge>{area}</Badge>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>View courses in area: {area}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ))}
         </div>
+
+        {/* TODO: eventually for these ratings we will want to pull from the database and allow for a quick form for users to contribute their rating */}
+        <div className='mt-1 flex flex-col gap-y-2 md:flex-row md:gap-x-3 md:gap-y-0'>
+          <Rating 
+            ratingName='Fluff' 
+            ratingOutOfFive={Math.floor(Math.random() * 5) + 1} 
+            fillColour='#4c68ee' 
+            ratingDescription="The 'Fluff Rating' indicates how much non-technical content a course contains." 
+            userContributions={0}
+          />
+          <Rating 
+            ratingName='Workload' 
+            ratingOutOfFive={Math.floor(Math.random() * 5) + 1} 
+            fillColour='#f4a261'
+            ratingDescription="The 'Workload Rating' provides an estimate of the effort and time commitment required for the course." 
+            userContributions={0}
+          />
+        </div>
+        
 
       </CardContent>
       <CardFooter className="text-sm text-gray-500">

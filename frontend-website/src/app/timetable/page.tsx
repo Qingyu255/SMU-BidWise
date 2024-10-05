@@ -4,7 +4,7 @@ import { useTimetable } from '../../components/timetableProvider';
 import TimetableGeneric from '../../components/timetable/TimetableGeneric';
 import { useToast } from "@/hooks/use-toast";
 import { TimetableSummaryTable } from './components/TimetableSummaryTable';
-
+import InfoCard from './components/InfoCard';
 
 export default function Page() {
 
@@ -29,7 +29,7 @@ export default function Page() {
 
   return (
     <div>
-
+        <InfoCard/>
         {/* to  convert the selectedClasses map (Map<string, ClassItem>) to an array of ClassItem objects, you can use the Array.from() method  */}
         <TimetableGeneric classes={selectedClassItems} onClassSelect={handleClassSelect}/>
         <TimetableSummaryTable sections={selectedClassItems}/>

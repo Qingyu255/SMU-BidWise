@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/command";
 import { useDebounce } from 'use-debounce';
 import { useRouter, usePathname } from 'next/navigation';
+import { useTimetable } from '@/components/timetableProvider';
 
 export function SearchBox() {
   const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
@@ -19,7 +20,13 @@ export function SearchBox() {
   const pathname = usePathname();
   const [searchText, setSearchText] = useState<string>("");
   // const [debouncedSearchText] = useDebounce(searchText, 500);
-  const [uniqueCourses, setUniqueCourses] = useState<string[]>([])
+  const [uniqueCourses, setUniqueCourses] = useState<string[]>([]);
+  const [showTimetableClasses, setShowTimetableClasses] = useState(false);
+
+  const { selectedClasses } = useTimetable();
+
+  const selectedClassObjArr = Array.from(selectedClasses.values());
+  const selectedClassCodeArr = [...new Set(selectedClassObjArr.map(obj => obj.courseCode))];
 
   useEffect(() => {
       const fetchAllCourseCodes = async () => {
@@ -42,7 +49,28 @@ export function SearchBox() {
 
   return (
     <Command className="rounded-lg border shadow-md md:min-w-[450px]">
-      <CommandInput placeholder="Search for a Course" onValueChange={handleSearchInputChange}/>
+      <CommandInput 
+        placeholder="Search for a Course" 
+        onValueChange={handleSearchInputChange}
+        onFocus={() => setShowTimetableClasses(true)}
+        onBlur={() => {
+          setTimeout(() => setShowTimetableClasses(false), 100)
+        }} // when click outside, added delay to if onselect needs to be called, onBlur wont come into play immediately
+      />
+
+      {/* show items in timetable if any */}
+      {(showTimetableClasses && (searchText.length === 0) && selectedClassCodeArr.length > 0) && (
+        <CommandList>
+          <CommandGroup heading="Courses in your timetable:">
+            {selectedClassCodeArr.map((courseCode, index) => (
+              <CommandItem key={index} onSelect={() => {handleCourseSelection(courseCode + ":"); setShowTimetableClasses(false);}}>
+                <span>{courseCode}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      )}
+
       <CommandList className={`${(searchText.length > 0) ? 'h-[150px]' : 'h-0'}`}>
         {(searchText.length > 0) && (
           <CommandEmpty>No courses found</CommandEmpty>
@@ -51,7 +79,7 @@ export function SearchBox() {
         {(uniqueCourses.length > 0) && (
           <CommandGroup heading="Courses">
             {uniqueCourses.map((course, index) => (
-              <CommandItem key={index} onSelect={() => {handleCourseSelection(course); console.log("hi")}}>
+              <CommandItem key={index} onSelect={() => {handleCourseSelection(course)}}>
                 <span>{course}</span>
               </CommandItem>
             ))}

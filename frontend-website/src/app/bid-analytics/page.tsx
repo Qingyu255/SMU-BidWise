@@ -136,9 +136,9 @@ export default function Page() {
                 : (chartDataOverview && chartDataInstructorOverview ? (
                     <>
                         {isSCISCourse && (
-                            <button key={isSCISCourse.toString()} onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left p-1 px-1.5 mb-2 sm:mb-4 border-2 w-fit rounded-md hover:bg-gray-200 text-xs sm:text-sm'>
-                                View Course Information
-                            </button>
+                            <Button key={isSCISCourse.toString()} onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left p-1 px-1.5 mb-2 sm:mb-4 w-fit text-xs sm:text-sm'>
+                                View SMU Course Document
+                            </Button>
                         )}
                         <div className='flex flex-col gap-y-5'>
                             <div className='flex flex-col'>

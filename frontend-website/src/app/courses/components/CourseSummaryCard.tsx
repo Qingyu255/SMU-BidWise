@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link";
-
+import Rating from "@/components/Rating";
 
 export interface CourseSummaryCardProps {
     course_code: string;
@@ -15,8 +15,9 @@ export interface CourseSummaryCardProps {
 
 export default function CourseSummaryCard({ course_code, title, career, description, enrolment_requirements, units }: CourseSummaryCardProps) {
     return (
-        <div className="flex justify-center p-4">
+        <div className="flex justify-center py-4">
             <Card className="w-full bg-background text-foreground">
+                <div>
                 <CardHeader>
                     <Link href={"courses/" + course_code}>
                         <CardTitle className="text-xl lg:text-2xl flex flex-row cursor-pointer hover:text-slate-500">
@@ -32,18 +33,42 @@ export default function CourseSummaryCard({ course_code, title, career, descript
                         Units: {units} CU
                     </CardDescription>
                 </CardHeader>
+                
                 <CardContent>
                     <Separator className="mb-2"/>
-                    <div className="mb-4">
-                        <p className="text-sm font-semibold">Description</p>
-                        <p className="text-sm">{description}</p>
-                    </div>
-                    <div>
-                        <p className="text-sm font-semibold">Enrolment Requirements</p>
-                        <p className="text-sm">{enrolment_requirements}</p>
+                    <div className="flex flex-col md:flex-row">
+                        <div>
+                            <div className="mb-4">
+                                <p className="text-sm font-semibold">Description</p>
+                                <p className="text-sm">{description}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm font-semibold">Enrolment Requirements</p>
+                                <p className="text-sm">{enrolment_requirements}</p>
+                            </div>
+                        </div>
+                        <div className='py-2 md:px-4 flex flex-row md:flex-col gap-x-3 gap-y-0 md:gap-y-2'>
+                            <Rating 
+                                ratingName='Fluff' 
+                                ratingOutOfFive={Math.floor(Math.random() * 5) + 1} 
+                                fillColour='#4c68ee' 
+                                ratingDescription="The 'Fluff Rating' indicates how much non-technical content a course contains." 
+                                userContributions={0}
+                            />
+                            <Rating 
+                                ratingName='Workload' 
+                                ratingOutOfFive={Math.floor(Math.random() * 5) + 1} 
+                                fillColour='#f4a261'
+                                ratingDescription="The 'Workload Rating' provides an estimate of the effort and time commitment required for the course." 
+                                userContributions={0}
+                            />
+                        </div>
                     </div>
                 </CardContent>
+                </div>
+                
             </Card>
+            
         </div>
     )
 }

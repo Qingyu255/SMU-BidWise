@@ -19,7 +19,14 @@ import { Button } from '@/components/ui/button';
 import { useTimetable } from '@/components/timetableProvider';
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { Info } from 'lucide-react';
 
 export interface AvailabilityProps {
     total_seats: number;
@@ -58,7 +65,6 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
   const sortedSections = sortBySection(sections);
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const { toast } = useToast();
-  const router = useRouter();
   
   const handleRemoveClass = (classItem: any) => {
     console.log("Class selected:", classItem);
@@ -76,15 +82,6 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
         <CardTitle className="text-xl xl:text-2xl font-semibold">Timetable Summary</CardTitle>
       </CardHeader>    
       <CardContent>
-        {/* {singleProfOnly ? (
-          <CardDescription className='mb-1'>
-            Showing sections for {sections[0].instructor}
-          </CardDescription>
-        ) : (
-        <CardDescription className='mb-1'>
-          Showing all sections
-        </CardDescription>
-        )} */}
         <Table className="w-full">
           <TableHeader>
             <TableRow>
@@ -106,9 +103,28 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
             </TableRow>
           </TableHeader>
           <TableBody>
+            {(sections.length == 0) && (
+              <TableRow>
+                <TableCell colSpan={14} className='text-center text-sm md:text-base'>
+                  <div className='opacity-60 py-4'>
+                    <Info className="inline w-5 h-5 text-gray-600" />
+                    <span className='px-2'>No courses added to timetable</span>
+                  </div>
+                  <Link href="/courses">
+                    <Button>
+                      View Courses
+                    </Button>
+                  </Link>
+                </TableCell>
+              </TableRow>
+            )}
             {sections.map((section) => (
               <TableRow key={section.id}>
-                <TableCell className='font-semibold'>{section.courseCode}</TableCell>
+                <TableCell>
+                  <Link href={"courses/" + section.courseCode} className='font-semibold lg:text-[16px] hover:underline hover:cursor-pointer'>
+                    {section.courseCode}
+                  </Link>
+                </TableCell>
                 <TableCell>{section.section}</TableCell>
                 <TableCell>{section.day}</TableCell>
                 <TableCell>{section.start_time}</TableCell>
@@ -129,17 +145,19 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                 </TableCell>
                 <TableCell>
                   <div className='flex flex-row items-center'>
-                    <Input type='number' placeholder='10.00'/>
-                    <span className='text-gray-600 px-1 ps-2'>e$</span>
+                  <span className='text-gray-600 pe-2'>e$</span>
+                    <Input type='number' placeholder='10.00' className='min-w-[70px]'/>
                   </div>
                 </TableCell>
                 <TableCell>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button className='text-xs font-semibold w-fit' onClick={() => {router.push("/bid-analytics?courseCode=" + section.courseCode)}}>
-                          <ChartNoAxesCombined/>
-                        </Button>
+                        <Link href={"/bid-analytics?courseCode=" + section.courseCode}>
+                          <Button className='text-xs font-semibold w-fit'>
+                            <ChartNoAxesCombined/>
+                          </Button>
+                        </Link>
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Analyse price trends for {section.courseCode}</p>
@@ -148,25 +166,33 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                   </TooltipProvider>
                 </TableCell>
                 <TableCell>
-                  <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button onClick={() => {
-                        handleRemoveClass(section);
-                        toast({
-                          title: `Removed ${"courseCode"} - ${section.section} to Timetable`,
-                        })
-                      }}>
+                <Popover key={section.id}>
+                    <PopoverTrigger>
+                      <Button>
                         <CalendarMinus/>
                       </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        {`Remove ${section.section} from Timetable`}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                  </TooltipProvider>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <div className="text-center">
+                        <h3 className="font-semibold py-2">
+                          Remove {section.courseCode} - {section.section} from Timetable?
+                        </h3>
+                        <PopoverClose asChild>
+                          <Button
+                            onClick={async () => {
+                              await new Promise((resolve) => setTimeout(resolve, 200));
+                              handleRemoveClass(section);
+                              toast({
+                                title: `Removed ${section.courseCode} - ${section.section} from Timetable`,
+                              })
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </PopoverClose>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </TableCell>
               </TableRow>
             ))}

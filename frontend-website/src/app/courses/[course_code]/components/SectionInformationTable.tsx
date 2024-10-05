@@ -17,7 +17,13 @@ import {
 import { CalendarPlus, CalendarMinus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTimetable } from '@/components/timetableProvider';
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { PopoverClose } from "@radix-ui/react-popover";
 
 export interface AvailabilityProps {
     total_seats: number;
@@ -59,14 +65,14 @@ export const SectionInformationTable = ({ courseCode, sections, latestTerm, sing
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const { toast } = useToast();
 
-  const handleClassSelect = (classItem: any) => {
-    console.log("Class selected:", classItem);
-    const isSelected = selectedClasses.has(classItem.id);
+  const handleClassSelect = (section: any) => {
+    console.log("Class selected:", section);
+    const isSelected = selectedClasses.has(section.id);
     if (isSelected) {
-      removeClass(classItem);
+      removeClass(section);
     } else {
-      classItem["courseCode"] = courseCode;
-      addClass(classItem);
+      section["courseCode"] = courseCode;
+      addClass(section);
     }
   }
 
@@ -124,33 +130,58 @@ export const SectionInformationTable = ({ courseCode, sections, latestTerm, sing
                   {section.availability ? section.availability.current_enrolled : 'N/A'}
                 </TableCell>
                 <TableCell>
-                  <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button onClick={() => {
-                        handleClassSelect(section);
-                        toast({
-                          title: `${selectedClasses.has(section.id) ? `Removed ${courseCode} - ${section.section} from Timetable` : `Added ${courseCode} - ${section.section} to Timetable`}`,
-                        })
-                      }}>
+                  <Popover key={section.id}>
+                    <PopoverTrigger>
+                      <Button>
                         {selectedClasses.has(section.id) ? (
                           <CalendarMinus/>
                         ) : (
                           <CalendarPlus/>
                         )}
                       </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        {selectedClasses.has(section.id) ? (
-                          `Remove ${section.section} from Timetable`
-                        ) : (
-                          `Add ${section.section} to Timetable`
-                        )} 
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                  </TooltipProvider>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      {selectedClasses.has(section.id) ? (
+                        <div className="text-center">
+                          <h3 className="font-semibold py-2">
+                            Remove {courseCode} - {section.section} from Timetable?
+                          </h3>
+                          <PopoverClose asChild>
+                            <Button
+                              onClick={async () => {
+                                await new Promise((resolve) => setTimeout(resolve, 200));
+                                handleClassSelect(section);
+                                toast({
+                                  title: `Removed ${courseCode} - ${section.section} from Timetable`,
+                                })
+                              }}
+                            >
+                              Remove
+                            </Button>
+                          </PopoverClose>
+                        </div>
+                      ) : (
+                        <div className="text-center">
+                          <h3 className="font-semibold py-2">
+                            Add {section.section} to Timetable?
+                          </h3>
+                          <PopoverClose asChild>
+                            <Button
+                              onClick={async () => {
+                                await new Promise((resolve) => setTimeout(resolve, 200));
+                                handleClassSelect(section);
+                                toast({
+                                  title: `Added ${courseCode} - ${section.section} to Timetable`,
+                                })
+                              }}
+                            >
+                              Add
+                            </Button>
+                          </PopoverClose>
+                        </div>
+                      )}
+                    </PopoverContent>
+                  </Popover>
                 </TableCell>
               </TableRow>
             ))}
