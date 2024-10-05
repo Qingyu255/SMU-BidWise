@@ -294,8 +294,8 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
                 <div
                   style={{
                     maxHeight: `${classItem.height -35}px`,
+                    overflowY: 'auto'
                   }}
-                  className='hover:overflow-auto'
                 >
                   {classItem.courseCode && (
                     <div className='font-bold'>{classItem.courseCode}</div>
