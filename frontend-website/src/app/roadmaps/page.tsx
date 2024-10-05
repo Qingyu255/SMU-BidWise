@@ -122,7 +122,7 @@ const handleClick = (seniorName: string) => {
     <div>
       { showRoadmap ? 
         <div className='flex flex-col overflow-hidden' style={{ width: '100%', height: '100%'}}>
-          <div className='container w-10/12 h-screen self-center flex-grow-0'>
+          <div className='container h-screen self-center flex-grow-0'>
             <Timeline seniorName={timelinePayload}/>
           </div>
         </div>

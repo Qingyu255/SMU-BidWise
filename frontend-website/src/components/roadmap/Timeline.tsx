@@ -20,7 +20,9 @@ import {
   ReactFlowProvider,
   DefaultEdgeOptions,
   NodeTypes,
-  type NodeProps
+  PanOnScrollMode,
+  type NodeProps,
+  ReactFlowInstance,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
@@ -114,28 +116,64 @@ const nodeTypes: NodeTypes = {
   SemNode: SemNode,
 };
 
+
+
+
 const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange, onEdgesChange, onConnect }) => {
-  const { zoomTo } = useReactFlow();
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance|null>(null); // State to hold the initialized instance
+
+  // When the reactFlowInstance changes, we can perform operations on it.
+  useEffect(() => {
+    if (reactFlowInstance) {
+       // Automatically fit the view to the diagram
+       reactFlowInstance.fitView();
+       let vp = reactFlowInstance.getViewport()
+       console.log(vp)
+       // Then zoom in by adjusting the zoom level
+       reactFlowInstance.setViewport({x:vp.x, y: vp.y, zoom: 0.7 });
+    }
+  }, [reactFlowInstance]);
+
 
   useEffect(() => {
-    // Set the zoom level to 75% (zoom out)
-    zoomTo(0.5);
-  }, [zoomTo]);
+    const handleResize = () => {
+      if(reactFlowInstance) {
+        reactFlowInstance.fitView()
+        let vp = reactFlowInstance.getViewport()
+        if(vp.x >= 210) {
+          reactFlowInstance.setViewport({x:vp.x, y: vp.y, zoom: 0.7 });
+        }
+        console.log(vp)
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [reactFlowInstance])
+
+  // Callback to get the React Flow instance once it's ready
+  const handleInit = (instance: ReactFlowInstance) => {
+    setReactFlowInstance(instance);  // Save the initialized instance in the state
+  };
 
   return (
     <ReactFlow
       nodes={nodes}
       nodeTypes={nodeTypes}
       edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
+      panOnScroll
+      panOnScrollMode={PanOnScrollMode.Vertical}
+      panOnDrag={false}
+      zoomOnPinch={false}
       fitView
-      fitViewOptions={fitViewOptions}
+      // fitViewOptions={fitViewOptions}
       defaultEdgeOptions={defaultEdgeOptions}
+      onInit={handleInit}
     >
       <Controls />
-      <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+      {/* <Background variant={BackgroundVariant.Lines} gap={12} size={1} /> */}
     </ReactFlow>
   );
 };
