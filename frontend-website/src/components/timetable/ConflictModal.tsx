@@ -19,27 +19,32 @@ interface ConflictModalProps {
 export default function ConflictModal({ open, onResolve }: ConflictModalProps) {
   return (
     <Dialog open={open}>
-      <DialogContent>
-        <DialogHeader>
-          <div className="flex items-center">
+      <DialogContent className="w-full max-w-[450px]">
+        <DialogHeader className="max-w-[400px]">
+          <div className="flex flex-row">
             <AlertCircle className="w-6 h-6 text-red-500 mr-2" />
             <DialogTitle>Data Conflict Detected</DialogTitle>
           </div>
           <DialogDescription>
             Your current timetable is different from the latest one saved in the cloud. Which version would you like to use?
           </DialogDescription>
+          <div className="flex justify-center pt-1">
+            <div className="w-fit flex flex-col space-y-2 text-center">
+              <Button onClick={() => onResolve("database")} className="w-full">
+                Use latest Cloud Version
+              </Button>
+
+              <Button variant="secondary" onClick={() => onResolve("local")} className="w-full">
+                Use Current Version
+              </Button>
+
+              <Button variant="outline" onClick={() => onResolve("merge")} className="w-full">
+                Merge Timetables
+              </Button>
+            </div>
+          </div>
         </DialogHeader>
-        <DialogFooter>
-          <Button onClick={() => onResolve("database")} className="my-1">
-            Use latest Cloud Version
-          </Button>
-          <Button variant="secondary" onClick={() => onResolve("local")} className="my-1">
-            Use Current Version
-          </Button>
-          <Button variant="outline" onClick={() => onResolve("merge")} className="my-1">
-            Merge Timetables
-          </Button>
-        </DialogFooter>
+        
       </DialogContent>
     </Dialog>
   );
