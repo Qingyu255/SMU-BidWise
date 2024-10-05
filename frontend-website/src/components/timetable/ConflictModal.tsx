@@ -30,13 +30,13 @@ export default function ConflictModal({ open, onResolve }: ConflictModalProps) {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={() => onResolve("database")}>
+          <Button onClick={() => onResolve("database")} className="my-1">
             Use latest Cloud Version
           </Button>
-          <Button variant="secondary" onClick={() => onResolve("local")} className="my-2">
+          <Button variant="secondary" onClick={() => onResolve("local")} className="my-1">
             Use Current Version
           </Button>
-          <Button variant="outline" onClick={() => onResolve("merge")}>
+          <Button variant="outline" onClick={() => onResolve("merge")} className="my-1">
             Merge Timetables
           </Button>
         </DialogFooter>
