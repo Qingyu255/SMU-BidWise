@@ -228,22 +228,22 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
             const numOverlaps = group.length;
 
             return group.map((classItem: any, overlapIndex: any) => (
-              <Popover key={classItem.id}>
-                <div
-                  style={{
-                    ...classStyle,
-                    backgroundColor: selectedClasses.has(classItem.id)
-                      ? '#bae6fd'
-                      : classStyle.backgroundColor,
-                    gridColumn: `${dayIndex + 2} / ${dayIndex + 3}`,
-                    gridRow: `2 / span ${totalRows}`,
-                    top: `${classItem.topOffset}px`,
-                    height: `${classItem.height}px`,
-                    width: `${100 / numOverlaps - 0.8}%`,
-                    left: `${(100 / numOverlaps) * overlapIndex + 0.3}%`,
-                  }}
-                >
-                  <div className='w-full flex justify-end'>
+              <div
+                style={{
+                  ...classStyle,
+                  backgroundColor: selectedClasses.has(classItem.id)
+                    ? '#bae6fd'
+                    : classStyle.backgroundColor,
+                  gridColumn: `${dayIndex + 2} / ${dayIndex + 3}`,
+                  gridRow: `2 / span ${totalRows}`,
+                  top: `${classItem.topOffset}px`,
+                  height: `${classItem.height}px`,
+                  width: `${100 / numOverlaps - 0.8}%`,
+                  left: `${(100 / numOverlaps) * overlapIndex + 0.3}%`,
+                }}
+              >
+                <div className='w-full flex justify-end'>
+                  <Popover key={classItem.id}>
                     <PopoverTrigger className='p-1 hover:bg-white hover:bg-opacity-70 rounded-md h-[32px]'>
                       {selectedClasses.has(classItem.id) ? (
                         <CalendarMinus className='text-gray-600'/>
@@ -251,63 +251,63 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
                         <CalendarPlus className='text-gray-600'/>
                       )}
                     </PopoverTrigger>
-                  </div>
-                  <div
-                    style={{
-                      maxHeight: `${classItem.height -35}px`,
-                    }}
-                    className='hover:overflow-auto'
-                  >
-                    {classItem.courseCode && (
-                      <div className='font-bold'>{classItem.courseCode}</div>
-                    )}
-                    <div>
-                      <div className='font-bold'>
-                        {classItem.section} 
-                        <p className='font-semibold text-xs leading-none'>{classItem.instructor}</p>
-                      </div>
-                      <div className='text-xs lg:text-sm leading-none '>{classItem.venue}</div>
+                    <PopoverContent>
+                      {selectedClasses.has(classItem.id) ? (
+                        <div className="text-center">
+                          <h3 className="font-semibold py-2">
+                            Remove{' '}
+                            {classItem.courseCode ? `${classItem.courseCode} - ` : ''}
+                            {classItem.section} from Timetable?
+                          </h3>
+                          <PopoverClose asChild>
+                            <Button
+                              onClick={async () => {
+                                await new Promise((resolve) => setTimeout(resolve, 200));
+                                onClassSelect(classItem);
+                              }}
+                            >
+                              Remove
+                            </Button>
+                          </PopoverClose>
+                        </div>
+                      ) : (
+                        <div className="text-center">
+                          <h3 className="font-semibold py-2">
+                            Add {classItem.section} to Timetable?
+                          </h3>
+                          <PopoverClose asChild>
+                            <Button
+                              onClick={async () => {
+                                await new Promise((resolve) => setTimeout(resolve, 200));
+                                onClassSelect(classItem);
+                              }}
+                            >
+                              Add
+                            </Button>
+                          </PopoverClose>
+                        </div>
+                      )}
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div
+                  style={{
+                    maxHeight: `${classItem.height -35}px`,
+                  }}
+                  className='hover:overflow-auto'
+                >
+                  {classItem.courseCode && (
+                    <div className='font-bold'>{classItem.courseCode}</div>
+                  )}
+                  <div>
+                    <div className='font-bold'>
+                      {classItem.section} 
+                      <p className='font-semibold text-xs leading-none'>{classItem.instructor}</p>
                     </div>
+                    <div className='text-xs lg:text-sm leading-none '>{classItem.venue}</div>
                   </div>
                 </div>
-                <PopoverContent>
-                  {selectedClasses.has(classItem.id) ? (
-                    <div className="text-center">
-                      <h3 className="font-semibold py-2">
-                        Remove{' '}
-                        {classItem.courseCode ? `${classItem.courseCode} - ` : ''}
-                        {classItem.section} from Timetable?
-                      </h3>
-                      <PopoverClose asChild>
-                        <Button
-                          onClick={async () => {
-                            await new Promise((resolve) => setTimeout(resolve, 200));
-                            onClassSelect(classItem);
-                          }}
-                        >
-                          Remove
-                        </Button>
-                      </PopoverClose>
-                    </div>
-                  ) : (
-                    <div className="text-center">
-                      <h3 className="font-semibold py-2">
-                        Add {classItem.section} to Timetable?
-                      </h3>
-                      <PopoverClose asChild>
-                        <Button
-                          onClick={async () => {
-                            await new Promise((resolve) => setTimeout(resolve, 200));
-                            onClassSelect(classItem);
-                          }}
-                        >
-                          Add
-                        </Button>
-                      </PopoverClose>
-                    </div>
-                  )}
-                </PopoverContent>
-              </Popover>
+              </div>
             ));
           });
         })}
