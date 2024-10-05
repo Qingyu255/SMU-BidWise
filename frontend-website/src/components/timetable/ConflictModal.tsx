@@ -16,7 +16,7 @@ interface ConflictModalProps {
   onResolve: (choice: string) => void;
 }
 
-const ConflictModal: React.FC<ConflictModalProps> = ({ open, onResolve }) => {
+export default function ConflictModal({ open, onResolve }: ConflictModalProps) {
   return (
     <Dialog open={open}>
       <DialogContent>
@@ -33,7 +33,7 @@ const ConflictModal: React.FC<ConflictModalProps> = ({ open, onResolve }) => {
           <Button onClick={() => onResolve("database")}>
             Use Cloud Version
           </Button>
-          <Button variant="secondary" onClick={() => onResolve("local")}>
+          <Button variant="secondary" onClick={() => onResolve("local")} className="py-1">
             Use Local Version
           </Button>
           <Button variant="outline" onClick={() => onResolve("merge")}>
@@ -44,5 +44,3 @@ const ConflictModal: React.FC<ConflictModalProps> = ({ open, onResolve }) => {
     </Dialog>
   );
 };
-
-export default ConflictModal;
