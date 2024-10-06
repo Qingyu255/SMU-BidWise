@@ -184,3 +184,14 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
     </TimetableContext.Provider>
   );
 };
+
+// Cloud saving behaviour Behavior:
+// User without an account (using local storage):
+// --The user can add timetables, and they are stored locally.
+
+// User logs in for the first time:
+// --If the user has local data but no cloud data, the local data is used and saved to the cloud.
+// --If the user has no local data, the app starts with an empty timetable.
+
+// User with existing cloud data:
+// --Cloud data is always used when the user logs in.
