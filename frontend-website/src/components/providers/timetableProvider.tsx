@@ -5,7 +5,6 @@ import React, {
   useContext,
   ReactNode,
   useEffect,
-  useRef,
 } from "react";
 import { ClassItem } from "@/types";
 import { useSupabaseClient } from "@/utils/supabase/authenticated/client";
@@ -23,7 +22,7 @@ const TimetableContext = createContext<TimetableContextType | undefined>(
   undefined
 );
 
-// hook to allow other components to access the provider
+// Hook to allow other components to access the provider
 export const useTimetable = () => {
   const context = useContext(TimetableContext);
   if (!context) {
@@ -33,7 +32,7 @@ export const useTimetable = () => {
 };
 
 export const TimetableProvider = ({ children }: { children: ReactNode }) => {
-  const { isSignedIn, user } = useUser();
+  const { isLoaded, isSignedIn, user } = useUser();
 
   const supabase = useSupabaseClient();
   const [selectedClasses, setSelectedClasses] = useState<Map<string, ClassItem>>(
@@ -44,7 +43,7 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
   const [dbTimetable, setDbTimetable] = useState<ClassItem[]>([]);
   const [localTimetable, setLocalTimetable] = useState<ClassItem[]>([]);
 
-  const prevIsSignedInRef = useRef<boolean>(isSignedIn ?? false);
+  const [initialLoadCompleted, setInitialLoadCompleted] = useState(false);
 
   const areTimetablesEqual = (
     timetable1: ClassItem[],
@@ -77,7 +76,6 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
       {
         clerk_user_id: user.id,
         timetable_data: timetableData,
-        updated_at: new Date().toISOString(),
       },
       { onConflict: "clerk_user_id" }
     );
@@ -89,9 +87,14 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // load data on initial mount
+  // Load data on initial mount
   useEffect(() => {
     const fetchData = async () => {
+      if (!isLoaded) {
+        // Wait for authentication to load
+        return;
+      }
+
       if (isSignedIn && supabase) {
         // User is signed in, always use cloud data
         const { data, error } = await supabase
@@ -100,49 +103,11 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
           .eq("clerk_user_id", user.id)
           .single();
 
-        const dbData: ClassItem[] = data?.timetable_data || [];
-
-        // set selectedClasses to cloud data
-        setSelectedClasses(new Map(dbData.map((item) => [item.id, item])));
-
-        // update local storage to match cloud data
-        localStorage.setItem(
-          "selectedClasses",
-          JSON.stringify(dbData.map((item) => [item.id, item]))
-        );
-      } else {
-        // User not signed in, load from local storage
-        const savedClasses = localStorage.getItem("selectedClasses");
-        if (savedClasses) {
-          const parsedClasses = JSON.parse(savedClasses);
-          setSelectedClasses(
-            new Map(
-              parsedClasses.map(([_, item]: [string, ClassItem]) => [
-                item.id,
-                item,
-              ])
-            )
-          );
-        } else {
-          setSelectedClasses(new Map());
+        if (error && error.code !== "PGRST116") {
+          // Handle error (excluding 'No rows found' error)
+          console.error("Error fetching timetable data:", error.message);
+          return;
         }
-      }
-      setIsDataLoaded(true);
-    };
-    fetchData();
-  }, [isSignedIn, user?.id]);
-
-  // detect when user logs in to handle potential conflicts
-  useEffect(() => {
-    if (!prevIsSignedInRef.current && isSignedIn && supabase) {
-      // User just logged in
-      const handleLogin = async () => {
-        // Fetch data from the database
-        const { data, error } = await supabase
-          .from("user_timetables")
-          .select("timetable_data")
-          .eq("clerk_user_id", user.id)
-          .single();
 
         const dbData: ClassItem[] = data?.timetable_data || [];
 
@@ -168,13 +133,30 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
             JSON.stringify(dbData.map((item) => [item.id, item]))
           );
         }
-      };
-      handleLogin();
-    }
-    prevIsSignedInRef.current = isSignedIn ?? false;
-  }, [isSignedIn]);
+      } else {
+        // User not signed in, load from local storage
+        const savedClasses = localStorage.getItem("selectedClasses");
+        if (savedClasses) {
+          const parsedClasses = JSON.parse(savedClasses);
+          setSelectedClasses(
+            new Map(
+              parsedClasses.map(([_, item]: [string, ClassItem]) => [
+                item.id,
+                item,
+              ])
+            )
+          );
+        } else {
+          setSelectedClasses(new Map());
+        }
+      }
+      setIsDataLoaded(true);
+      setInitialLoadCompleted(true);
+    };
+    fetchData();
+  }, [isSignedIn, user?.id, isLoaded]);
 
-  // save to local storage whenever selectedClasses changes
+  // Save to local storage whenever selectedClasses changes
   useEffect(() => {
     if (isDataLoaded) {
       localStorage.setItem(
@@ -184,13 +166,13 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [selectedClasses, isDataLoaded]);
 
-  // upsert to Supabase whenever selectedClasses changes and user is signed in
+  // Upsert to Supabase whenever selectedClasses changes and user is signed in
   useEffect(() => {
-    if (isDataLoaded && isSignedIn && !conflictDetected) {
+    if (isDataLoaded && isSignedIn && !conflictDetected && initialLoadCompleted) {
       const timetableData = Array.from(selectedClasses.values());
       upsertTimetable(timetableData);
     }
-  }, [selectedClasses, isSignedIn, isDataLoaded, conflictDetected]);
+  }, [selectedClasses, isSignedIn, isDataLoaded, conflictDetected, initialLoadCompleted]);
 
   const addClass = (classItem: ClassItem) => {
     setSelectedClasses((prev) => {
@@ -271,7 +253,15 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+
 // intended cloud saving logic:
 
-// - When the user is logged in, the application always uses cloud data
-// - Conflicts are only detected when the user was editing locally while not logged in and then logs in with different cloud data.
+// -If the user is signed in:
+// --Fetch cloud data from Supabase.
+// --Load local data from localStorage.
+// --Compare the two datasets.
+// --If they differ and local data exists, trigger conflict detection.
+// --If no conflict, use cloud data and update local storage.
+
+// -If the user is not signed in:
+// --Load local data from localStorage.
