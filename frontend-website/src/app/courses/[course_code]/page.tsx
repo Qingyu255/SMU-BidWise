@@ -72,23 +72,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
     }
   }
 
-  async function getSectionDetails(course_code: string, termId: string) {
-    const { data: courseInfo, error: courseInfoError } = await supabase
-      .from('course_info')
-      .select('id')
-      .eq('course_code', course_code)
-      .single();
-    if (courseInfoError) {
-      console.error('Error fetching course_id:', courseInfoError.message);
-      return { sections: [], professors: [] };
-    }
-  
-    const course_id: any = courseInfo?.id;
-    setCourseId(course_id);
-    if (!course_id) {
-      console.error('Course ID not found for course_code:', course_code);
-      return { sections: [], professors: [] };
-    }
+  async function getSectionDetails(course_id: string, termId: string) {
   
     const { data: sections, error: sectionsError } = await supabase
       .from('sections')
@@ -164,10 +148,11 @@ export default function Page({ params }: { params: { course_code: string }}) {
 
         // console.log(`Fetching data for course_code: ${course_code}`);
         const courseInfo: any = await getCourseInfoByCourseCode(course_code);
+        setCourseId(courseInfo.id);
         setCourseInfo(courseInfo);
 
         // console.log('Fetching sections and professors for course_code: ' + course_code + " for latest term: " + latestTermStr);
-        const { sections, professors }: any = await getSectionDetails(course_code, latestTermIdStr);
+        const { sections, professors }: any = await getSectionDetails(courseInfo.id, latestTermIdStr);
         setSections(sections);
         setProfessors(professors);
         // console.log('Professors:', professors);
@@ -182,7 +167,6 @@ export default function Page({ params }: { params: { course_code: string }}) {
   useEffect(() => {
     (async () => {
       try {
-        console.log(courseId)
         const courseAreas: any = await getCourseAreasByCourseId(courseId || "");
         setCourseAreas(courseAreas);
       } catch (error) {
@@ -223,9 +207,6 @@ export default function Page({ params }: { params: { course_code: string }}) {
                       <p className='text-gray-400 text-sm py-2'>Showing all sections:</p>
                       <TimetableGeneric classes={sections} onClassSelect={handleClassSelect}/>
                     </div>
-                    // <Card className='rounded-lg mt-2'>
-                    //   <CardDescription className='py-6 lg:py-10 text-center'>Select a professor to view their sections</CardDescription>
-                    // </Card>
                   )}
                 </div>
               )}

@@ -10,6 +10,7 @@ import {
 import { PopoverClose } from "@radix-ui/react-popover";
 import { Button } from '../ui/button';
 import { CalendarPlus, CalendarMinus } from 'lucide-react';
+import { Badge } from '../ui/badge';
 
 export type TimetableProps = {
   classes: ClassItem[];
@@ -47,6 +48,9 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
     '22:00',
     '23:00',
   ];
+
+  const selectedClassColour = "#bae6fd";
+  const unselectedClassColour = "#34d399";
 
   // Convert time to minutes
   const parseTime = (time: string) => {
@@ -157,7 +161,7 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
   const classStyle: React.CSSProperties = {
     // minWidth: `${minClassWidth}px`,
     position: 'absolute',
-    backgroundColor: '#34d399',
+    backgroundColor: unselectedClassColour,
     color: 'black',
     borderRadius: '5px',
     padding: '5px 4px',
@@ -231,7 +235,7 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
                 style={{
                   ...classStyle,
                   backgroundColor: selectedClasses.has(classItem.id)
-                    ? '#bae6fd'
+                    ? selectedClassColour
                     : classStyle.backgroundColor,
                   borderLeft: selectedClasses.has(classItem.id)
                   ? '6px solid #5A7BB5'
@@ -314,6 +318,18 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
             ));
           });
         })}
+      </div>
+      <div className="flex justify-between pb-1">
+        <div className="flex items-center space-x-2">
+          <Badge variant="outline" className="flex items-center ">
+            <div className={`w-4 h-4 bg-[${unselectedClassColour}] rounded-sm mr-2`}/>
+            Available
+          </Badge>
+          <Badge variant="outline" className="flex items-center">
+            <div className={`w-4 h-4 bg-[${selectedClassColour}] rounded-sm mr-2`}/>
+            Selected
+          </Badge>
+        </div>
       </div>
     </div>
   );

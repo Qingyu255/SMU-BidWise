@@ -27,6 +27,7 @@ export async function Courses({ query, page, career, grading_basis, units, area 
     .from("course_info")
     .select(
         `
+        id,
         course_code,
         title,
         career,
@@ -78,8 +79,8 @@ export async function Courses({ query, page, career, grading_basis, units, area 
     }
 
     if(error) {
-        console.error('Error fetching course_info data: ' + error);
-        return <ErrorPopUp errorMessage={"Error fetching course information: " + error}/>;
+        console.error('Error fetching course_info data: ', error);
+        return <ErrorPopUp errorMessage={"Error fetching course information: "+ error.message}/>;
     }
 
     // handle no courses found
@@ -99,6 +100,7 @@ export async function Courses({ query, page, career, grading_basis, units, area 
                 {courses?.map((courseInfo: any, index) => (
                     <CourseSummaryCard
                         key={index}
+                        course_id = {courseInfo.id}
                         course_code={courseInfo.course_code}
                         title={courseInfo.title}
                         career={courseInfo.career}

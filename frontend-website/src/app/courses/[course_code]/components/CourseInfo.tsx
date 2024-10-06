@@ -20,6 +20,7 @@ import { ChartNoAxesCombined } from 'lucide-react';
 import Rating from '@/components/Rating';
 
 export interface CourseInfoProps {
+  id: string;
   course_code: string;
   title: string;
   career: string;
@@ -105,21 +106,20 @@ export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoPr
           ))}
         </div>
 
-        {/* TODO: eventually for these ratings we will want to pull from the database and allow for a quick form for users to contribute their rating */}
         <div className='mt-1 flex flex-col gap-y-2 md:flex-row md:gap-x-3 md:gap-y-0'>
-          <Rating 
-            ratingName='Fluff' 
-            ratingOutOfFive={Math.floor(Math.random() * 5) + 1} 
+          <Rating
+            courseId={courseInfo.id}
+            ratingName='Fluff'
             fillColour='#4c68ee' 
             ratingDescription="The 'Fluff Rating' indicates how much non-technical content a course contains." 
-            userContributions={0}
+            isRatingAllowed={true}
           />
-          <Rating 
-            ratingName='Workload' 
-            ratingOutOfFive={Math.floor(Math.random() * 5) + 1} 
+          <Rating
+            courseId={courseInfo.id}
+            ratingName='Workload'
             fillColour='#f4a261'
             ratingDescription="The 'Workload Rating' provides an estimate of the effort and time commitment required for the course." 
-            userContributions={0}
+            isRatingAllowed={true}
           />
         </div>
         

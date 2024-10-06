@@ -5,6 +5,7 @@ import Link from "next/link";
 import Rating from "@/components/Rating";
 
 export interface CourseSummaryCardProps {
+    course_id: string;
     course_code: string;
     title: string;
     career: string;
@@ -13,7 +14,7 @@ export interface CourseSummaryCardProps {
     units: string;
 }
 
-export default function CourseSummaryCard({ course_code, title, career, description, enrolment_requirements, units }: CourseSummaryCardProps) {
+export default function CourseSummaryCard({ course_id, course_code, title, career, description, enrolment_requirements, units }: CourseSummaryCardProps) {
     return (
         <div className="flex justify-center py-4">
             <Card className="w-full bg-background text-foreground">
@@ -48,19 +49,17 @@ export default function CourseSummaryCard({ course_code, title, career, descript
                             </div>
                         </div>
                         <div className='py-2 md:px-4 flex flex-row md:flex-col gap-x-3 gap-y-0 md:gap-y-2'>
-                            <Rating 
-                                ratingName='Fluff' 
-                                ratingOutOfFive={Math.floor(Math.random() * 5) + 1} 
+                            <Rating
+                                courseId={course_id}
+                                ratingName='Fluff'
                                 fillColour='#4c68ee' 
                                 ratingDescription="The 'Fluff Rating' indicates how much non-technical content a course contains." 
-                                userContributions={0}
                             />
-                            <Rating 
-                                ratingName='Workload' 
-                                ratingOutOfFive={Math.floor(Math.random() * 5) + 1} 
+                            <Rating
+                                courseId={course_id}
+                                ratingName='Workload'
                                 fillColour='#f4a261'
                                 ratingDescription="The 'Workload Rating' provides an estimate of the effort and time commitment required for the course." 
-                                userContributions={0}
                             />
                         </div>
                     </div>
