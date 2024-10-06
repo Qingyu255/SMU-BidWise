@@ -17,7 +17,6 @@ import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { useSupabaseClient } from '@/utils/supabase/authenticated/client';
 import { useUser, SignInButton } from '@clerk/nextjs';
 import { Button } from './ui/button';
-import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 
 type RatingProps = {
@@ -34,7 +33,6 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
     const [userRating, setUserRating] = useState<number>(0);
     const [averageRating, setAverageRating] = useState<number>(0);
     const [userContributions, setUserContributions] = useState<number>(0);
-    const router = useRouter();
     const { toast } = useToast();
 
     const fetchRatingData = async () => {
@@ -85,7 +83,6 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
                 title: 'Thank you for contributing!',
             })
             await fetchRatingData();
-            router.refresh();
         }
     };
 
@@ -93,17 +90,15 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
         <div id={`${ratingName.toLowerCase()}rating`} className='inline-block'>
             <div className="flex items-center space-x-2">
                 <p className="text-sm font-semibold my-2">{ratingName} Rating:</p>
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger>
+                    <Popover>
+                        <PopoverTrigger asChild>
                             <Info className="w-5 h-5 text-gray-600 cursor-pointer opacity-60" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>{ratingDescription}</p>
-                            <p className='mt-1 opacity-60'>{userContributions} users contributed to this rating.</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                            <p className='text-xs'>{ratingDescription}</p>
+                            <p className='text-xs mt-1 opacity-60'>{userContributions} users contributed to this rating.</p>
+                        </PopoverContent>
+                    </Popover>
             </div>
             <div key={averageRating} className='flex flex-row border-2 border-r-0 border-black dark:border-white w-fit'>
                 {Array(5).fill('_').map((_, index) => (
@@ -121,7 +116,6 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
                         <Button variant="secondary" className="mt-2 px-1">
                             <SquarePen className='h-4 w-4 mr-1'/>
                             <span className='text-[11px] font-medium'>Rate</span>
-                            
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent>
@@ -143,6 +137,7 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
                                         Rate
                                     </Button>
                                 </PopoverClose>
+                                <div className='text-xs text-left opacity-60 pt-2'>Ratings are anonymous</div>
                             </div>
                         </SignedIn>
                         <SignedOut>
