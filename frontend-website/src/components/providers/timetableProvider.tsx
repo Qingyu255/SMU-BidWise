@@ -9,7 +9,6 @@ import React, {
 import { ClassItem } from "@/types";
 import { useSupabaseClient } from "@/utils/supabase/authenticated/client";
 import { useUser } from "@clerk/nextjs";
-import ConflictModal from "../timetable/ConflictModal";
 
 interface TimetableContextType {
   selectedClasses: Map<string, ClassItem>;
@@ -39,31 +38,8 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
     new Map()
   );
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [conflictDetected, setConflictDetected] = useState(false);
-  const [dbTimetable, setDbTimetable] = useState<ClassItem[]>([]);
-  const [localTimetable, setLocalTimetable] = useState<ClassItem[]>([]);
 
   const [initialLoadCompleted, setInitialLoadCompleted] = useState(false);
-
-  const areTimetablesEqual = (
-    timetable1: ClassItem[],
-    timetable2: ClassItem[]
-  ) => {
-    if (timetable1.length !== timetable2.length) {
-      return false;
-    }
-
-    const map1 = new Map(timetable1.map((item) => [item.id, item]));
-    const map2 = new Map(timetable2.map((item) => [item.id, item]));
-
-    for (let [id, item] of map1) {
-      const item2 = map2.get(id);
-      if (!item2 || JSON.stringify(item) !== JSON.stringify(item2)) {
-        return false;
-      }
-    }
-    return true;
-  };
 
   const upsertTimetable = async (timetableData: ClassItem[]) => {
     if (!user || !supabase) {
@@ -94,40 +70,39 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
         // Wait for authentication to load
         return;
       }
-
+  
       if (isSignedIn && supabase) {
-        // User is signed in, always use cloud data
+        // User is signed in, fetch cloud data
         const { data, error } = await supabase
           .from("user_timetables")
           .select("timetable_data")
           .eq("clerk_user_id", user.id)
           .single();
-
+  
         if (error && error.code !== "PGRST116") {
           // Handle error (excluding 'No rows found' error)
           console.error("Error fetching timetable data:", error.message);
           return;
         }
-
+  
         const dbData: ClassItem[] = data?.timetable_data || [];
-
+  
         // Load local data
         const savedClasses = localStorage.getItem("selectedClasses");
         const localData: ClassItem[] = savedClasses
           ? JSON.parse(savedClasses).map(([_, item]: [string, ClassItem]) => item)
           : [];
-
-        if (
-          localData.length > 0 &&
-          !areTimetablesEqual(dbData, localData)
-        ) {
-          // Conflict detected
-          setDbTimetable(dbData);
-          setLocalTimetable(localData);
-          setConflictDetected(true);
+  
+        if (dbData.length === 0 && localData.length > 0) {
+          // First login with no cloud data, upsert local data to cloud
+          console.log("First login, using local data and saving to cloud...");
+          setSelectedClasses(new Map(localData.map((item) => [item.id, item])));
+          await upsertTimetable(localData); // Save local data to cloud
         } else {
-          // No conflict, use cloud data
+          // Use cloud data
           setSelectedClasses(new Map(dbData.map((item) => [item.id, item])));
+  
+          // Update local storage to match cloud data
           localStorage.setItem(
             "selectedClasses",
             JSON.stringify(dbData.map((item) => [item.id, item]))
@@ -154,7 +129,7 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
       setInitialLoadCompleted(true);
     };
     fetchData();
-  }, [isSignedIn, user?.id, isLoaded]);
+  }, [isSignedIn, user?.id, isLoaded]);  
 
   // Save to local storage whenever selectedClasses changes
   useEffect(() => {
@@ -168,11 +143,11 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
 
   // Upsert to Supabase whenever selectedClasses changes and user is signed in
   useEffect(() => {
-    if (isDataLoaded && isSignedIn && !conflictDetected && initialLoadCompleted) {
+    if (isDataLoaded && isSignedIn && initialLoadCompleted) {
       const timetableData = Array.from(selectedClasses.values());
       upsertTimetable(timetableData);
     }
-  }, [selectedClasses, isSignedIn, isDataLoaded, conflictDetected, initialLoadCompleted]);
+  }, [selectedClasses, isSignedIn, isDataLoaded, initialLoadCompleted]);
 
   const addClass = (classItem: ClassItem) => {
     setSelectedClasses((prev) => {
@@ -201,67 +176,11 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const handleConflictResolution = async (choice: string) => {
-    if (choice === "database") {
-      setSelectedClasses(new Map(dbTimetable.map((item) => [item.id, item])));
-      localStorage.setItem(
-        "selectedClasses",
-        JSON.stringify(dbTimetable.map((item) => [item.id, item]))
-      );
-    } else if (choice === "local") {
-      setSelectedClasses(new Map(localTimetable.map((item) => [item.id, item])));
-      await upsertTimetable(localTimetable);
-    } else if (choice === "merge") {
-      const mergedTimetable = mergeTimetables(dbTimetable, localTimetable);
-      setSelectedClasses(
-        new Map(mergedTimetable.map((item) => [item.id, item]))
-      );
-      await upsertTimetable(mergedTimetable);
-    }
-    setConflictDetected(false);
-  };
-
-  const mergeTimetables = (
-    dbTimetable: ClassItem[],
-    localTimetable: ClassItem[]
-  ) => {
-    const mergedMap = new Map<string, ClassItem>();
-
-    dbTimetable.forEach((item) => {
-      mergedMap.set(item.id, item);
-    });
-
-    localTimetable.forEach((item) => {
-      mergedMap.set(item.id, item); // Overwrites duplicates with local data
-    });
-
-    return Array.from(mergedMap.values());
-  };
-
   return (
-    <>
-      <ConflictModal
-        open={conflictDetected}
-        onResolve={handleConflictResolution}
-      />
-      <TimetableContext.Provider
-        value={{ selectedClasses, addClass, removeClass, updatePlannedBid }}
-      >
-        {children}
-      </TimetableContext.Provider>
-    </>
+    <TimetableContext.Provider
+      value={{ selectedClasses, addClass, removeClass, updatePlannedBid }}
+    >
+      {children}
+    </TimetableContext.Provider>
   );
 };
-
-
-// intended cloud saving logic:
-
-// -If the user is signed in:
-// --Fetch cloud data from Supabase.
-// --Load local data from localStorage.
-// --Compare the two datasets.
-// --If they differ and local data exists, trigger conflict detection.
-// --If no conflict, use cloud data and update local storage.
-
-// -If the user is not signed in:
-// --Load local data from localStorage.
