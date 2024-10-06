@@ -48,7 +48,7 @@ const sortByCourseCode = (sections: ClassItem[]): ClassItem[] => {
 export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) => {
   let temp: string = "";
   const sortedSections = sortByCourseCode(sections);
-  const { selectedClasses, addClass, removeClass } = useTimetable();
+  const { selectedClasses, addClass, removeClass, updatePlannedBid } = useTimetable();
   const { toast } = useToast();
   
   const handleRemoveClass = (classItem: any) => {
@@ -58,6 +58,13 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
       removeClass(classItem);
     } else {
       console.error("Attempting to remove class not selected in timetable provider");
+    }
+  }
+
+  const handlePlannedBidUpdate = (e: React.ChangeEvent<HTMLInputElement>, sectionId: string) => {
+    const plannedBid = parseFloat(e.target.value);
+    if (!isNaN(plannedBid)) {
+      updatePlannedBid(sectionId, plannedBid);
     }
   }
 
@@ -131,7 +138,13 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                 <TableCell>
                   <div className='flex flex-row items-center'>
                   <span className='text-gray-600 pe-2'>e$</span>
-                    <Input type='number' placeholder='10.00' className='min-w-[70px]'/>
+                    <Input 
+                      type='number' 
+                      placeholder='10.00' 
+                      className='min-w-[70px]' 
+                      value={section.plannedBid || ''}
+                      onInput={(e: any) => {handlePlannedBidUpdate(e, section.id)}}
+                    />
                   </div>
                 </TableCell>
                 <TableCell>

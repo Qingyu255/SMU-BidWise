@@ -160,7 +160,7 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
     backgroundColor: '#34d399',
     color: 'black',
     borderRadius: '5px',
-    padding: '5px 3px',
+    padding: '5px 4px',
     overflow: 'hidden',
     cursor: 'pointer',
   };
@@ -199,7 +199,6 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
           </div>
         ))}
 
-
         {/* Fill empty grid Cells */}
         {daysArr.map((day, dayIndex) =>
           fixedTimeSlots.slice(0, -1).map((_, timeIndex) => (
@@ -234,6 +233,9 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
                   backgroundColor: selectedClasses.has(classItem.id)
                     ? '#bae6fd'
                     : classStyle.backgroundColor,
+                  borderLeft: selectedClasses.has(classItem.id)
+                  ? '6px solid #5A7BB5'
+                  : '6px solid #059669',
                   gridColumn: `${dayIndex + 2} / ${dayIndex + 3}`,
                   gridRow: `2 / span ${totalRows}`,
                   top: `${classItem.topOffset}px`,

@@ -15,6 +15,7 @@ interface TimetableContextType {
   selectedClasses: Map<string, ClassItem>;
   addClass: (classItem: ClassItem) => void;
   removeClass: (classItem: ClassItem) => void;
+  updatePlannedBid: (classId: string, bid: number) => void;
 }
 
 const TimetableContext = createContext<TimetableContextType | undefined>(undefined);
@@ -216,11 +217,22 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const updatePlannedBid = (classId: string, bid: number) => {
+    setSelectedClasses((prev) => {
+      const deepCopiedMap = new Map(prev);
+      const classItem = deepCopiedMap.get(classId);
+      if (classItem) {
+        deepCopiedMap.set(classId, { ...classItem, plannedBid: bid });
+      }
+      return deepCopiedMap;
+    });
+  };
+
   return (
     <>
       <ConflictModal open={conflictDetected} onResolve={handleConflictResolution} />
       <TimetableContext.Provider
-        value={{ selectedClasses, addClass, removeClass }}
+        value={{ selectedClasses, addClass, removeClass, updatePlannedBid }}
       >
         {children}
       </TimetableContext.Provider>
