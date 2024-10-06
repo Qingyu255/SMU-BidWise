@@ -7,7 +7,7 @@ import React, {
   useEffect,
 } from "react";
 import { ClassItem } from "@/types";
-import createClient from "@/utils/supabase/client";
+import {useSupabaseClient} from "@/utils/supabase/authenticated/client";
 import { useUser } from "@clerk/nextjs";
 import ConflictModal from "./timetable/ConflictModal";
 
@@ -30,12 +30,15 @@ export const useTimetable = () => {
 
 export const TimetableProvider = ({ children }: { children: ReactNode }) => {
   const { isSignedIn, user } = useUser();
-  const supabase = createClient();
+
+  // Create a `client` object for accessing Supabase data using the Clerk token
+  const supabase = useSupabaseClient();
   const [selectedClasses, setSelectedClasses] = useState<Map<string, ClassItem>>(new Map());
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [conflictDetected, setConflictDetected] = useState(false);
   const [dbTimetable, setDbTimetable] = useState<ClassItem[]>([]);
   const [localTimetable, setLocalTimetable] = useState<ClassItem[]>([]);
+
 
   const areTimetablesEqual = (timetable1: ClassItem[], timetable2: ClassItem[]) => {
     if (timetable1.length !== timetable2.length) {
@@ -55,8 +58,8 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const upsertTimetable = async (timetableData: ClassItem[]) => {
-    if (!user) {
-      console.warn("upsertTimetable() is called when clerk user object is null, returning... ");
+    if (!user || !supabase) {
+      console.warn("upsertTimetable() is called when clerk user object or supabase client(user not logged in) is null, returning... ");
       return;
     }
     const { data, error } = await supabase.from("user_timetables").upsert(
@@ -118,7 +121,7 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
   // try fetch on mount and resolve table data, resolve any conflicts between local storage or cloud
   useEffect(() => {
     const fetchData = async () => {
-      if (isSignedIn) {
+      if (isSignedIn && supabase) {
         // fetch data from the database
         const { data, error } = await supabase
           .from("user_timetables")

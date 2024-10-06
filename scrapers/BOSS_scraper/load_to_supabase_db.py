@@ -8,8 +8,14 @@ from datetime import datetime
 load_dotenv('.env.local')
 
 SUPABASE_URL = os.getenv('SUPABASE_URL')
-SUPABASE_KEY = os.getenv('SUPABASE_ANON_KEY')
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# deprecated usage of anon key as I added RLS policies so that only authenticated users can insert/upsert to our tables, this script hence will need to use service role key
+# SUPABASE_KEY = os.getenv('SUPABASE_ANON_KEY')
+# supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# UPDATED: using service role key that bypasses rls policy:
+SUPABASE_SERVICE_ROLE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger()
