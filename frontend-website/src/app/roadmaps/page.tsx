@@ -4,29 +4,12 @@ import Roadmaps from './components/Roadmaps';
 import { useEffect, useState } from 'react';
 import createClient from '@/utils/supabase/client';
 import { SeniorName, SeniorRoadmap } from '@/types';
+import HeadingCard from '@/components/roadmap/HeadingCard';
+
 
 export default function Page() {
 
   const supabase = createClient()
-
-  // const [seniorNames, setSeniorNames] = useState<SeniorName[]>([]);
-
-  // useEffect(() => {
-  //   const fetchSeniorNames = async () => {
-  //     const { data, error } = await supabase
-  //     .from('seniors')
-  //     .select('name');
-
-  //     if(error) {
-  //       console.log('Error fetching seniors:', error);
-  //     } else {
-  //       setSeniorNames(data);
-  //     }
-      
-  //   };
-
-  //   fetchSeniorNames();
-  // }, [])
 
   const [seniorNames, setSeniorNames] = useState<SeniorName[]>([]);
 
@@ -46,22 +29,6 @@ export default function Page() {
     fetchSeniorNames();
   }, [supabase]);
 
-
-  
-
-// const seniorRoadmaps: SeniorRoadmap[] = [
-// ]
-
-
-// if(seniorNames.length != 0) {
-//   seniorNames.forEach((senior) => {
-//     seniorRoadmaps.push({
-//       name: senior.name,
-//       title: '',
-//       description: ''
-//     })
-//   })
-// }
 
 // Define arrays of degrees and job descriptions
 const degrees = [
@@ -116,13 +83,22 @@ const [timelinePayload, setTimelinePayload] = useState('')
 const handleClick = (seniorName: string) => {
   setShowRoadmap(true)
   setTimelinePayload(seniorName)
+  window.scrollTo({ top: 0});
+}
+
+const handleBack = () => {
+  setShowRoadmap(false)
 }
 
   return (
     <div>
       { showRoadmap ? 
         <div className='flex flex-col overflow-hidden' style={{ width: '100%', height: '100%'}}>
-          <div className='container h-screen self-center flex-grow-0'>
+          <div className='mb-2'>
+            <HeadingCard handleClick={handleBack}/>
+          </div>
+          <div className='w-11/12 container h-screen self-center flex-grow-0'>
+            
             <Timeline seniorName={timelinePayload}/>
           </div>
         </div>
@@ -131,26 +107,4 @@ const handleClick = (seniorName: string) => {
     </div>
   )
 
-
-
-
 }
-// }
-
-
-
-
-
-  // return (
-  //   // <div className='w-full h-full'>
-  //      <div className='flex flex-col overflow-hidden' style={{ width: '100%', height: '100%'}}>
-  //         <div className='container w-10/12 h-screen self-center flex-grow-0'>
-  //           <Timeline seniorName='Senior3'/>
-  //         </div>
-            
-          
-
-  //       </div>
-  //   // </div>
-    
-  // );

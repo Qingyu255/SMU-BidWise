@@ -128,7 +128,7 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
        // Automatically fit the view to the diagram
        reactFlowInstance.fitView();
        let vp = reactFlowInstance.getViewport()
-       console.log(vp)
+      //  console.log(vp)
        // Then zoom in by adjusting the zoom level
        reactFlowInstance.setViewport({x:vp.x, y: vp.y, zoom: 0.7 });
     }
@@ -143,7 +143,7 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
         if(vp.x >= 210) {
           reactFlowInstance.setViewport({x:vp.x, y: vp.y, zoom: 0.7 });
         }
-        console.log(vp)
+        // console.log(vp)
       }
     }
 
@@ -164,16 +164,17 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
       nodeTypes={nodeTypes}
       edges={edges}
       panOnScroll
-      panOnScrollMode={PanOnScrollMode.Vertical}
+      // panOnScrollMode={PanOnScrollMode.Vertical}
       panOnDrag={false}
       zoomOnPinch={false}
+      zoomOnDoubleClick={false}
       fitView
       // fitViewOptions={fitViewOptions}
       defaultEdgeOptions={defaultEdgeOptions}
       onInit={handleInit}
     >
       <Controls />
-      {/* <Background variant={BackgroundVariant.Lines} gap={12} size={1} /> */}
+      <Background variant={BackgroundVariant.Lines} gap={12} size={1} />
     </ReactFlow>
   );
 };

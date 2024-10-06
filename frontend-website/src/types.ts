@@ -186,3 +186,7 @@ export interface RoadmapCardProps {
 export interface SeniorName {
   name: string;
 }
+
+export interface HeadingCardProps {
+  handleClick: () => void;
+}
