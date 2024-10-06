@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { useTimetable } from '../../components/timetableProvider';
+import { useTimetable } from '../../components/providers/timetableProvider';
 import TimetableGeneric from '../../components/timetable/TimetableGeneric';
 import { useToast } from "@/hooks/use-toast";
 import { TimetableSummaryTable } from './components/TimetableSummaryTable';
@@ -9,7 +9,7 @@ import InfoCard from './components/InfoCard';
 export default function Page() {
 
   const { selectedClasses, addClass, removeClass } = useTimetable();
-  const selectedClassItems = Array.from(selectedClasses.values());
+  const selectedClassItems: any = Array.from(selectedClasses.values());
   const { toast } = useToast();
 
   const handleClassSelect = (classItem: any) => {

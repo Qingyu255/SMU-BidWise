@@ -20,7 +20,7 @@ export default function Rating({ ratingName, ratingOutOfFive, fillColour, rating
     return (
         <div id={`${ratingName.toLowerCase()}rating`} className='inline-block'>
             <div className="flex items-center space-x-2">
-                <p className="text-base font-semibold my-2">{ratingName} Rating:</p>
+                <p className="text-sm font-semibold my-2">{ratingName} Rating:</p>
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger>

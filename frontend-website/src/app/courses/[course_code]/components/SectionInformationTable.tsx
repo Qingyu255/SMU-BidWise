@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 import { CalendarPlus, CalendarMinus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useTimetable } from '@/components/timetableProvider';
+import { useTimetable } from '@/components/providers/timetableProvider';
 import { useToast } from "@/hooks/use-toast";
 import {
   Popover,
@@ -24,33 +24,16 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
-
-export interface AvailabilityProps {
-    total_seats: number;
-    current_enrolled: number;
-    reserved_seats: number;
-    available_seats: number;
-  }
-  
-export interface SectionProps {
-  id: string;
-  section: string;
-  day: string;
-  start_time: string;
-  end_time: string;
-  instructor: string;
-  venue: string;
-  availability: AvailabilityProps | null; // availability can be null
-}
+import { ClassItem } from '@/types';
 
 export interface SectionInformationTableProps {
-  sections: SectionProps[];
+  sections: ClassItem[];
   latestTerm: string;
   singleProfOnly: boolean;
   courseCode: string;
 }
 
-const sortBySection = (sections: SectionProps[]): SectionProps[] => {
+const sortBySection = (sections: ClassItem[]): ClassItem[] => {
   return sections.sort((a, b) => {
     const numA = parseInt(a.section.replace(/^\D+/g, ''), 10);
     const numB = parseInt(b.section.replace(/^\D+/g, ''), 10);

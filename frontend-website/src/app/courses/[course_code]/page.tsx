@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useRouter } from 'next/navigation';
 import TimetableGeneric from '../../../components/timetable/TimetableGeneric';
-import { useTimetable } from '../../../components/timetableProvider';
+import { useTimetable } from '../../../components/providers/timetableProvider';
 import { useToast } from "@/hooks/use-toast";
 
 const supabase = createClient();

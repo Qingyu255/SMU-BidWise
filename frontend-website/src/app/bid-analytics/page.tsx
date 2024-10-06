@@ -28,9 +28,6 @@ export default function Page() {
     const [chartDataInstructorOverview, setChartDataInstructorOverview] = useState<chartAttributes>()
     const [error, setError] = useState<any>(null)
     const [chartWidthHeightArr, setChartWidthHeightArr] = useState<string[]>(["", ""])
-    const [isSCISCourse, setIsSCISCourse] = useState<boolean>(false)
-
-    
 
     useEffect(() => {
         setCourseCode(courseCodeParam ? courseCodeParam.toUpperCase() : defaultCourseCode);
@@ -47,10 +44,7 @@ export default function Page() {
                 const courseName = await response.json()
                 setCourseName(courseName)
                 // courseCode should be in upper case
-                if (courseCode.slice(0, 2) == "IS" || courseCode.slice(0, 2) == "CS" || courseCode.slice(0, 6) == "COR-IS" ) {
-                    // show button for scis students to navigate to official course description
-                    setIsSCISCourse(true)
-                }
+
             } catch (error: any) {
                 setCourseName("Not Found")
                 setError(error)
@@ -122,7 +116,7 @@ export default function Page() {
                     <div>
                         <p className='py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>{courseCode} - {courseName}</p>
                     </div>
-                    <Link href={"/courses/" + courseCode}>
+                    <Link href={"/courses/" + courseCode} className='w-fit'>
                         <Button className='text-xs font-semibold w-fit'>
                             <BookText/>
                             <span className='px-2'>Course Information</span>
@@ -135,10 +129,10 @@ export default function Page() {
                 ) 
                 : (chartDataOverview && chartDataInstructorOverview ? (
                     <>
-                        {isSCISCourse && (
-                            <Button key={isSCISCourse.toString()} onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left p-1 px-1.5 mb-2 sm:mb-4 w-fit text-xs sm:text-sm'>
+                        {((courseCode.slice(0, 2) == "IS" || courseCode.slice(0, 2) == "CS" || courseCode.slice(0, 6) == "COR-IS" )) && (
+                            <p onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left p-1 px-1.5 mb-2 sm:mb-4 w-fit text-xs sm:text-sm cursor-pointer underline hover:text-gray-600'>
                                 View SMU Course Document
-                            </Button>
+                            </p>
                         )}
                         <div className='flex flex-col gap-y-5'>
                             <div className='flex flex-col'>

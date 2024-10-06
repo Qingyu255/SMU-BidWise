@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { useTimetable } from '../timetableProvider';
+import { useTimetable } from '../providers/timetableProvider';
 import { ClassItem } from '@/types';
 import {
   Popover,

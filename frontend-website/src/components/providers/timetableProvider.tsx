@@ -9,7 +9,7 @@ import React, {
 import { ClassItem } from "@/types";
 import {useSupabaseClient} from "@/utils/supabase/authenticated/client";
 import { useUser } from "@clerk/nextjs";
-import ConflictModal from "./timetable/ConflictModal";
+import ConflictModal from "../timetable/ConflictModal";
 
 interface TimetableContextType {
   selectedClasses: Map<string, ClassItem>;

@@ -45,7 +45,7 @@ export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoPr
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href={"/bid-analytics?courseCode=" + courseInfo.course_code}>
+                <Link href={"/bid-analytics?courseCode=" + courseInfo.course_code} className='w-fit'>
                   <Button className='text-xs font-semibold w-fit'>
                     <ChartNoAxesCombined className='inline'/><span className='inline-block px-2'>Bid Analytics</span>
                   </Button>

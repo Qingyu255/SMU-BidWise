@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 import { CalendarPlus, CalendarMinus, ChartNoAxesCombined } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useTimetable } from '@/components/timetableProvider';
+import { useTimetable } from '@/components/providers/timetableProvider';
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import Link from 'next/link';
@@ -27,34 +27,19 @@ import {
 } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { Info } from 'lucide-react';
-
-export interface AvailabilityProps {
-    total_seats: number;
-    current_enrolled: number;
-    reserved_seats: number;
-    available_seats: number;
-  }
-  
-export interface SectionProps {
-  courseCode?: string,
-  id: string;
-  section: string;
-  day: string;
-  start_time: string;
-  end_time: string;
-  instructor: string;
-  venue: string;
-  availability: AvailabilityProps | null; // availability can be null
-}
+import { ClassItem } from '@/types';
 
 export interface TimetableSummaryTableProps {
-  sections: SectionProps[];
+  sections: ClassItem[];
 }
 
-const sortBySection = (sections: SectionProps[]): SectionProps[] => {
+const sortByCourseCode = (sections: ClassItem[]): ClassItem[] => {
   return sections.sort((a, b) => {
-    const numA = parseInt(a.section.replace(/^\D+/g, ''), 10);
-    const numB = parseInt(b.section.replace(/^\D+/g, ''), 10);
+    const courseCodeA = a.courseCode ? a.courseCode : '';
+    const courseCodeB = b.courseCode ? b.courseCode : '';
+
+    const numA = parseInt(courseCodeA.replace(/^\D+/g, ''), 10);
+    const numB = parseInt(courseCodeB.replace(/^\D+/g, ''), 10);
     
     return numA - numB; // Sort by numeric value
   });
@@ -62,7 +47,7 @@ const sortBySection = (sections: SectionProps[]): SectionProps[] => {
 
 export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) => {
   let temp: string = "";
-  const sortedSections = sortBySection(sections);
+  const sortedSections = sortByCourseCode(sections);
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const { toast } = useToast();
   

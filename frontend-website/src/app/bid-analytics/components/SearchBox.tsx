@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/command";
 import { useDebounce } from 'use-debounce';
 import { useRouter, usePathname } from 'next/navigation';
-import { useTimetable } from '@/components/timetableProvider';
+import { useTimetable } from '@/components/providers/timetableProvider';
 
 export function SearchBox() {
   const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL

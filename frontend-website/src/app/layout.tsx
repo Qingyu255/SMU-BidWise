@@ -10,8 +10,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Sidebar } from "@/components/sidebar/sidebar";
 import TopBar from "@/components/TopBar";
-import { ThemeProvider } from "@/components/theme-provider";
-import { TimetableProvider } from "../components/timetableProvider"; // Import your context provider
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { TimetableProvider } from "../components/providers/timetableProvider"; // Import your context provider
 import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
