@@ -97,7 +97,7 @@ const handleBack = () => {
           <div className='mb-2'>
             <HeadingCard handleClick={handleBack}/>
           </div>
-          <div className='w-11/12 container h-screen self-center flex-grow-0'>
+          <div className='container self-center flex-grow-0' style={{ height: 510 }}>
             
             <Timeline seniorName={timelinePayload}/>
           </div>

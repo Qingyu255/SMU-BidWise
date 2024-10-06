@@ -1,7 +1,5 @@
 import React, { memo } from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
-import { NodeData } from '@/types';
-
 
 
 type SemNodeProps = {
@@ -13,6 +11,8 @@ type SemNodeProps = {
 
 const SemNode = ({ data }: SemNodeProps) => {
     return (
+      
+
       <div style={{
         padding: '10px 40px',
         
@@ -95,6 +95,8 @@ const SemNode = ({ data }: SemNodeProps) => {
           id='b-target'
         />
       </div>
+
+      
     );
   };
   

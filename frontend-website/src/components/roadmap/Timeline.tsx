@@ -27,6 +27,7 @@ import {
 
 import '@xyflow/react/dist/style.css';
 import SemNode from './SemNode';
+import CourseNode from './CourseNode';
 import createClient from '@/utils/supabase/client';
 import '@/components/roadmap/roadmap.css'; 
 import { Course, edgeData,SeniorData, NodeData, seniorsAttributes, TimelineProps } from '@/types';
@@ -114,6 +115,7 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
 
 const nodeTypes: NodeTypes = {
   SemNode: SemNode,
+  CourseNode: CourseNode,
 };
 
 
@@ -130,7 +132,7 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
        let vp = reactFlowInstance.getViewport()
       //  console.log(vp)
        // Then zoom in by adjusting the zoom level
-       reactFlowInstance.setViewport({x:vp.x, y: vp.y, zoom: 0.7 });
+       reactFlowInstance.setViewport({x:vp.x, y: vp.y + 150, zoom: 0.7 });
     }
   }, [reactFlowInstance]);
 
@@ -141,7 +143,9 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
         reactFlowInstance.fitView()
         let vp = reactFlowInstance.getViewport()
         if(vp.x >= 210) {
-          reactFlowInstance.setViewport({x:vp.x, y: vp.y, zoom: 0.7 });
+          reactFlowInstance.setViewport({x:vp.x, y: vp.y + 150, zoom: 0.7 });
+        } else {
+          reactFlowInstance.setViewport({x:vp.x, y: vp.y + 150, zoom: vp.zoom });
         }
         // console.log(vp)
       }
@@ -166,7 +170,7 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
       panOnScroll
       // panOnScrollMode={PanOnScrollMode.Vertical}
       panOnDrag={false}
-      zoomOnPinch={false}
+      // zoomOnPinch={false}
       zoomOnDoubleClick={false}
       fitView
       // fitViewOptions={fitViewOptions}
@@ -284,7 +288,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'default',
           target: 's1n2',
           sourceHandle: 't-src',
-          
+          targetHandle: 'b-target',
           animated: true,
           style: { stroke: '#2b78e4', strokeWidth: 2 },
         },
@@ -356,7 +360,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
       y1s1.forEach((course) => {
         let subnode = {
           id: 's' + snCounter.toString() + 'n1',
-          // type: 'default',
+          type: 'CourseNode',
           // sourcePosition: Position.Top,
           targetPosition: Position.Right,
           data: { label: course.course_code },
@@ -369,6 +373,8 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 'n1-s' + snCounter.toString() + 'n1',
           source: 'n1',
           type: 'default',
+          sourceHandle: 'l-src',
+          targetHandle: 'r-target',
           target: 's' + snCounter.toString() + 'n1',
           animated: true,
           style: { stroke: '#2b78e4', strokeWidth: 2 },
@@ -384,7 +390,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
       y1s2.forEach((course: { course_code: string }) => {
         let subnode = {
           id: 's' + snCounter.toString() + 'n2',
-          type: 'default',
+          type: 'CourseNode',
           sourcePosition: Position.Top,
           targetPosition: Position.Bottom,
           data: { label: course.course_code },
@@ -402,6 +408,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
         let subnode = {
           id: 's' + snCounter.toString() + 'n3',
           targetPosition: Position.Right,
+          type: 'CourseNode',
           data: { label: course.course_code },
           position: { x: -250, y: 113 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
@@ -414,6 +421,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'default',
           target: 's' + snCounter.toString() + 'n3',
           sourceHandle: 'l-src',
+          targetHandle: 'r-target',
           animated: true,
           style: { stroke: '#2b78e4', strokeWidth: 2 },
         }
@@ -430,6 +438,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
         let subnode = {
           id: 's' + snCounter.toString() + 'n4',
           targetPosition: Position.Left,
+          type: 'CourseNode',
           data: { label: course.course_code },
           position: { x: 250, y: 255 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
@@ -442,6 +451,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'smoothstep',
           target: 's' + snCounter.toString() + 'n4',
           sourceHandle: 'r-src',
+          targetHandle: 'l-target',
           animated: true,
           style: { stroke: '#2b78e4', strokeWidth: 2 },
         }
@@ -457,6 +467,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
         let subnode = {
           id: 's' + snCounter.toString() + 'n5',
           targetPosition: Position.Right,
+          type: 'CourseNode',
           data: { label: course.course_code },
           position: { x: -200, y: 390 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
@@ -469,6 +480,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'smoothstep',
           target: 's' + snCounter.toString() + 'n5',
           sourceHandle: 'l-src',
+          targetHandle: 'r-target',
           animated: true,
           style: { stroke: '#2b78e4', strokeWidth: 2 },
         }
@@ -484,6 +496,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
         let subnode = {
           id: 's' + snCounter.toString() + 'n6',
           targetPosition: Position.Right,
+          type: 'CourseNode',
           data: { label: course.course_code },
           position: { x: -250, y: 710 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
@@ -496,6 +509,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'smoothstep',
           target: 's' + snCounter.toString() + 'n6',
           sourceHandle: 'b-src',
+          targetHandle: 'r-target',
           animated: true,
           style: { stroke: '#2b78e4', strokeWidth: 2 },
         }
@@ -511,6 +525,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
         let subnode = {
           id: 's' + snCounter.toString() + 'n7',
           targetPosition: Position.Left,
+          type: 'CourseNode',
           data: { label: course.course_code },
           position: { x: 250, y: 665 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
@@ -523,6 +538,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'default',
           target: 's' + snCounter.toString() + 'n7',
           sourceHandle: 't-src',
+          targetHandle: 'l-target',
           animated: true,
           style: { stroke: '#2b78e4', strokeWidth: 2 },
         }
@@ -538,6 +554,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
         let subnode = {
           id: 's' + snCounter.toString() + 'n8',
           targetPosition: Position.Left,
+          type: 'CourseNode',
           data: { label: course.course_code },
           position: { x: 200, y: 1015 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
@@ -550,6 +567,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'default',
           target: 's' + snCounter.toString() + 'n8',
           sourceHandle: 'r-src',
+          targetHandle: 'l-target',
           animated: true,
           style: { stroke: '#2b78e4', strokeWidth: 2 },
         }
