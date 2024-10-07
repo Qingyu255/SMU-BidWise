@@ -26,7 +26,7 @@ import {
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
-import SemNode from './SemNode';
+import SemNode from '../../../components/roadmap/SemNode';
 import CourseNode from './CourseNode';
 import createClient from '@/utils/supabase/client';
 import '@/components/roadmap/roadmap.css'; 
@@ -206,7 +206,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 'n1',
           type: 'SemNode',
           sourcePosition: Position.Left,
-          data: { label: 'Y1S1' },
+          data: { course_code: 'Y1S1' },
           position: { x: 0, y: 0 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
@@ -215,7 +215,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'SemNode',
           targetPosition: Position.Left,
           sourcePosition: Position.Left,
-          data: { label: 'Y1S2' },
+          data: { course_code: 'Y1S2' },
           position: { x: 200, y: 200 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
@@ -224,7 +224,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 'n3',
           type: 'SemNode',
           sourcePosition: Position.Left,
-          data: { label: 'Y2S1' },
+          data: { course_code: 'Y2S1' },
           position: { x: -40, y: 200 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
@@ -232,7 +232,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 'n4',
           type: 'SemNode',
           sourcePosition: Position.Left,
-          data: { label: 'Y2S2' },
+          data: { course_code: 'Y2S2' },
           position: { x: 80, y: 360 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
@@ -240,7 +240,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 'n5',
           type: 'SemNode',
           sourcePosition: Position.Bottom,
-          data: { label: 'Y3S1' },
+          data: { course_code: 'Y3S1' },
           position: { x: 80, y: 480 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
@@ -248,7 +248,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 'n6',
           type: 'SemNode',
           sourcePosition: Position.Bottom,
-          data: { label: 'Y3S2' },
+          data: { course_code: 'Y3S2' },
           position: { x: -120, y: 680 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
@@ -256,7 +256,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 'n7',
           type: 'SemNode',
           sourcePosition: Position.Bottom,
-          data: { label: 'Y4S1' },
+          data: { course_code: 'Y4S1' },
           position: { x: 120, y: 960 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
@@ -264,7 +264,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 'n8',
           type: 'SemNode',
           sourcePosition: Position.Bottom,
-          data: { label: 'Y4S2' },
+          data: { course_code: 'Y4S2' },
           position: { x: -120, y: 1050 },
           style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
@@ -363,7 +363,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'CourseNode',
           // sourcePosition: Position.Top,
           targetPosition: Position.Right,
-          data: { label: course.course_code },
+          data: { course_code: course.course_code },
           position: { x: -250, y: -135 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         }
@@ -393,7 +393,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'CourseNode',
           sourcePosition: Position.Top,
           targetPosition: Position.Bottom,
-          data: { label: course.course_code },
+          data: { course_code: course.course_code },
           position: { x: 250, y: 135 - (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         }
@@ -409,7 +409,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 's' + snCounter.toString() + 'n3',
           targetPosition: Position.Right,
           type: 'CourseNode',
-          data: { label: course.course_code },
+          data: { course_code: course.course_code },
           position: { x: -250, y: 113 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         }
@@ -439,7 +439,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 's' + snCounter.toString() + 'n4',
           targetPosition: Position.Left,
           type: 'CourseNode',
-          data: { label: course.course_code },
+          data: { course_code: course.course_code },
           position: { x: 250, y: 255 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         }
@@ -468,7 +468,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 's' + snCounter.toString() + 'n5',
           targetPosition: Position.Right,
           type: 'CourseNode',
-          data: { label: course.course_code },
+          data: { course_code: course.course_code },
           position: { x: -200, y: 390 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         }
@@ -497,7 +497,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 's' + snCounter.toString() + 'n6',
           targetPosition: Position.Right,
           type: 'CourseNode',
-          data: { label: course.course_code },
+          data: { course_code: course.course_code },
           position: { x: -250, y: 710 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         }
@@ -526,7 +526,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 's' + snCounter.toString() + 'n7',
           targetPosition: Position.Left,
           type: 'CourseNode',
-          data: { label: course.course_code },
+          data: { course_code: course.course_code },
           position: { x: 250, y: 665 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         }
@@ -555,7 +555,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           id: 's' + snCounter.toString() + 'n8',
           targetPosition: Position.Left,
           type: 'CourseNode',
-          data: { label: course.course_code },
+          data: { course_code: course.course_code },
           position: { x: 200, y: 1015 + (45 * snCounter) },
           style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         }

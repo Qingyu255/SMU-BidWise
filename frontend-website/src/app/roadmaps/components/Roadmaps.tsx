@@ -1,5 +1,5 @@
 "use client"
-import Timeline from '@/components/roadmap/Timeline'
+import Timeline from '@/app/roadmaps/components/Timeline'
 import React from 'react'
 import RoadmapCard from './RoadmapCard'
 import { RoadmapsProps } from '@/types'

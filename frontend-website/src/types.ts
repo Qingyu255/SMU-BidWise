@@ -1,6 +1,7 @@
 import { LucideIcon } from 'lucide-react';
 import { ReactNode } from 'react';
 import { Node, Position, XYPosition } from '@xyflow/react';
+import { UUID } from 'crypto';
 export interface SidebarItems {
   links: Array<{
     label: string;
@@ -66,6 +67,7 @@ export interface courses {
 }
 
 export interface courseInfo {
+  id: UUID;
   course_code: string;
   title: string;
   career: string;
@@ -187,6 +189,7 @@ export interface RoadmapCardProps {
 export interface SeniorName {
   name: string;
 }
+
 
 export interface HeadingCardProps {
   handleClick: () => void;

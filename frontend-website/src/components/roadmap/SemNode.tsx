@@ -4,12 +4,14 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 
 type SemNodeProps = {
   data: {
-    label: string
+    course_code: string
   }
 }
 
 
 const SemNode = ({ data }: SemNodeProps) => {
+
+    
     return (
       
 
@@ -17,7 +19,7 @@ const SemNode = ({ data }: SemNodeProps) => {
         padding: '10px 40px',
         
       }}>
-        <div>{data.label}</div>
+        <div>{data.course_code}</div>
         
         {/* Define 4 different source handles */}
         <Handle

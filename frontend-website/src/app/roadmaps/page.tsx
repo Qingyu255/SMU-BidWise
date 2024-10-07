@@ -1,5 +1,5 @@
 "use client"
-import Timeline from '@/components/roadmap/Timeline';
+import Timeline from '@/app/roadmaps/components/Timeline';
 import Roadmaps from './components/Roadmaps';
 import { useEffect, useState } from 'react';
 import createClient from '@/utils/supabase/client';
