@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
+  ClerkProvider
 } from '@clerk/nextjs';
 import localFont from "next/font/local";
 import "./globals.css";
@@ -47,7 +43,7 @@ export default function RootLayout({
           >
             <TimetableProvider> {/* Wrap your context provider here */}
               <Sidebar />
-              <main className='sm:ml-[290px] mx-5'>
+              <main className='lg:ml-[290px] mx-5'>
                 <TopBar />
                 {children}
               </main>

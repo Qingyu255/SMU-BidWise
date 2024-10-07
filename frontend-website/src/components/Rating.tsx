@@ -1,11 +1,5 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Info, SquarePen, Square } from 'lucide-react';
 import {
     Popover,

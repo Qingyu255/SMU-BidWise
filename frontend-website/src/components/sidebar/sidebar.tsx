@@ -64,7 +64,7 @@ const sidebarItems: SidebarItems = {
 };
 
 export function Sidebar() {
-  const isDesktop = useMediaQuery('(min-width: 640px)', {
+  const isDesktop = useMediaQuery('(min-width: 1024px)', {
     initializeWithValue: false,
   });
 

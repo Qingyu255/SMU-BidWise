@@ -20,7 +20,7 @@ export function useSupabaseClient() {
                     console.error('Clerk JWT token is missing.');
                     return fetch(url, options);
                 }
-                console.log('Clerk JWT token fetched');
+                // console.log('Clerk JWT token fetched');
                 const headers = new Headers(options?.headers);
                 headers.set('Authorization', `Bearer ${clerkToken}`);
                 return fetch(url, {

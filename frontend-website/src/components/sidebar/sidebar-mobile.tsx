@@ -39,7 +39,7 @@ export function SidebarMobile(props: SidebarMobileProps) {
           <Menu size={20} />
         </Button>
       </SheetTrigger>
-      <SheetContent side='left' className='px-3 py-4'>
+      <SheetContent side='left' className='px-3 py-4 w-fit'>
         <SheetHeader className='flex flex-row justify-between items-center space-y-0'>
           <Link href={"/"}>
             <SidebarButton className='px-0'>

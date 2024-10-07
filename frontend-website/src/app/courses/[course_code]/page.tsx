@@ -63,7 +63,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
         return [];
       }
       const res = [...new Set(data.map((item: { area_name: string }) => item.area_name))];
-      console.log(res);
+      // console.log(res);
       return res;
 
     } catch (error) {
@@ -99,7 +99,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
       console.error('Error fetching section details:', sectionsError.message);
       return { sections: [], professors: [] };
     }
-    console.log('Fetched sections:', sections); 
+    // console.log('Fetched sections:', sections); 
     const professors = Array.from(new Set(sections.map(section => section.instructor)));
   
     return { sections, professors };
@@ -167,7 +167,10 @@ export default function Page({ params }: { params: { course_code: string }}) {
   useEffect(() => {
     (async () => {
       try {
-        const courseAreas: any = await getCourseAreasByCourseId(courseId || "");
+        if (!courseId) {
+          return;
+        }
+        const courseAreas: any = await getCourseAreasByCourseId(courseId);
         setCourseAreas(courseAreas);
       } catch (error) {
         console.error('Error fetching data:', error);
