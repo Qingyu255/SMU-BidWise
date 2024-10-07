@@ -112,8 +112,8 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
                 ))}
             </div>
             {userContributions === 0 && (
-                <div className="absolute inset-0 flex items-center justify-center bg-opacity-50 dark:bg-gray-800 dark:bg-opacity-50 text-center">
-                    <span className="text-gray-200 text-xs">No ratings yet</span>
+                <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 dark:bg-gray-800 dark:bg-opacity-70 text-center">
+                    <span className=" opacity-50 text-xs">No ratings yet</span>
                 </div>
             )}
             </div>
