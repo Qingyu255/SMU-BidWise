@@ -23,6 +23,7 @@ import {
   UserButton
 } from '@clerk/nextjs';
 import Image from 'next/image';
+import { poppins } from '@/utils/fonts';
 
 interface SidebarMobileProps {
   sidebarItems: SidebarItems;
@@ -34,11 +35,11 @@ export function SidebarMobile(props: SidebarMobileProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size='icon' variant='ghost' className='fixed top-3 left-3 border-2'>
+        <Button size='icon' variant='ghost' className='fixed top-3 left-3 border-2 z-10'>
           <Menu size={20} />
         </Button>
       </SheetTrigger>
-      <SheetContent side='left' className='px-3 py-4'>
+      <SheetContent side='left' className='px-3 py-4 w-fit'>
         <SheetHeader className='flex flex-row justify-between items-center space-y-0'>
           <Link href={"/"}>
             <SidebarButton className='px-0'>
@@ -50,7 +51,7 @@ export function SidebarMobile(props: SidebarMobileProps) {
                   width={35}
                   height={35}
                 />
-                <span className='text-lg font-semibold text-foreground mx-2'>SMU BidWise</span>
+                <span className={`text-lg font-semibold text-foreground mx-2 ${poppins.className}`}>SMU BidWise</span>
               </div>
             </SidebarButton>
           </Link>

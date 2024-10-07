@@ -29,7 +29,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
 
     const fetchAvailableTermsOfInstructorWhoTeachCourse = async (courseCode: string, instructorName: string) => {
         try {
-            const response = await fetch(`${apiURL}/instructordata/terms_available/${courseCode}/${instructorName}`)
+            const response = await fetch(`${apiURL}/instructordata/terms_available/${courseCode}/${instructorName}`, { next: { revalidate: 86400 } })
             const jsonPayload = await response.json()
             const biddingWindowDropdownOptions = jsonPayload.data
             setTermDropdownArr(biddingWindowDropdownOptions || [])
@@ -42,7 +42,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
 
     const fetchAvailableSections = async (term: string) => {
         try {
-            const response = await fetch(`${apiURL}/instructordata/sections_available/${courseCode}/${courseInstructorSelected}/${term}`)
+            const response = await fetch(`${apiURL}/instructordata/sections_available/${courseCode}/${courseInstructorSelected}/${term}`, { next: { revalidate: 86400 } })
             const jsonPayload = await response.json()
             setSectionDropdownArr(jsonPayload.data|| [])
             setIsSectionDropdownVisible(true)
@@ -80,7 +80,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
 
     const update_before_after_vacancy_data = async (chartDataInstructorsBiddingWindow: chartAttributes, section: string) => {
         try {
-            const response = await fetch(`${apiURL}/coursedata/sectionbidpriceacrosswindows/vacancies/${courseCode}/${selectedTerm}/${courseInstructorSelected}/${section}`)
+            const response = await fetch(`${apiURL}/coursedata/sectionbidpriceacrosswindows/vacancies/${courseCode}/${selectedTerm}/${courseInstructorSelected}/${section}`, { next: { revalidate: 86400 } })
             // if (!response.ok) {
             //     throw new Error(`${response.status}`)
             // }
@@ -125,7 +125,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
     const handleSectionSelect = async (section: string) => {
         setSection(section)
         try {
-            const response = await fetch(`${apiURL}/coursedata/sectionbidpriceacrosswindows/${courseCode}/${selectedTerm}/${courseInstructorSelected}/${section}`)
+            const response = await fetch(`${apiURL}/coursedata/sectionbidpriceacrosswindows/${courseCode}/${selectedTerm}/${courseInstructorSelected}/${section}`, { next: { revalidate: 86400 } })
             const jsonPayload = await response.json()
             update_before_after_vacancy_data(jsonPayload, section) // state change is made in this update function
             // show charts again
@@ -140,7 +140,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
         // Fetch dropdown options array for select instructor on page refresh
         const fetchInstructorsWhoTeachCourseCode = async () => {
             try {
-                const response = await fetch(`${apiURL}/instructordata/instructor/${courseCode}`)
+                const response = await fetch(`${apiURL}/instructordata/instructor/${courseCode}`, { next: { revalidate: 86400 } })
                 if (!response.ok) {
                     const errorResponse = await response.json()
                     throw new Error(`${response.status}: ${errorResponse.detail}`)

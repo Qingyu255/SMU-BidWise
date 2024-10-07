@@ -99,15 +99,15 @@ body {
 }
 
 
-.react-flow__minimap {
-  z-index: 100;     /* Bring it above other elements */
-  width: 150px;     /* Adjust the width of the MiniMap */
-  height: 100px;    /* Adjust the height of the MiniMap */
-  position: relative; /* Ensure it stays in place */
-  bottom: 20px;     /* Position it at the bottom */
-  right: 20px;      /* Position it to the right */
-  border: 1px solid black; /* Add a border for visibility */
-  background-color: white; /* Ensure background color is set */
+/* .react-flow__minimap {
+  z-index: 100;    
+  width: 150px;     
+  height: 100px;    
+  position: relative; 
+  bottom: 20px;     
+  right: 20px;    
+  border: 1px solid black; 
+  background-color: white; 
 }
 
 .react-flow__pane {
@@ -120,4 +120,4 @@ body {
 
 .react-flow__node {
   color: black;
-}
+} */

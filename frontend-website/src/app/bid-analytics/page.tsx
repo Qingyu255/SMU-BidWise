@@ -1,31 +1,37 @@
 "use client"
 import React, { useState, useEffect } from 'react'
+import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import ErrorPopUp from '@/components/ErrorPopUp'
 import BarChart from '@/components/charts/BarChart'
 import adjustChartWidthHeight from '@/components/charts/chartUtils/adjustChartWidthHeight'
 import VisualiseTrendAcrossSemesters from '@/components/interactiveCharts/VisualiseTrendAcrossSemesters'
 import VisualiseTrendAcrossBiddingWindows from '@/components/interactiveCharts/VisualiseTrendAcrossBiddingWindows'
 import VisualiseBidPriceForSpecificInstructorTermSection from '@/components/interactiveCharts/VisualiseBidPriceForSpecificInstructorTermSection'
-import { Spinner } from '@nextui-org/react'
+import { Spinner, user } from '@nextui-org/react'
 import { ChartData, Dataset, chartAttributes } from '@/types';
-import { SearchBox } from './components/SearchBox'
-
+import { SearchBox } from './components/SearchBox';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link'
+import { BookText } from 'lucide-react';
 
 export default function Page() {
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
     // const courseCode: string = params.courseCode.toUpperCase()
-    const [courseCode, setCourseCode] = useState<string>("COR-STAT1202"); // default
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const courseCodeParam = searchParams.get('courseCode');
+    const defaultCourseCode = "COR-STAT1202";
+    const [courseCode, setCourseCode] = useState<string>(courseCodeParam ? courseCodeParam.toUpperCase() : defaultCourseCode); // default
     const [courseName, setCourseName] = useState<string>("")
     const [chartDataOverview, setChartDataOverview] = useState<chartAttributes>()
     const [chartDataInstructorOverview, setChartDataInstructorOverview] = useState<chartAttributes>()
     const [error, setError] = useState<any>(null)
     const [chartWidthHeightArr, setChartWidthHeightArr] = useState<string[]>(["", ""])
-    const [isSCISCourse, setIsSCISCourse] = useState<boolean>(false)
 
-    const handleCourseSelection = (courseCode: string) => {
-        console.log(courseCode);
-        setCourseCode(courseCode);
-    }
+    useEffect(() => {
+        setCourseCode(courseCodeParam ? courseCodeParam.toUpperCase() : defaultCourseCode);
+    }, [courseCodeParam]);
 
     useEffect(() => {
         const fetchCourseName = async () => {
@@ -38,10 +44,7 @@ export default function Page() {
                 const courseName = await response.json()
                 setCourseName(courseName)
                 // courseCode should be in upper case
-                if (courseCode.slice(0, 2) == "IS" || courseCode.slice(0, 2) == "CS" || courseCode.slice(0, 6) == "COR-IS" ) {
-                    // show button for scis students to navigate to official course description
-                    setIsSCISCourse(true)
-                }
+
             } catch (error: any) {
                 setCourseName("Not Found")
                 setError(error)
@@ -81,7 +84,7 @@ export default function Page() {
         fetchCourseMinMaxMeanMedianMedianData()
         fetch_all_instructor_median_median_bid_by_course_code()
         
-    }, [courseCode, apiURL]);
+    }, [courseCode, courseCodeParam, apiURL]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -107,19 +110,29 @@ export default function Page() {
         <>
             <div className='flex flex-col pb-5'>
                 <div className='lg:w-1/2'>
-                    <SearchBox onCourseSelected={handleCourseSelection}/>
+                    <SearchBox/>
                 </div>
-                
-                <p className='py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>{courseCode} - {courseName}</p>
+                <div className='flex flex-col md:flex-row md:justify-between md:items-center'>
+                    <div>
+                        <p className='py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>{courseCode} - {courseName}</p>
+                    </div>
+                    <Link href={"/courses/" + courseCode} className='w-fit'>
+                        <Button className='text-xs font-semibold w-fit'>
+                            <BookText/>
+                            <span className='px-2'>Course Information</span>
+                        </Button>
+                    </Link>       
+                </div>
+                {/* <p className='py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>{courseCode} - {courseName}</p> */}
                 {error ? (
                     <ErrorPopUp errorMessage={error.message}/>
                 ) 
                 : (chartDataOverview && chartDataInstructorOverview ? (
                     <>
-                        {isSCISCourse && (
-                            <button onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left p-1 px-1.5 mb-2 sm:mb-4 border-2 w-fit rounded-md hover:bg-gray-200 text-xs sm:text-sm'>
-                                View Course Information
-                            </button>
+                        {((courseCode.slice(0, 2) == "IS" || courseCode.slice(0, 2) == "CS" || courseCode.slice(0, 6) == "COR-IS" )) && (
+                            <p onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left p-1 px-1.5 mb-2 sm:mb-4 w-fit text-xs sm:text-sm cursor-pointer underline hover:text-gray-600'>
+                                View SMU Course Document
+                            </p>
                         )}
                         <div className='flex flex-col gap-y-5'>
                             <div className='flex flex-col'>
@@ -135,6 +148,7 @@ export default function Page() {
                             <hr></hr>
                             <div>
                                 <VisualiseBidPriceForSpecificInstructorTermSection
+                                    key={courseCode} // force re-render on courseCode change (temp fix)
                                     courseCode={courseCode} 
                                     width={chartWidthHeightArr[0]}  
                                     height={chartWidthHeightArr[1]}

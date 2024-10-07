@@ -18,7 +18,7 @@ export default function TopBar() {
         pageName = pathName.split("/")[1];
         switch(pageName) {
             case "timetable":
-                pageName = "Timetable"
+                pageName = "My Timetable"
                 break;
             case "courses":
                 pageName = "Courses"
@@ -40,7 +40,7 @@ export default function TopBar() {
           }
     }
     return (
-    <div className='pl-[40px] sm:px-0 w-full flex justify-between items-center py-4'>
+    <div className='pl-[40px] lg:px-0 w-full flex justify-between items-center py-4'>
         {/* TODO: Make term dynamic*/}
         <div>
             {/* <SignedOut>

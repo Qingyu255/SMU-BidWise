@@ -22,11 +22,12 @@ type comboboxProps = {
     options : string[] | undefined,
     selectedValue: string,
     onSelect: (option: string) => void,
+    clearOptionText?: string,
     // showFirstOption?: boolean // optional
     // hideCategoryAsPrefix?: boolean // optional
 }
 
-export function Combobox({category, options, selectedValue, onSelect}: comboboxProps) {
+export function Combobox({category, options, selectedValue, onSelect, clearOptionText}: comboboxProps) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState(selectedValue)
 
@@ -65,7 +66,7 @@ export function Combobox({category, options, selectedValue, onSelect}: comboboxP
                             setOpen(false);
                         }}
                     >
-                    Clear
+                    {clearOptionText? clearOptionText : 'Clear'}
                     </CommandItem>
                 {options?.map((option) => (
                     <CommandItem

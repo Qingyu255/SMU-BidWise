@@ -16,6 +16,7 @@ import {
   UserButton,
 } from '@clerk/nextjs';
 import Image from 'next/image';
+import { poppins } from '@/utils/fonts';
 
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
@@ -35,7 +36,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
             width={35}
             height={35}
           />
-          <Link href={"/"} className='mx-1 text-lg font-semibold text-foreground'>SMU BidWise</Link>
+          <Link href={"/"} className={`mx-1 text-lg font-semibold text-foreground ${poppins.className}`}>SMU BIDWISE</Link>
         </div>
         <div className='mt-5'>
           <div className='flex flex-col gap-1 w-full'>

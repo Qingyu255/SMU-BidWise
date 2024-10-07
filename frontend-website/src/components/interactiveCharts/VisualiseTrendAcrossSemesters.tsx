@@ -26,7 +26,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
 
     const fetchAvailableBiddingWindowsOfInstructorWhoTeachCourse = async (courseCode: string, instructorName: string) => {
         try {
-            const response = await fetch(`${apiURL}/instructordata/bidding_windows_available/${courseCode}/${instructorName}`)
+            const response = await fetch(`${apiURL}/instructordata/bidding_windows_available/${courseCode}/${instructorName}`, { next: { revalidate: 86400 } })
             const jsonPayload = await response.json()
             const biddingWindowDropdownOptions = jsonPayload.data
             setBiddingWindowDropdownArr(biddingWindowDropdownOptions || [])
@@ -55,7 +55,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
     }
     const update_before_after_vacancy_data = async (chartDataInstructorsBiddingWindow: chartAttributes, biddingWindow: string) => {
         try {
-            const response = await fetch(`${apiURL}/coursedata/bidpriceacrossterms/vacancies/${courseCode}/${biddingWindow}/${courseInstructorSelected}`)
+            const response = await fetch(`${apiURL}/coursedata/bidpriceacrossterms/vacancies/${courseCode}/${biddingWindow}/${courseInstructorSelected}`, { next: { revalidate: 86400 } })
             if (!response.ok) {
                 throw new Error(`${response.status}`)
             }
@@ -99,7 +99,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
     const handleBiddingWindowSelect = async (biddingWindow: string) => {
         setSelectedBiddingWindow(biddingWindow)
         try {
-            const response = await fetch(`${apiURL}/coursedata/bidpriceacrossterms/${courseCode}/${biddingWindow}/${courseInstructorSelected}`)
+            const response = await fetch(`${apiURL}/coursedata/bidpriceacrossterms/${courseCode}/${biddingWindow}/${courseInstructorSelected}`, { next: { revalidate: 86400 } })
             const jsonPayload = await response.json()
             update_before_after_vacancy_data(jsonPayload, biddingWindow) // state change is made in this update function
             // show charts again
@@ -115,7 +115,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
         // Fetch dropdown options array for select instructor on page refresh
         const fetch_instructors_who_teach_course_code = async () => {
             try {
-                const response = await fetch(`${apiURL}/instructordata/instructor/${courseCode}`)
+                const response = await fetch(`${apiURL}/instructordata/instructor/${courseCode}`, { next: { revalidate: 86400 } })
                 if (!response.ok) {
                     const errorResponse = await response.json()
                     throw new Error(`${response.status}: ${errorResponse.detail}`)

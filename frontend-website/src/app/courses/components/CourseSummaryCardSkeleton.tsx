@@ -8,7 +8,7 @@ export default function CourseSummaryCardSkeleton() {
     return (
         <>
             {Array.from({length: 10}).map((_, index) => (
-                <div key={index} className="flex justify-center p-4">
+                <div key={index} className="flex justify-center py-4">
                     <Card className="w-full bg-inherit">
                         <CardHeader>
                             <CardTitle className="text-xl lg:text-2xl flex flex-row">
