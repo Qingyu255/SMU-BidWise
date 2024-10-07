@@ -322,11 +322,11 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
       <div className="flex justify-between pb-1">
         <div className="flex items-center space-x-2">
           <Badge variant="outline" className="flex items-center ">
-            <div className={`w-4 h-4 bg-[${unselectedClassColour}] rounded-sm mr-2`}/>
+            <div style={{backgroundColor: unselectedClassColour}} className={`w-4 h-4 rounded-sm mr-2`}></div>
             Available
           </Badge>
           <Badge variant="outline" className="flex items-center">
-            <div className={`w-4 h-4 bg-[${selectedClassColour}] rounded-sm mr-2`}/>
+            <div style={{backgroundColor: selectedClassColour}} className={`w-4 h-4 rounded-sm mr-2`}></div>
             Selected
           </Badge>
         </div>
