@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator"
 import Link from "next/link";
 import Rating from "@/components/Rating";
 import { ScrollArea } from "@/components/ui/scroll-area"
+import CourseSummaryCard from '@/app/courses/components/CourseSummaryCard';
 
 import {
   Sheet,
@@ -151,60 +152,16 @@ const CourseNode = ({ data }: CourseNodeProps) => {
                 <SheetTitle>{courseData[0]?.title}</SheetTitle>
               </SheetHeader>
               <ScrollArea>
-              <div className="flex justify-center py-4">
-              <Card className="w-full bg-background text-foreground">
-                <div>
-                <CardHeader>
-                    <Link href={"courses/" + courseData[0]?.course_code}>
-                        <CardTitle className="text-xl lg:text-2xl flex flex-row cursor-pointer hover:text-slate-500">
-                            <span className="flex items-center">{courseData[0]?.course_code}</span>
-                            <Separator className="mx-2 my-[5px] h-100 w-[2px]" orientation="vertical"/>
-                            <span className="flex items-center">{courseData[0]?.title}</span>
-                        </CardTitle>
-                    </Link>
-                    <CardDescription className="">
-                        Career: {courseData[0]?.career}
-                    </CardDescription>
-                    <CardDescription>
-                        Units: {courseData[0]?.units} CU
-                    </CardDescription>
-                </CardHeader>
-                
-                <CardContent>
-                    <Separator className="mb-2"/>
-                    <div className="flex flex-col">
-                        <div>
-                            <div className="mb-4">
-                                <p className="text-sm font-semibold">Description</p>
-                                <p className="text-sm">{courseData[0]?.description}</p>
-                            </div>
-                            <div>
-                                <p className="text-sm font-semibold">Enrolment Requirements</p>
-                                <p className="text-sm">{courseData[0]?.enrolment_requirements}</p>
-                            </div>
-                        </div>
-                        <div className='py-2 md:px-4 flex flex-row md:flex-col gap-x-3 gap-y-0 md:gap-y-2'>
-                            <Rating
-                                courseId={courseData[0]?.id}
-                                ratingName='Fluff'
-                                fillColour='#4c68ee' 
-                                ratingDescription="The 'Fluff Rating' indicates how much non-technical content a course contains." 
-                            />
-                            <Rating
-                                courseId={courseData[0]?.id}
-                                ratingName='Workload'
-                                fillColour='#f4a261'
-                                ratingDescription="The 'Workload Rating' provides an estimate of the effort and time commitment required for the course." 
-                            />
-                        </div>
-                    </div>
-                </CardContent>
-                </div>
-                
-            </Card>
-            </div>
-            </ScrollArea>
-
+                <CourseSummaryCard
+                    course_id = {courseData[0]?.id}
+                    course_code={courseData[0]?.course_code}
+                    title={courseData[0]?.title}
+                    career={courseData[0]?.career}
+                    description={courseData[0]?.description}
+                    enrolment_requirements={courseData[0]?.enrolment_requirements}
+                    units={courseData[0]?.units}
+                />
+              </ScrollArea>
               <SheetFooter>
                 <SheetClose asChild>
                 </SheetClose>

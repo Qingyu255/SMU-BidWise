@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link";
-import Rating from "@/components/Rating";
+import RatingsCombined from "@/components/RatingsCombined";
 
 export interface CourseSummaryCardProps {
     course_id: string;
@@ -48,21 +48,8 @@ export default function CourseSummaryCard({ course_id, course_code, title, caree
                                 <p className="text-sm">{enrolment_requirements}</p>
                             </div>
                         </div>
-                        <div className='py-2 md:px-4 flex flex-row md:flex-col gap-x-3 gap-y-0 md:gap-y-2'>
-                            <Rating
-                                courseId={course_id}
-                                ratingName='Fluff'
-                                fillColour='#4c68ee' 
-                                ratingDescription="The 'Fluff Rating' indicates how much non-technical content a course contains." 
-                            />
-                            <Rating
-                                courseId={course_id}
-                                ratingName='Workload'
-                                fillColour='#f4a261'
-                                ratingDescription="The 'Workload Rating' provides an estimate of the effort and time commitment required for the course." 
-                            />
-                        </div>
                     </div>
+                    <RatingsCombined courseId={course_id}/>
                 </CardContent>
                 </div>
                 

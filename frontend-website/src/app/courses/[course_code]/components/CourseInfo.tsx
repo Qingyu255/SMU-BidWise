@@ -17,7 +17,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ChartNoAxesCombined } from 'lucide-react';
-import Rating from '@/components/Rating';
+import RatingsCombined from "@/components/RatingsCombined";
 
 export interface CourseInfoProps {
   id: string;
@@ -106,22 +106,10 @@ export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoPr
           ))}
         </div>
 
-        <div className='mt-1 flex flex-col gap-y-2 md:flex-row md:gap-x-3 md:gap-y-0'>
-          <Rating
-            courseId={courseInfo.id}
-            ratingName='Fluff'
-            fillColour='#4c68ee' 
-            ratingDescription="The 'Fluff Rating' indicates how much non-technical content a course contains." 
-            isRatingAllowed={true}
-          />
-          <Rating
-            courseId={courseInfo.id}
-            ratingName='Workload'
-            fillColour='#f4a261'
-            ratingDescription="The 'Workload Rating' provides an estimate of the effort and time commitment required for the course." 
-            isRatingAllowed={true}
-          />
-        </div>
+        <RatingsCombined 
+          courseId={courseInfo.id}
+          isRatingAllowed={true}
+        />
         
 
       </CardContent>
