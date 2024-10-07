@@ -33,31 +33,36 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
     const [userRating, setUserRating] = useState<number>(0);
     const [averageRating, setAverageRating] = useState<number>(0);
     const [userContributions, setUserContributions] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(true);
     const { toast } = useToast();
 
     const fetchRatingData = async () => {
-        const { data: avgData, error: avgError } = await supabase.rpc('get_average_rating', {
-            _course_id: courseId,
-            _rating_name: ratingName,
-        });
-
-        if (avgError) {
-            console.error("Error fetching average rating:", avgError.message);
-        } else {
-            // console.log("average rating: for" + courseId, avgData);
-            setAverageRating(avgData);
-        }
-
-        const { data: countData, error: countError } = await supabase.rpc('get_user_contributions', {
-            _course_id: courseId,
-            _rating_name: ratingName,
-        });
-
-        if (countError) {
-            console.error("Error fetching user contributions:", countError.message);
-        } else {
-            // console.log("user contributions: ", countData);
-            setUserContributions(countData);
+        try {
+            const { data: avgData, error: avgError } = await supabase.rpc('get_average_rating', {
+                _course_id: courseId,
+                _rating_name: ratingName,
+            });
+    
+            if (avgError) {
+                console.error("Error fetching average rating:", avgError.message);
+            } else {
+                // console.log("average rating: for" + courseId, avgData);
+                setAverageRating(avgData);
+            }
+    
+            const { data: countData, error: countError } = await supabase.rpc('get_user_contributions', {
+                _course_id: courseId,
+                _rating_name: ratingName,
+            });
+    
+            if (countError) {
+                console.error("Error fetching user contributions:", countError.message);
+            } else {
+                // console.log("user contributions: ", countData);
+                setUserContributions(countData);
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -111,7 +116,7 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
                     </div>
                 ))}
             </div>
-            {userContributions === 0 && (
+            {(!loading && userContributions === 0) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 dark:bg-gray-800 dark:bg-opacity-70 text-center">
                     <span className=" opacity-50 text-xs">No ratings yet</span>
                 </div>
