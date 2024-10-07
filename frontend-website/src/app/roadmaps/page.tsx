@@ -93,11 +93,11 @@ const handleBack = () => {
   return (
     <div>
       { showRoadmap ? 
-        <div className='flex flex-col overflow-hidden' style={{ width: '100%', height: '100%'}}>
+        <div className='flex flex-col overflow-hidden' style={{ width: '100%', height: '90vh'}}>
           <div className='mb-2'>
             <HeadingCard handleClick={handleBack}/>
           </div>
-          <div className='container self-center flex-grow-0' style={{ height: 510 }}>
+          <div className='container self-center flex-grow-1' style={{ height: 'inherit' }}>
             
             <Timeline seniorName={timelinePayload}/>
           </div>

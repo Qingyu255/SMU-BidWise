@@ -132,7 +132,7 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
        let vp = reactFlowInstance.getViewport()
       //  console.log(vp)
        // Then zoom in by adjusting the zoom level
-       reactFlowInstance.setViewport({x:vp.x, y: vp.y + 150, zoom: 0.7 });
+       reactFlowInstance.setViewport({x:vp.x, y: vp.y + 120, zoom: 0.7 });
     }
   }, [reactFlowInstance]);
 
@@ -143,9 +143,9 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
         reactFlowInstance.fitView()
         let vp = reactFlowInstance.getViewport()
         if(vp.x >= 210) {
-          reactFlowInstance.setViewport({x:vp.x, y: vp.y + 150, zoom: 0.7 });
+          reactFlowInstance.setViewport({x:vp.x, y: vp.y + 120, zoom: 0.7 });
         } else {
-          reactFlowInstance.setViewport({x:vp.x, y: vp.y + 150, zoom: vp.zoom });
+          reactFlowInstance.setViewport({x:vp.x, y: vp.y + 120, zoom: vp.zoom });
         }
         // console.log(vp)
       }
