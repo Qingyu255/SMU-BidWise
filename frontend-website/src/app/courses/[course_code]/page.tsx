@@ -25,7 +25,6 @@ const supabase = createClient();
 
 export default function Page({ params }: { params: { course_code: string }}) {
   const { course_code } = params;
-  const [courseId, setCourseId] = useState<string>();
   const [sections, setSections] = useState<any[]>([]);
   const [professors, setProfessors] = useState<string[]>([]);
   const [selectedProfessor, setSelectedProfessor] = useState<string | null>(null);
@@ -148,7 +147,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
 
         // console.log(`Fetching data for course_code: ${course_code}`);
         const courseInfo: any = await getCourseInfoByCourseCode(course_code);
-        setCourseId(courseInfo.id);
+        const courseAreas: any = await getCourseAreasByCourseId(courseInfo.id);
+        setCourseAreas(courseAreas);
         setCourseInfo(courseInfo);
 
         // console.log('Fetching sections and professors for course_code: ' + course_code + " for latest term: " + latestTermStr);
@@ -163,20 +163,6 @@ export default function Page({ params }: { params: { course_code: string }}) {
       }
     })();
   }, [course_code]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        if (!courseId) {
-          return;
-        }
-        const courseAreas: any = await getCourseAreasByCourseId(courseId);
-        setCourseAreas(courseAreas);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    })();
-  }, [courseId]);
 
   return (
     <>
