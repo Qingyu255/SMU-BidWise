@@ -49,6 +49,8 @@ const WelcomeMessage = () => {
     transition: 'background-color 0.3s ease, color 0.3s ease', // Add transition for color changes
   };
 
+  
+
   return (
     <motion.div
       variants={container(0)} // Apply motion.js animation to the WelcomeMessage
@@ -61,8 +63,12 @@ const WelcomeMessage = () => {
         padding: '4.5rem',
         color: textColor,
         flexDirection: isMobile ? 'column' : 'row',
+        maxWidth: '1280px', // Add a max-width to the container
+        overflowX: 'hidden', // Prevent horizontal overflow
+        margin: '0 auto' // Center container within the viewport
       }}
     >
+
       {/* Text Section */}
       <div style={{ 
         flex: 1, 
