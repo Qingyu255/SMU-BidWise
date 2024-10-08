@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { motion } from 'framer-motion';
-import { container } from '../../../public/motion';
 
 const About = () => {
     const { theme } = useTheme(); // Get the current theme
@@ -33,34 +31,21 @@ const About = () => {
 
     return (
         <div style={{ padding: '2rem', textAlign: 'center' }}> {/* Implemented the styling here */}
-            <motion.div>
-                <motion.p 
-                    variants={container(1)}
-                    initial="hidden"
-                    animate="visible"
-                    style={sectionSubTextStyle}
-                >
+            <div>
+                <p style={sectionSubTextStyle}>
                     Introduction
-                </motion.p>
+                </p>
                 
-                <motion.h2 
-                    variants={container(1.5)}
-                    initial="hidden"
-                    animate="visible"                    
-                    style={sectionHeadTextStyle}
-                >
+                <h2 style={sectionHeadTextStyle}>
                     Overview
-                </motion.h2>
-            </motion.div>
+                </h2>
+            </div>
             
-            <motion.p
-                variants={container(2)}
-                initial="hidden"
-                animate="visible"
-            >
+            <p>
                 Welcome to SMU BidWise, the platform designed to transform the module bidding experience for SMU students. With real-time bid analytics, personalized insights, and an intuitive timetable interface, SMU BidWise simplifies academic planning. Access tools like senior roadmaps, bid price trends, and a graduation tracker to make informed decisions. Stay ahead with up-to-date course availability and data visualizations, all in one seamless experience.
-            </motion.p>
+            </p>
         </div>
+        
     );
 }
 

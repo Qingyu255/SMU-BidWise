@@ -3,6 +3,7 @@
 import About from '../components/homepage/About';
 import WelcomeMessage from '../components/homepage/Welcome'; 
 import Cards from '../components/homepage/Cards';
+import Benefits from '../components/homepage/Benefits';
 
 export default function Home() {
   return (
@@ -12,6 +13,9 @@ export default function Home() {
 
       {/* About Section */}
       <About />
+
+      {/* Benefits Section */}
+      <Benefits />
 
       {/* Cards Section */}
       <div id="cards-section">
