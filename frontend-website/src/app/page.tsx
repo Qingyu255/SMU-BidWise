@@ -1,22 +1,22 @@
-import Cylinder_shape from '../components/cylinder-threejs/cylinder';
+"use client";
+
 import About from '../components/homepage/About';
 import WelcomeMessage from '../components/homepage/Welcome'; 
-import Cards from '../components/homepage/Cards'
+import Cards from '../components/homepage/Cards';
 
 export default function Home() {
   return (
-    <div style={{ height: '100vh', margin: '0', padding: '0' }}>
-      
+    <div style={{ margin: '0', padding: '0', position: 'relative' }}>
       {/* Welcome Message Component */}
-        <WelcomeMessage />
+      <WelcomeMessage />
 
-      {/* About Section without background Cylinder */}
+      {/* About Section */}
       <About />
 
       {/* Cards Section */}
-      <Cards />
-
-    
+      <div id="cards-section">
+        <Cards />
+      </div>
     </div>
   );
 }

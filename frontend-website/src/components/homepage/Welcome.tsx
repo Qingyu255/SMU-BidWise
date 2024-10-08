@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { motion } from 'framer-motion'; // Import motion from framer-motion
-import Link from 'next/link'; // Import Link from next/link
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { container } from "../../../public/motion"; // Ensure you update this path
 
 const WelcomeMessage = () => {
@@ -36,34 +36,47 @@ const WelcomeMessage = () => {
   const isMobile = screenSize < 768; // Mobile
   const isTablet = screenSize >= 768 && screenSize < 1024; // Tablet
 
+  // Button styles based on theme
+  const buttonStyles = {
+    marginTop: '1rem',
+    padding: '0.75rem 1.5rem',
+    fontSize: isMobile ? '1rem' : isTablet ? '1.05rem' : '1.25rem',
+    backgroundColor: theme === 'dark' ? 'white' : 'black', // Set background color
+    color: theme === 'dark' ? 'black' : 'white', // Set text color
+    border: 'none',
+    borderRadius: '1.75rem',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease, color 0.3s ease', // Add transition for color changes
+  };
+
   return (
     <motion.div
       variants={container(0)} // Apply motion.js animation to the WelcomeMessage
       initial="hidden"
       animate="visible"
       style={{ 
-        display: 'flex',  // Use flexbox to place items side by side
-        alignItems: 'flex-start', // Align items to the top
-        justifyContent: isMobile ? 'center' : 'space-between', // Center items on mobile
-        padding: '2rem',
+        display: 'flex',
+        alignItems: isMobile ? 'center' : 'flex-start',
+        justifyContent: isMobile ? 'center' : 'space-between',
+        padding: '4.5rem',
         color: textColor,
-        flexDirection: isMobile ? 'column' : 'row', // Stack items vertically on mobile
+        flexDirection: isMobile ? 'column' : 'row',
       }}
     >
       {/* Text Section */}
       <div style={{ 
         flex: 1, 
-        textAlign: isMobile ? 'center' : 'left', // Center text on mobile
+        textAlign: isMobile ? 'center' : 'left',
         paddingBottom: isMobile ? '1rem' : '0' 
       }}>
         <h1 style={{
-          fontSize: isMobile ? '3rem' : isTablet ? '5rem' : '6rem', // Adjust font size for mobile and tablet
+          fontSize: isMobile ? '3rem' : isTablet ? '5rem' : '6rem',
           fontWeight: 'bold',
           lineHeight: '1.2',
           paddingTop: '1rem',
         }}>
           Welcome to <span style={{
-            background: 'linear-gradient(135deg, #3C5AA6, #D4A76A)', // Brighter blue to gold gradient
+            background: 'linear-gradient(135deg, #3C5AA6, #D4A76A)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             display: 'inline-block',
@@ -72,25 +85,15 @@ const WelcomeMessage = () => {
           </span>
         </h1>
         <p style={{
-          fontSize: isMobile ? '1.25rem' : isTablet ? '1.75rem' : '2rem', // Adjust font size for mobile and tablet
+          fontSize: isMobile ? '1.25rem' : isTablet ? '1.75rem' : '2rem',
           lineHeight: '1.4',
         }}>
           Optimizing the module bidding process for SMU students.
         </p>
         {/* Button Section */}
         <Link href="/courses" passHref>
-          <button style={{
-            marginTop: '1rem', // Space above the button
-            padding: '0.75rem 1.5rem', // Button padding
-            fontSize: isMobile ? '1rem' : isTablet ? '1.25rem' : '1.5rem', // Adjust font size for mobile and tablet
-            backgroundColor: 'black', // Button color
-            color: 'white', // Text color
-            border: 'none',
-            borderRadius: '1.75rem',
-            cursor: 'pointer',
-            transition: 'background-color 0.3s ease',
-          }}>
-            Start Searching Courses
+          <button style={buttonStyles}>
+            Get Started
           </button>
         </Link>
       </div>
@@ -98,18 +101,21 @@ const WelcomeMessage = () => {
       {/* Image Section */}
       <div style={{ 
         flex: '0 0 auto', 
-        textAlign: isMobile ? 'center' : 'right', // Center text on mobile
-        marginTop: isMobile ? '1rem' : '0' // Add margin on top for mobile
+        textAlign: 'center',
+        marginTop: isMobile ? '1rem' : '0',
+        width: isMobile ? '100%' : 'auto',
+        display: 'flex',
+        justifyContent: isMobile ? 'center' : 'flex-end',
       }}> 
         <img 
           src="/images/lp2-removebg.png" 
           alt="Landing Page" 
           style={{ 
-            width: '475px',  // Maintain a fixed width
-            height: '450px', // Fixed height of 450px
-            objectFit: 'cover', // Ensure the image covers the set dimensions
-            margin: isMobile ? '0 auto' : '0', // Center image horizontally on mobile
-            display: isMobile ? 'block' : 'inline-block', // Ensure the image behaves as a block for centering
+            width: '475px',
+            height: '450px',
+            objectFit: 'cover',
+            margin: '0 auto',
+            display: 'block', 
           }} 
         />
       </div>
@@ -118,4 +124,3 @@ const WelcomeMessage = () => {
 };
 
 export default WelcomeMessage;
-
