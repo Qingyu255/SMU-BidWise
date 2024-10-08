@@ -194,3 +194,5 @@ export interface SeniorName {
 export interface HeadingCardProps {
   handleClick: () => void;
 }
+
+

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import createClient from '@/utils/supabase/client';
 import { SeniorName, SeniorRoadmap } from '@/types';
 import HeadingCard from '@/components/roadmap/HeadingCard';
+import RoadmapFormCard from './components/RoadmapFormCard';
 
 
 export default function Page() {
@@ -90,6 +91,10 @@ const handleBack = () => {
   setShowRoadmap(false)
 }
 
+const handleFormClick = () => {
+
+}
+
   return (
     <div>
       { showRoadmap ? 
@@ -103,7 +108,12 @@ const handleBack = () => {
           </div>
         </div>
 
-      :<Roadmaps seniorRoadmaps={seniorRoadmaps} onClick={handleClick}/>}
+      :
+      <>
+      <RoadmapFormCard/>
+      <Roadmaps seniorRoadmaps={seniorRoadmaps} onClick={handleClick}/>
+      </>
+      }
     </div>
   )
 
