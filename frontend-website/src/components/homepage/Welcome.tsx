@@ -58,7 +58,7 @@ const WelcomeMessage = () => {
       animate="visible"
       style={{ 
         display: 'flex',
-        alignItems: isMobile ? 'center' : 'flex-start',
+        alignItems: isMobile ? 'center' : 'center',
         justifyContent: isMobile ? 'center' : 'space-between',
         padding: '4.5rem',
         color: textColor,
@@ -106,25 +106,29 @@ const WelcomeMessage = () => {
 
       {/* Image Section */}
       <div style={{ 
-        flex: '0 0 auto', 
-        textAlign: 'center',
-        marginTop: isMobile ? '1rem' : '0',
-        width: isMobile ? '100%' : 'auto',
-        display: 'flex',
-        justifyContent: isMobile ? 'center' : 'flex-end',
+          textAlign: 'center',
+          marginTop: isMobile ? '1rem' : '0',
+          width: isMobile ? '100%' : 'auto',
+          display: 'flex',
+          justifyContent: isMobile ? 'center' : 'flex-end',
+          alignItems: 'center', // Center the image vertically
+          height: '100%', // Maintain a specific height or define a fixed height
       }}> 
-        <img 
-          src="/images/lp2-removebg.png" 
-          alt="Landing Page" 
-          style={{ 
-            width: '475px',
-            height: '450px',
-            objectFit: 'cover',
-            margin: '0 auto',
-            display: 'block', 
-          }} 
-        />
+          <img 
+              src="/images/lp2-removebg.png" 
+              alt="Landing Page" 
+              style={{ 
+                  width: isMobile ? '100%' : '40vw', // Adjust width based on viewport for larger screens
+                  height: 'auto', // Height set to auto to maintain aspect ratio
+                  maxWidth: '475px', // Set a max width to prevent the image from growing too large
+                  maxHeight: '450px', // Set a max height to maintain the original aspect ratio
+                  margin: 'auto', // Use auto to center the image within the flex container
+                  display: 'block', // Ensures the image behaves like a block element
+              }} 
+          />
       </div>
+
+
     </motion.div>
   );
 };
