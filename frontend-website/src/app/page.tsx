@@ -16,11 +16,7 @@ export default function Home() {
 
       {/* Benefits Section */}
       <Benefits />
-
-      {/* Cards Section */}
-      <div id="cards-section">
-        <Cards />
-      </div>
+      
     </div>
   );
 }

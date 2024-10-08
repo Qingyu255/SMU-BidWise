@@ -1,13 +1,11 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 
 const Benefits = () => {
-    const { theme } = useTheme(); // Get the current theme
-
-    // Hook to handle window resizing
+    const { theme } = useTheme();
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const videoRef = useRef<HTMLVideoElement>(null); // Explicitly define the type
 
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
@@ -15,97 +13,119 @@ const Benefits = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Styles based on window width and current theme
-    const sectionHeadTextStyle: React.CSSProperties = {
-        color: theme === 'dark' ? 'white' : 'black', // Toggle text color based on theme
-        fontWeight: 'bold', // Equivalent to font-black in Tailwind CSS
-        fontSize: windowWidth >= 640 ? '60px' : windowWidth >= 480 ? '50px' : '30px',
+    const handlePlayVideo = () => {
+        if (videoRef.current) {
+            videoRef.current.play();
+            setIsPlaying(true);
+        }
     };
 
-    const sectionSubTextStyle: React.CSSProperties = {
-        fontSize: windowWidth >= 640 ? '18px' : '14px',
-        color: theme === 'dark' ? '#6b7280' : '#333333', // Adjust secondary color based on theme
-        textTransform: 'uppercase', // Use valid values for textTransform
-        letterSpacing: '0.1em', // Equivalent to tracking-wider in Tailwind CSS
+    const handleVideoEnded = () => {
+        setIsPlaying(false);
     };
 
-    // Define the border color based on the current theme
+    useEffect(() => {
+        const video = videoRef.current;
+        if (video) {
+            video.addEventListener('ended', handleVideoEnded);
+            return () => video.removeEventListener('ended', handleVideoEnded);
+        }
+    }, []);
+
+    const sectionHeadTextStyle = {
+        color: theme === 'dark' ? 'white' : 'black',
+        fontWeight: 'bold',
+        fontSize: windowWidth >= 768 ? '60px' : windowWidth >= 480 ? '50px' : '30px',
+    };
+
+    const sectionSubTextStyle = {
+        fontSize: windowWidth >= 768 ? '18px' : '14px',
+        color: theme === 'dark' ? '#6b7280' : '#333333',
+        textTransform: 'uppercase' as 'uppercase',
+        letterSpacing: '0.1em',
+    };
+
     const borderColor = theme === 'dark' ? 'white' : 'black';
 
     return (
-        <div style={{ padding: '2rem', textAlign: 'center' }}> {/* Implemented the styling here */}
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
             <div>
-                <p style={sectionSubTextStyle}>
-                    Why Choose SMU BidWise?
-                </p>
-                
-                <h2 style={sectionHeadTextStyle}>
-                    Introduction to Our Features
-                </h2>
+                <p style={sectionSubTextStyle}>Why Choose SMU BidWise?</p>
+                <h2 style={sectionHeadTextStyle}>Introduction to Our Features</h2>
             </div>
 
             <div 
                 style={{ 
                     display: 'flex', 
-                    flexDirection: windowWidth < 768 ? 'column' : 'row', // Stack on top for smaller screens
+                    flexDirection: windowWidth < 768 ? 'column' : 'row',
                     border: `2px solid ${borderColor}`, 
                     borderRadius: '1rem', 
                     padding: '1rem', 
                     justifyContent: 'space-between', 
-                    marginTop: '1rem' 
+                    alignItems: 'center',
+                    marginTop: '1rem',
+                    backgroundColor: theme === 'dark' ? '#333' : '#f9f9f9' 
                 }}
             >
-                <p style={{
-                    fontSize: windowWidth >= 640 ? '40px' : '30px', // Adjust font size as needed
-                    fontWeight: '600', // Slightly lighter than bold
-                    fontFamily: 'Poppins, sans-serif', // Apply the Poppins font directly here
-                    margin: 0, // Ensure no margin for proper alignment
-                    textAlign: 'start'
-                }}>
-                    Timetable & Course Discovery
-                </p>
-                
+                <div style={{ flexBasis: '40%', textAlign: windowWidth >= 768 ? 'left' : 'center' }}>
+                    <p style={{
+                        fontSize: windowWidth >= 768 ? '30px' : '20px',
+                        fontWeight: '600',
+                        fontFamily: 'Poppins, sans-serif',
+                        marginBottom: '1rem'
+                    }}>
+                        Timetable & Course Discovery
+                    </p>
+                    <p style={{
+                        fontSize: windowWidth >= 768 ? '16px' : '14px',
+                        color: theme === 'dark' ? '#d1d5db' : '#4b5563',
+                        marginBottom: '0.5rem'
+                    }}>
+                        Effortlessly browse and plan your courses. Our timetable feature allows you to visualize course availability, helping you build a schedule that fits your needs and preferences.
+                    </p>
+                </div>
+
                 <div 
                     style={{ 
-                        marginLeft: windowWidth >= 768 ? '1rem' : '0', // Remove left margin for smaller screens
+                        position: 'relative',
+                        marginLeft: windowWidth >= 768 ? '1rem' : '0', 
                         backgroundColor: 'lightgrey', 
                         padding: '1rem', 
                         borderRadius: '1rem', 
-                        marginTop: windowWidth < 768 ? '1rem' : '0' // Add margin-top for small screens
+                        marginTop: windowWidth < 768 ? '1rem' : '0',
+                        flexBasis: '50%' 
                     }}
                 >
                     <video 
-                        loop 
+                        ref={videoRef}
+                        loop={windowWidth >= 768}
                         muted 
-                        autoPlay 
-                        style={{ width: '800px', height: 'auto' }} // Adjust dimensions as needed
+                        autoPlay={windowWidth >= 768}
+                        controls={windowWidth >= 768} 
+                        style={{ width: '100%', height: 'auto' }}
                     >
-                        <source src="/images/timetable.mp4" type="video/mp4" /> {/* Change the video source */}
+                        <source src="/images/timetable.mp4" type="video/mp4" />
                     </video>
+                    
+                    {!isPlaying && windowWidth < 768 && (
+                        <button 
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                backgroundColor: 'transparent',
+                                border: 'none',
+                                cursor: 'pointer',
+                                fontSize: '48px',
+                                color: '#ff6347'
+                            }}
+                            onClick={handlePlayVideo}
+                        >
+                            ▶️
+                        </button>
+                    )}
                 </div>
-            </div>
-
-            {/* Other content sections */}
-            <div style={{ display: 'flex', border: `2px solid ${borderColor}`, borderRadius: '1rem', padding: '1rem', justifyContent: 'space-between', marginTop: '1rem' }}>
-                <p style={{
-                    fontSize: windowWidth >= 640 ? '40px' : '30px', // Adjust font size as needed
-                    fontWeight: '600', // Slightly lighter than bold
-                    fontFamily: 'Poppins, sans-serif', // Apply the Poppins font directly here
-                    margin: 0, // Ensure no margin for proper alignment
-                }}>
-                    Timetable Interface
-                </p>
-            </div>
-
-            <div style={{ display: 'flex', border: `2px solid ${borderColor}`, borderRadius: '1rem', padding: '1rem', justifyContent: 'space-between', marginTop: '1rem' }}>
-                <p style={{
-                    fontSize: windowWidth >= 640 ? '40px' : '30px', // Adjust font size as needed
-                    fontWeight: '600', // Slightly lighter than bold
-                    fontFamily: 'Poppins, sans-serif', // Apply the Poppins font directly here
-                    margin: 0, // Ensure no margin for proper alignment
-                }}>
-                    Timetable Interface
-                </p>
             </div>
         </div>
     );

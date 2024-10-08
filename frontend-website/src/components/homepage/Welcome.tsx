@@ -60,7 +60,7 @@ const WelcomeMessage = () => {
         display: 'flex',
         alignItems: isMobile ? 'center' : 'center',
         justifyContent: isMobile ? 'center' : 'space-between',
-        padding: '4.5rem',
+        padding: '2rem',
         color: textColor,
         flexDirection: isMobile ? 'column' : 'row',
         maxWidth: '1280px', // Add a max-width to the container
