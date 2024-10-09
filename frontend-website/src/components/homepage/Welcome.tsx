@@ -97,7 +97,7 @@ const WelcomeMessage = () => {
           Optimizing the module bidding process for SMU students.
         </p>
         {/* Button Section */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+        <div style={{display:'flex', gap: '1rem', marginTop: '1rem', justifyContent: isMobile ? 'center' : 'left'}}>
           <Link href="/courses" passHref>
             <button style={buttonStyles}>
               Get started
@@ -145,9 +145,9 @@ const WelcomeMessage = () => {
           />
       </div>
 
-
-
     </motion.div>
+    
+
   );
 };
 
