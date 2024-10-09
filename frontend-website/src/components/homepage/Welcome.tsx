@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { container } from "../../../public/motion"; // Ensure you update this path
+import { container } from "../../../public/motion"; 
 
 const WelcomeMessage = () => {
   const { theme } = useTheme(); // Get the current theme
@@ -97,12 +97,21 @@ const WelcomeMessage = () => {
           Optimizing the module bidding process for SMU students.
         </p>
         {/* Button Section */}
-        <Link href="/courses" passHref>
-          <button style={buttonStyles}>
-            Get Started
-          </button>
-        </Link>
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+          <Link href="/courses" passHref>
+            <button style={buttonStyles}>
+              Get started
+            </button>
+          </Link>
+          <Link href="#about-section">
+            <button style={buttonStyles}>
+              Learn more about us
+            </button>
+          </Link>
+        </div>
       </div>
+
+
 
       {/* Image Section */}
       <div style={{ 
@@ -114,9 +123,17 @@ const WelcomeMessage = () => {
           alignItems: 'center', // Center the image vertically
           height: '100%', // Maintain a specific height or define a fixed height
       }}> 
-          <img 
+          <motion.img 
               src="/images/lp2-removebg.png" 
               alt="Landing Page" 
+              animate={{
+                  y: [0, -10, 0], // Moves image 10px up and down
+              }}
+              transition={{
+                  duration: 2, // Duration of one up and down motion
+                  repeat: Infinity, // Makes the animation loop indefinitely
+                  ease: "easeInOut" // Smooth easing for the up and down motion
+              }}
               style={{ 
                   width: isMobile ? '100%' : '40vw', // Adjust width based on viewport for larger screens
                   height: 'auto', // Height set to auto to maintain aspect ratio
@@ -127,6 +144,7 @@ const WelcomeMessage = () => {
               }} 
           />
       </div>
+
 
 
     </motion.div>
