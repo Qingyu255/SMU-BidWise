@@ -1,36 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 
 const Benefits = () => {
     const { theme } = useTheme();
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const videoRef = useRef<HTMLVideoElement>(null);
-    const [activeIndex, setActiveIndex] = useState(0); // State for active carousel index
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [fadeIn, setFadeIn] = useState(false); // State for fade-in effect
 
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    const handlePlayVideo = () => {
-        if (videoRef.current) {
-            videoRef.current.play();
-            setIsPlaying(true);
-        }
-    };
-
-    const handleVideoEnded = () => {
-        setIsPlaying(false);
-    };
-
-    useEffect(() => {
-        const video = videoRef.current;
-        if (video) {
-            video.addEventListener('ended', handleVideoEnded);
-            return () => video.removeEventListener('ended', handleVideoEnded);
-        }
     }, []);
 
     const sectionHeadTextStyle = {
@@ -46,16 +26,33 @@ const Benefits = () => {
         letterSpacing: '0.1em',
     };
 
-    const borderColor = theme === 'dark' ? 'white' : 'black';
-    const navBackgroundColor = theme === 'dark' ? '#1a1a1a' : 'white'; // Adjust background color for nav
-    const navTextColor = theme === 'dark' ? 'white' : 'black'; // Text color for nav items
+    const navLinkStyle: React.CSSProperties = {
+        fontSize: '15px',
+        textTransform: 'uppercase',
+        color: 'white',
+        textDecoration: 'none',
+        position: 'relative',
+        zIndex: '1',
+        margin: '0 10px'
+    };
 
+    const borderColor = theme === 'dark' ? 'white' : 'black';
+
+    const handleNavClick = (index: number) => {
+        setFadeIn(false); // Trigger fade-out
+        setTimeout(() => {
+            setActiveIndex(index);
+            setFadeIn(true); // Trigger fade-in
+        }, 300); // Match this to your transition duration
+    };
+
+    // Handle next and previous carousel navigation
     const handleNext = () => {
-        setActiveIndex((prevIndex) => (prevIndex + 1) % 5); // Wrap around to the first index
+        handleNavClick((activeIndex + 1) % 5);
     };
 
     const handlePrevious = () => {
-        setActiveIndex((prevIndex) => (prevIndex - 1 + 5) % 5); // Wrap around to the last index
+        handleNavClick((activeIndex + 4) % 5);
     };
 
     return (
@@ -67,27 +64,24 @@ const Benefits = () => {
 
             <div style={{ marginTop: '10px' }}>
                 {/* Navigation for carousel */}
-                <div className="landing_nav">
-                    <nav className="hidden md:flex w-full h-[40px] min-[1190px]:h-[50px] justify-between relative" style={{ backgroundColor: navBackgroundColor }}>
-                        {/* Navigation items */}
-                        {["Timetable", "Courses", "Bid Price Analytics", "Senior Roadmaps", "Community Threads"].map((item, index) => (
-                            <div className="h-full flex items-center relative mx-4" key={index}> {/* Use flex for items to align properly */}
-                                <button
-                                    className={`font-medium md:text-[16px] lg:text-[18px] min-[1190px]:text-[1.5rem] ${activeIndex === index ? navTextColor : 'text-grey-400'} mb-1`} // Use dynamic text color
-                                    onClick={() => setActiveIndex(index)} // Update active index on click
-                                >
-                                    {item}
-                                </button>
-                                {activeIndex === index && (
-                                    <div className="absolute left-0 bottom-[-5px] w-full bg-accent h-[3px] min-[1190px]:h-[5px] rounded-full transition-all duration-200 ease-in-out"></div> // Adjusted bottom value
-                                )}
-                            </div>
-                        ))}
+                {/* Conditionally render the nav or carousel controls based on screen size */}
+                {windowWidth >= 768 ? (
+                    <nav className="hidden md:flex w-full h-[40px] min-[1190px]:h-[50px] justify-between relative" style={{ backgroundColor: '#34495e', borderRadius: '8px', alignItems: 'center', boxShadow: '0 2px 3px 0 rgba(0,0,0,.1)', padding: '10px' }}>
+                        <button style={navLinkStyle} onClick={() => handleNavClick(0)}>Timetable</button>
+                        <button style={navLinkStyle} onClick={() => handleNavClick(1)}>Courses</button>
+                        <button style={navLinkStyle} onClick={() => handleNavClick(2)}>Bid Price Analytics</button>
+                        <button style={navLinkStyle} onClick={() => handleNavClick(3)}>Senior Roadmaps</button>
+                        <button style={navLinkStyle} onClick={() => handleNavClick(4)}>Community Threads</button>
                     </nav>
-                </div>
+                ) : (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 20px', marginTop: '10px' }}>
+                        <button onClick={handlePrevious}>Previous</button>
+                        <button onClick={handleNext}>Next</button>
+                    </div>
+                )}
 
                 {/* Custom carousel implementation */}
-                <div style={{ marginTop: '1rem' }}>
+                <div id="carousel-content" style={{ marginTop: '1rem' }}>
                     <div style={{
                         display: 'flex',
                         flexDirection: windowWidth < 768 ? 'column' : 'row',
@@ -98,11 +92,11 @@ const Benefits = () => {
                         alignItems: 'center',
                         backgroundColor: theme === 'dark' ? '#333' : '#f9f9f9'
                     }}>
-                        <div style={{ flexBasis: '40%', textAlign: windowWidth >= 768 ? 'left' : 'center' }}>
+                        <div style={{ flexBasis: '40%', textAlign: windowWidth >= 768 ? 'left' : 'center', opacity: fadeIn ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }}>
                             {activeIndex === 0 && (
                                 <>
                                     <p style={{ fontSize: windowWidth >= 768 ? '30px' : '20px', fontWeight: '600', fontFamily: 'Poppins, sans-serif', marginBottom: '1rem' }}>
-                                        Timetable & Course Discovery
+                                        Timetable
                                     </p>
                                     <p style={{ fontSize: windowWidth >= 768 ? '16px' : '14px', color: theme === 'dark' ? '#d1d5db' : '#4b5563', marginBottom: '0.5rem' }}>
                                         Effortlessly browse and plan your courses. Our timetable feature allows you to visualize course availability, helping you build a schedule that fits your needs and preferences.
@@ -150,20 +144,18 @@ const Benefits = () => {
                                 </>
                             )}
                         </div>
-
-                        {activeIndex === 0 && (
-                            <div style={{ flexBasis: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '1rem', backgroundColor: 'lightgrey' }}>
+                        <div style={{ flexBasis: '60%', textAlign: windowWidth >= 768 ? 'right' : 'center', padding: '10px', margin:'10px' , backgroundColor: 'lightgrey', borderRadius: '10px', opacity: fadeIn ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }}>
+                            {activeIndex === 0 && (
                                 <video
-                                    ref={videoRef}
-                                    src={'./images/timetable.mp4'}
-                                    width="100%"
+                                    src="./images/timetable.mp4"
                                     controls
-                                    style={{ padding: '1rem' }}
-                                    onPlay={() => setIsPlaying(true)}
-                                    onPause={() => setIsPlaying(false)}
+                                    autoPlay
+                                    loop
+                                    style={{ width: '100%', borderRadius: '8px' }}
+                                    onError={() => console.error('Error loading video')}
                                 />
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

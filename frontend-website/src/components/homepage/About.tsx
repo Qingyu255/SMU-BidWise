@@ -42,7 +42,7 @@ const About = () => {
             </div>
             
             <p>
-                Welcome to SMU BidWise, the platform designed to transform the module bidding experience for SMU students. With real-time bid analytics, personalized insights, and an intuitive timetable interface, SMU BidWise simplifies academic planning. Access tools like senior roadmaps, bid price trends, and a graduation tracker to make informed decisions. Stay ahead with up-to-date course availability and data visualizations, all in one seamless experience.
+                Welcome to SMU BidWise! Transform your module bidding experience with real-time analytics, personalized insights, and an intuitive timetable. Access senior roadmaps, bid price trends, and a graduation tracker to make informed decisions. Stay updated on course availability and enjoy seamless data visualizations—all in one place!
             </p>
         </div>
         

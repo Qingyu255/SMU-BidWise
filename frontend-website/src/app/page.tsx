@@ -5,14 +5,12 @@ import WelcomeMessage from '../components/homepage/Welcome';
 import Benefits from '../components/homepage/Benefits';
 import Reviews from '../components/homepage/Reviews';
 
-
-
 export default function Home() {
   return (
-    
     <div style={{ margin: '0', padding: '0', position: 'relative' }}>
       {/* Welcome Message Component */}
-      <div style={{ height: 'calc(100vh - 70px)', border:'2px solid black', display:'flex', paddingBottom:'10rem'}}>
+      <div style={{ height: 'calc(100vh - 70px)', border: '2px solid black', display: 'flex', paddingBottom: '10rem', position: 'relative', overflow: 'hidden' }}>
+        {/* Welcome Message */}
         <WelcomeMessage />
       </div>
 
@@ -26,13 +24,21 @@ export default function Home() {
         <Reviews />
       </div>
 
-      {/* Global Style for Smooth Scrolling */}
+      {/* Global Style for Smooth Scrolling and Video Fade Animation */}
       <style jsx global>{`
         html {
           scroll-behavior: smooth;
         }
+
+        @keyframes fadeEffect {
+          0%, 80% {
+            opacity: 1;
+          }
+          90%, 100% {
+            opacity: 0.9;
+          }
+        }
       `}</style>
-      
     </div>
   );
 }
