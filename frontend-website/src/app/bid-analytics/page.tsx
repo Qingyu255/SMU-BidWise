@@ -129,11 +129,11 @@ export default function Page() {
                 ) 
                 : (chartDataOverview && chartDataInstructorOverview ? (
                     <>
-                        {((courseCode.slice(0, 2) == "IS" || courseCode.slice(0, 2) == "CS" || courseCode.slice(0, 6) == "COR-IS" )) && (
+                        {/* {((courseCode.slice(0, 2) == "IS" || courseCode.slice(0, 2) == "CS" || courseCode.slice(0, 6) == "COR-IS" )) && (
                             <p onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left p-1 px-1.5 mb-2 sm:mb-4 w-fit text-xs sm:text-sm cursor-pointer underline hover:text-gray-600'>
                                 View SMU Course Document
                             </p>
-                        )}
+                        )} */}
                         <div className='flex flex-col gap-y-5'>
                             <div className='flex flex-col'>
                                 <BarChart
