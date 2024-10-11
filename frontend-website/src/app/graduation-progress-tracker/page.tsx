@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 
 const styles = {
     header: {
@@ -126,19 +126,18 @@ const GraduationProgress: React.FC<GraduationProgressProps> = ({ totalCourses, c
           }}
         />
       </div>
-        <p style={styles.leadText}>
+      <p style={styles.leadText}>
         {completedCourses} out of {totalCourses} CUs completed
-        </p>
-        <p style={styles.leadText}>
+      </p>
+      <p style={styles.leadText}>
         Progress: {progressPercentage.toFixed(2)}%
-        </p>
-
+      </p>
     </div>
   );
 };
 
 const GraduationTracker: React.FC = () => {
-  const [courses, setCourses] = useState<Course[]>([
+  const initialCourses: Course[] = [
     { id: 1, name: 'Statistics', completed: true },
     { id: 2, name: 'Computational Thinking and Programming', completed: true },
     { id: 3, name: 'Modeling & Data Analytics', completed: false },
@@ -146,26 +145,35 @@ const GraduationTracker: React.FC = () => {
     { id: 5, name: 'Writing & Reasoning', completed: true },
     { id: 6, name: 'Internship', completed: false },
     { id: 7, name: 'Economics & Society', completed: false },
-    { id: 8, name: 'Technology, Science & Society', completed: false }, 
-    { id: 9, name: 'Cultures of the Modern World', completed: false }, 
-    { id: 10, name: 'Ethics & Social Responsibility', completed: false }, 
-    { id: 11, name: 'Big Questions', completed: true }, 
+    { id: 8, name: 'Technology, Science & Society', completed: false },
+    { id: 9, name: 'Cultures of the Modern World', completed: false },
+    { id: 10, name: 'Ethics & Social Responsibility', completed: false },
+    { id: 11, name: 'Big Questions', completed: true },
+  ];
 
-
-
-]);
+  // Load courses from localStorage or use initialCourses as default
+  const [courses, setCourses] = useState<Course[]>(() => {
+    const storedCourses = localStorage.getItem('courses');
+    return storedCourses ? JSON.parse(storedCourses) : initialCourses;
+  });
 
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Save courses to localStorage whenever the courses array changes
+    if (courses.length > 0) {
+      localStorage.setItem('courses', JSON.stringify(courses));
+    }
+  }, [courses]);
 
   const totalCourses = courses.length;
   const completedCourses = courses.filter(course => course.completed).length;
 
   const toggleCourseCompletion = (id: number) => {
-    setCourses(prevCourses =>
-      prevCourses.map(course =>
-        course.id === id ? { ...course, completed: !course.completed } : course
-      )
+    const updatedCourses = courses.map(course =>
+      course.id === id ? { ...course, completed: !course.completed } : course
     );
+    setCourses(updatedCourses);
   };
 
   return (
@@ -195,7 +203,7 @@ const GraduationTracker: React.FC = () => {
             </li>
           ))}
       </ul>
-<br></br>
+
       {/* Toggle Button for Completed Courses */}
       <button
         style={styles.dropdownButton}
