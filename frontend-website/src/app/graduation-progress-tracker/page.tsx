@@ -1,6 +1,6 @@
 import React from 'react';
-import PlannerCheckList from './components/PlannerCheckList';
 import createClient from '@/utils/supabase/server';
+import KanbanPlanner from './components/KanbanPlanner';
 
 // note that this is a server page
 export default async function Page() {
@@ -31,7 +31,9 @@ export default async function Page() {
   // TODO for this page: allow for cloud saving
   return (
     <>
-      <PlannerCheckList courseOptions={courseOptions}/>
+      <div className='pb-3'>
+        <KanbanPlanner courseOptions={courseOptions}/>
+      </div>
     </>
   );
 };

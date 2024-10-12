@@ -18,7 +18,7 @@ type Course = {
 type CheckListProps = {
     courseOptions: string[]
 }
-
+// "DEPRECATED"
 export default function PlannerCheckList({ courseOptions }: CheckListProps) {
 
     const { toast } = useToast();
@@ -87,7 +87,7 @@ export default function PlannerCheckList({ courseOptions }: CheckListProps) {
                     </div>
                 </div>
                 {((courses.length - completedCourses) == 0) && (
-                    <NoCoursesAddedCard text={"incomplete"}/>
+                    <NoCoursesAddedCard/>
                 )}
                 <ul>
                     {courses
