@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 
 import { useSupabaseClient } from '@/utils/supabase/authenticated/client'
-import { courseInfo } from '@/types'
+import { courseInfo, RoadmapFormProps } from '@/types'
 
 
 const formSchema = z.object({
@@ -31,29 +31,31 @@ const formSchema = z.object({
 })
 
 
-const RoadmapForm = () => {
+const RoadmapForm: React.FC<RoadmapFormProps> = ({ setFormStep }) => {
 
   const supabase = useSupabaseClient();
   const {user} = useUser();
-  const [courses, setCourses] = useState<courseInfo[]>([])
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      const { data, error } = await supabase
-        .from('course_info')
-        .select('*');
+  // TEST IF NOT IN USE IN THIS FORM
+  // const [courses, setCourses] = useState<courseInfo[]>([])
+
+  // useEffect(() => {
+  //   const fetchCourses = async () => {
+  //     const { data, error } = await supabase
+  //       .from('course_info')
+  //       .select('*');
       
-      if (error) {
-        console.log('Error fetching courses', error);
-      } else if (data) {
-        setCourses(data);
-      }
-    };
+  //     if (error) {
+  //       console.log('Error fetching courses', error);
+  //     } else if (data) {
+  //       setCourses(data);
+  //     }
+  //   };
 
-    fetchCourses();
+  //   fetchCourses();
 
 
-  }, [supabase]);
+  // }, [supabase]);
 
 
     // 1. Define your form.
@@ -83,7 +85,9 @@ const RoadmapForm = () => {
       .from('seniors')
       .upsert(seniorPayload, { onConflict: '_clerk_user_id'});
 
-      form.reset()
+      // proceed to 2nd form
+      // form.reset()
+      setFormStep(2)
 
       if (seniorPayload) {
         console.log('Senior posting error: ', seniorError)
@@ -208,7 +212,7 @@ const RoadmapForm = () => {
             
 
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit">Save and Proceed</Button>
           </form>
         </Form>
       )
