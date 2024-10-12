@@ -36,7 +36,7 @@ export function Combobox({category, options, selectedValue, onSelect, clearOptio
   }, [selectedValue]);
 
   return (
-    <div className="m-1">
+    <div className="ml-0 m-1 mr-2">
         <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
             <Button
