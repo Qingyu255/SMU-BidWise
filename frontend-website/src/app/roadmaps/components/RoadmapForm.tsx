@@ -22,7 +22,7 @@ import { courseInfo } from '@/types'
 const formSchema = z.object({
     name: z.string().min(2).max(50),
     major: z.string().min(2).max(80),
-    graduation_year: z.number().min(2003).max(new Date().getFullYear()),
+    graduation_year: z.coerce.number().min(2003).max(new Date().getFullYear()),
     courses_summary: z.string().min(2).max(300),
     current_job: z.string().min(2).max(80),
     advice: z.string().min(2).max(500),
@@ -53,8 +53,7 @@ const RoadmapForm = () => {
 
 
   }, [supabase]);
-  
-  console.log(courses)
+
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
@@ -62,9 +61,19 @@ const RoadmapForm = () => {
     })
 
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    const { data, error } = await supabase
+    .from('roadmap_info')
+    .upsert(values);
+
+    if(error) {
+      console.log('Error posting data: ', error)
+    } else {
+      console.log('Data successfully added: ', data)
+    }
+    
     console.log(values)
     }
 
@@ -112,7 +121,7 @@ const RoadmapForm = () => {
                 <FormItem>
                   <FormLabel>Graduation Year</FormLabel>
                   <FormControl>
-                    <Input placeholder="2020" {...field} />
+                    <Input type='number' placeholder="2020" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is the year of graduation.
@@ -172,25 +181,6 @@ const RoadmapForm = () => {
                 </FormItem>
               )}
             />
-            {/* Add Combobox for this input and dynamically add form field */}
-            <FormField
-              control={form.control}
-              name="advice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Advice</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Work hard, Play harder" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Word of advice on how to survive SMU.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-
             <Button type="submit">Submit</Button>
           </form>
         </Form>
