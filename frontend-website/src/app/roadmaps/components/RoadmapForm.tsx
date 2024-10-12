@@ -4,6 +4,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
+import { useUser } from '@clerk/nextjs'
 import {
   Form,
   FormControl,
@@ -20,20 +21,20 @@ import { courseInfo } from '@/types'
 
 
 const formSchema = z.object({
-    name: z.string().min(2).max(50),
-    major: z.string().min(2).max(80),
-    graduation_year: z.coerce.number().min(2003).max(new Date().getFullYear()),
-    courses_summary: z.string().min(2).max(300),
-    current_job: z.string().min(2).max(80),
-    advice: z.string().min(2).max(500),
-
+  name: z.string().min(2).max(50),
+  major: z.string().min(2).max(80),
+  graduation_year: z.coerce.number().min(2003).max(new Date().getFullYear()),
+  courses_summary: z.string().min(2).max(300),
+  current_job: z.string().min(2).max(80),
+  advice: z.string().min(2).max(500),
 
 })
 
 
 const RoadmapForm = () => {
 
-  const supabase = useSupabaseClient()
+  const supabase = useSupabaseClient();
+  const {user} = useUser();
   const [courses, setCourses] = useState<courseInfo[]>([])
 
   useEffect(() => {
@@ -64,15 +65,35 @@ const RoadmapForm = () => {
     async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    const { data, error } = await supabase
-    .from('roadmap_info')
-    .upsert(values);
+    
+    if(user) {
+      const roadmapPayload = { ...values, _clerk_user_id: user.id }
+      
+      const { error: roadmapError } = await supabase
+      .from('roadmap_info')
+      .upsert(roadmapPayload, { onConflict: '_clerk_user_id'});
+  
+      if(roadmapError) {
+        console.log('Roadmap posting error: ', roadmapError)
+      }
 
-    if(error) {
-      console.log('Error posting data: ', error)
+      const seniorPayload = {name: values.name, _clerk_user_id: user.id}
+
+      const { error: seniorError } = await supabase
+      .from('seniors')
+      .upsert(seniorPayload, { onConflict: '_clerk_user_id'});
+
+      form.reset()
+
+      if (seniorPayload) {
+        console.log('Senior posting error: ', seniorError)
+      }
+      
     } else {
-      console.log('Data successfully added: ', data)
+      console.log('User id not found')
     }
+
+
     
     console.log(values)
     }
@@ -80,6 +101,8 @@ const RoadmapForm = () => {
     return (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+
+
             <FormField
               control={form.control}
               name="name"
@@ -181,6 +204,10 @@ const RoadmapForm = () => {
                 </FormItem>
               )}
             />
+
+            
+
+
             <Button type="submit">Submit</Button>
           </form>
         </Form>
