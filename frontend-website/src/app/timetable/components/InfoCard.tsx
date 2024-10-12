@@ -41,7 +41,7 @@ export default function InfoCard() {
             <SignedIn>
                 <div className="flex items-center space-x-2">
                     <CloudUpload className="w-4 h-4"/>
-                    <CardDescription>Changes saved automatically</CardDescription>
+                    <CardDescription>Changes saved automatically to cloud</CardDescription>
                 </div>
             </SignedIn>
         </>
