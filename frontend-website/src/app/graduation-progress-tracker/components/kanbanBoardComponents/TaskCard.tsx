@@ -1,12 +1,29 @@
+"use client"
+import React, { useEffect, useState } from "react";
 import type { UniqueIdentifier } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cva } from "class-variance-authority";
-import { Trash2, CheckCircle, Circle, GripVertical } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Trash2, CheckCircle, Circle, GripVertical, Info } from "lucide-react";
 import { ColumnId } from "./KanbanBoard";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { courseInfo } from '@/types';
+import createClient  from '@/utils/supabase/client';
+import CourseSummaryCard from "@/app/courses/components/CourseSummaryCard";
 
 export interface Task {
   id: string;
@@ -61,8 +78,29 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
       },
     },
   });
+  const supabase = createClient();
+  const [courseData, setCourseData] = useState<courseInfo[]>([]);
+
+  useEffect(() => {
+    const courseCode = task.id;
+    const fetchCourseData = async () => {
+      const { data: courseData, error } = await supabase
+        .from('course_info')
+        .select('*')
+        .eq('course_code', courseCode);
+
+        if (error) {
+          console.error(error);
+        } else if (courseData) {
+          
+          setCourseData(courseData as unknown as courseInfo[]);
+        }
+    };
+    fetchCourseData();
+  }, [task]);
 
   return (
+    <TooltipProvider>
     <Card
       ref={setNodeRef}
       style={style}
@@ -80,41 +118,91 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
           <span className="sr-only">Move task</span>
           <GripVertical />
         </Button>
-        {/* <Badge variant={"outline"} className="ml-auto font-semibold">
-          Course
-        </Badge> */}
-
+        
         {/* Completion Status Icon */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onToggleCompletion}
-          className="ml-auto text-[#5A7BB5]"
-        >
-          {task.completed ? (
-            <CheckCircle className="w-5 h-5" />
-          ) : (
-            <Circle className="w-5 h-5" />
-          )}
-          <span className="sr-only">
-            {task.completed ? "Mark as Incomplete" : "Mark as Complete"}
-          </span>
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggleCompletion}
+              className="ml-auto text-[#5A7BB5]"
+            >
+              {task.completed ? (
+                <CheckCircle className="w-5 h-5" />
+              ) : (
+                <Circle className="w-5 h-5" />
+              )}
+              <span className="sr-only">
+                {task.completed ? "Mark as Incomplete" : "Mark as Complete"}
+              </span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Mark {task.id} as {task.completed ? "incomplete" : "complete"}</p>
+          </TooltipContent>
+        </Tooltip>
+
         {/* Remove Button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onRemove}
-          className="ml-2 text-red-500"
-        >
-          <Trash2 className="w-4 h-4" />
-          <span className="sr-only">Remove task</span>
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onRemove}
+            className="ml-2 text-red-500"
+          >
+            <Trash2 className="w-4 h-4" />
+            <span className="sr-only">Remove task</span>
+          </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Remove {task.id} from planner</p>
+          </TooltipContent>
+        </Tooltip>
       </CardHeader>
 
-      <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
-        {task.content}
+      <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap flex justify-between">
+        <span>
+          {task.content}
+        </span>
+        <div className="inline-block">
+        <Sheet>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="ml-auto"
+              >
+                <Info className="w-5 h-5"/>
+              </Button>
+              </SheetTrigger>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>View Course Information for {task.id}</p>
+            </TooltipContent>
+          </Tooltip>
+          <SheetContent className="flex flex-col">
+            <CourseSummaryCard
+                course_id = {courseData[0]?.id}
+                course_code={courseData[0]?.course_code}
+                title={courseData[0]?.title}
+                career={courseData[0]?.career}
+                description={courseData[0]?.description}
+                enrolment_requirements={courseData[0]?.enrolment_requirements}
+                units={courseData[0]?.units}
+            />
+            <SheetFooter>
+              <SheetClose asChild>
+              </SheetClose>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+        </div>
       </CardContent>
     </Card>
+    </TooltipProvider>
   );
 }

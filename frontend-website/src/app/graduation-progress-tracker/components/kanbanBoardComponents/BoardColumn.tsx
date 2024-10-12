@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { GripVertical } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 
 export interface Column {
   id: UniqueIdentifier;
@@ -88,7 +89,10 @@ export function BoardColumn({ column, tasks, isOverlay, onRemoveTask, onToggleTa
           <span className="sr-only">{`Move column: ${column.title}`}</span>
           <GripVertical />
         </Button>
-        <span className="ml-auto"> {column.title}</span>
+        {/* <span className="ml-auto"> {column.title}</span> */}
+        <Badge variant={"outline"} className="ml-auto font-semibold text-base">
+          {column.title}
+        </Badge>
       </CardHeader>
       <ScrollArea>
         <CardContent className="flex flex-grow flex-col gap-2 p-2">
