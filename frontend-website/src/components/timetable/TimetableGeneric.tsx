@@ -159,7 +159,6 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
   };
 
   const classStyle: React.CSSProperties = {
-    // minWidth: `${minClassWidth}px`,
     position: 'absolute',
     backgroundColor: unselectedClassColour,
     color: 'black',

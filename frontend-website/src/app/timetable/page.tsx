@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React from 'react';
 import { useTimetable } from '../../components/providers/timetableProvider';
 import TimetableGeneric from '../../components/timetable/TimetableGeneric';
 import { useToast } from "@/hooks/use-toast";
