@@ -9,52 +9,47 @@
 // }
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator"
-import Link from "next/link";
+import Link from 'next/link';
+import { buttonVariants } from '@/components/ui/button'; // Adjust this path as needed based on your file structure
+
+// import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+// import { Separator } from "@/components/ui/separator"
+// import Link from "next/link";
 // import { format } from "date-fns"
 //how to import new components? 
 
 
-export default function communitypage() {
+export default function Page() {
     return (
-        <div className="flex p-4">
-            <Card className="w-1/2 sm:w-full md:w-full lg:w-1/3 bg-background text-foreground">
-                <CardHeader>
-                    <Link href="#">
-                        <CardTitle className="text-xl lg:text-2xl flex flex-row cursor-pointer hover:text-slate-500">
-                            <span className="flex items-center">Thread title OR Course Name</span>
-                            <Separator className="mx-2 my-[5px] h-100 w-[2px]" orientation="vertical" />
-                            <span className="flex items-center">Related Course Code</span>
-                        </CardTitle>
-                    </Link>
-                    <CardDescription className="">
-                        Posted by: Original Poster Username
-                    </CardDescription>
-                    <CardDescription>
-                        Date and Time Posted
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="mb-4">
-                        <p className="text-sm">
-                            Content
-                        </p>
-                        <p className="text-xs">
-                            Upvotes and replies
+        <>
+            {/* <h1 className='font-bold text-3xl md:text-4xl'>Join Communities</h1>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 py-6'></div>
+ */}
+
+            {/* subreddit info */}
+            <div className='overflow-hidden h-fit rounded-lg border border-gray-200 order-first md:order-last'>
+                <div className='bg-emerald-100 px-6 py-4'>
+                    <p className='font-bold'>Welcome to SMUBidwise Community Threads</p>
+                </div>
+                <div className='-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6'>
+                    <div className='flex justify-between gap-x-4 py-3'>
+                        <p className='text-zinc-500'>
+                            Join and interact with communities related to your course or mods! 
                         </p>
                     </div>
-                </CardContent>
-            </Card>
-        </div>
-    )
-}
 
-/*(to self)Next steps:
-- figure out date/time module
-- compile mock threads data?
-- create thread?
-- live commentting?
-- start new thread?
-- filter?
-*/
+                </div>
+
+                <div className="text-center">
+                    <Link
+                        className={buttonVariants({
+                            className: 'w-11/12 mt-4 mb-6',
+                        })}
+                        href={`/communities/create`}>
+                        Create A Community
+                    </Link>
+                </div>
+            </div>
+            </> 
+            )
+}
