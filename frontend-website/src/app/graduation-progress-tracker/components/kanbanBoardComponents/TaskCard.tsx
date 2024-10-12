@@ -24,6 +24,7 @@ import {
 import { courseInfo } from '@/types';
 import createClient  from '@/utils/supabase/client';
 import CourseSummaryCard from "@/app/courses/components/CourseSummaryCard";
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export interface Task {
   id: string;
@@ -185,15 +186,17 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
             </TooltipContent>
           </Tooltip>
           <SheetContent className="flex flex-col">
-            <CourseSummaryCard
-                course_id = {courseData[0]?.id}
-                course_code={courseData[0]?.course_code}
-                title={courseData[0]?.title}
-                career={courseData[0]?.career}
-                description={courseData[0]?.description}
-                enrolment_requirements={courseData[0]?.enrolment_requirements}
-                units={courseData[0]?.units}
-            />
+            <ScrollArea>
+              <CourseSummaryCard
+                  course_id = {courseData[0]?.id}
+                  course_code={courseData[0]?.course_code}
+                  title={courseData[0]?.title}
+                  career={courseData[0]?.career}
+                  description={courseData[0]?.description}
+                  enrolment_requirements={courseData[0]?.enrolment_requirements}
+                  units={courseData[0]?.units}
+              />
+            </ScrollArea>
             <SheetFooter>
               <SheetClose asChild>
               </SheetClose>
