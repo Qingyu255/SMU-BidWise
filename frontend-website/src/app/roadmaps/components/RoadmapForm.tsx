@@ -1,10 +1,8 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -17,6 +15,10 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
+import { useSupabaseClient } from '@/utils/supabase/authenticated/client'
+import { courseInfo } from '@/types'
+
+
 const formSchema = z.object({
     name: z.string().min(2).max(50),
     major: z.string().min(2).max(80),
@@ -25,10 +27,35 @@ const formSchema = z.object({
     current_job: z.string().min(2).max(80),
     advice: z.string().min(2).max(500),
 
+
 })
 
 
 const RoadmapForm = () => {
+
+  const supabase = useSupabaseClient()
+  const [courses, setCourses] = useState<courseInfo[]>([])
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const { data, error } = await supabase
+        .from('course_info')
+        .select('*');
+      
+      if (error) {
+        console.log('Error fetching courses', error);
+      } else if (data) {
+        setCourses(data);
+      }
+    };
+
+    fetchCourses();
+
+
+  }, [supabase]);
+  
+  console.log(courses)
+
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -129,6 +156,23 @@ const RoadmapForm = () => {
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="advice"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Advice</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Work hard, Play harder" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Word of advice on how to survive SMU.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Add Combobox for this input and dynamically add form field */}
             <FormField
               control={form.control}
               name="advice"
