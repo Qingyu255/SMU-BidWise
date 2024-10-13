@@ -12,6 +12,8 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetHeader,
+  SheetTitle,
   SheetFooter,
   SheetTrigger,
 } from "@/components/ui/sheet";
@@ -186,6 +188,9 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
             </TooltipContent>
           </Tooltip>
           <SheetContent className="flex flex-col">
+            <SheetHeader>
+              <SheetTitle>Course Information:</SheetTitle>
+            </SheetHeader>
             <ScrollArea>
               <CourseSummaryCard
                   course_id = {courseData[0]?.id}
