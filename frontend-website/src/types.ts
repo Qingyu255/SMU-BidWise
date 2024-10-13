@@ -195,4 +195,8 @@ export interface HeadingCardProps {
   handleClick: () => void;
 }
 
+export type FormStep = 1 | 2;
 
+export type RoadmapFormProps = {
+  setFormStep: React.Dispatch<React.SetStateAction<FormStep>>;
+};

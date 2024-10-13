@@ -25,6 +25,7 @@ const supabase = createClient();
 
 export default function Page({ params }: { params: { course_code: string }}) {
   const { course_code } = params;
+  const [courseUUID, setCourseUUID] = useState<string>("");
   const [sections, setSections] = useState<any[]>([]);
   const [professors, setProfessors] = useState<string[]>([]);
   const [selectedProfessor, setSelectedProfessor] = useState<string | null>(null);
@@ -106,13 +107,14 @@ export default function Page({ params }: { params: { course_code: string }}) {
 
   const updateTimetable = async (professor: string) => {
     if (professor === "") {
-      const { sections, professors }: any = await getSectionDetails(course_code, latestTermId);
+      // fetch all sections
+      const { sections, professors }: any = await getSectionDetails(courseUUID, latestTermId);
       setSections(sections);
       setSelectedProfessor(professor);
       return;
     }
   
-    const { sections } = await getSectionDetails(course_code, latestTermId);
+    const { sections } = await getSectionDetails(courseUUID, latestTermId);
     const filteredSections = sections.filter(section => section.instructor === professor);
     
     setSelectedProfessor(professor);
@@ -148,6 +150,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
         // console.log(`Fetching data for course_code: ${course_code}`);
         const courseInfo: any = await getCourseInfoByCourseCode(course_code);
         const courseAreas: any = await getCourseAreasByCourseId(courseInfo.id);
+        setCourseUUID(courseInfo.id);
         setCourseAreas(courseAreas);
         setCourseInfo(courseInfo);
 
