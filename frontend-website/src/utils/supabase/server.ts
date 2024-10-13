@@ -10,7 +10,7 @@ export const createFetch =
     });
   };
 
-export default function createClient() {
+export default function createClient(req?: Request) {
   const cookieStore = cookies()
 
   return createServerClient(

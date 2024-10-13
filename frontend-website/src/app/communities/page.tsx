@@ -1,22 +1,6 @@
-// import React from 'react'
-
-// export default function page() {
-//     return (
-//         <div>
-//             Hello communities (threads? / discussions)
-//         </div>
-//     )
-// }
-
 import React from "react";
 import Link from 'next/link';
 import { buttonVariants } from '@/components/ui/button'; // Adjust this path as needed based on your file structure
-
-// import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-// import { Separator } from "@/components/ui/separator"
-// import Link from "next/link";
-// import { format } from "date-fns"
-//how to import new components? 
 
 
 export default function Page() {
@@ -50,6 +34,7 @@ export default function Page() {
                     </Link>
                 </div>
             </div>
+
             </> 
             )
 }
