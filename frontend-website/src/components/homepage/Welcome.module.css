@@ -1,0 +1,21 @@
+
+.button {
+    position: relative;
+    background: #fff; /* Changed to a vibrant blue */
+    color: #000; /* Ensure text is white for contrast */
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 1.5em;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+    padding: 10px 30px;
+    
+    transition: 0.5s;
+}
+
+.button:hover {
+    background: #fff; /* Darker blue on hover */
+    color: #1e9bff;
+    letter-spacing: 0.25em;
+    box-shadow: 0 0 35px #1e9bff;
+}
