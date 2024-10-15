@@ -31,7 +31,7 @@ export default function Page() {
     <div>
         <InfoCard/>
         {/* to  convert the selectedClasses map (Map<string, ClassItem>) to an array of ClassItem objects, you can use the Array.from() method  */}
-        <TimetableGeneric classes={selectedClassItems} onClassSelect={handleClassSelect}/>
+        <TimetableGeneric classes={selectedClassItems} onClassSelect={handleClassSelect} isTimetablePage={true}/>
         <TimetableSummaryTable sections={selectedClassItems}/>
     </div>
   );
