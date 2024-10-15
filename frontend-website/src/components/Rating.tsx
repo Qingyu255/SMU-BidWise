@@ -129,14 +129,34 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
                             <div className='text-center'>
                                 <h3 className="text-center font-semibold mb-2">Select {ratingName} rating</h3>
                                 <div className="flex space-x-2 justify-center">
-                                {Array.from({ length: 5 }).map((_, index) => (
-                                    <Square
-                                    key={index}
-                                    className={`cursor-pointer ${index < (userRating ?? 0) ? `text-black` : 'text-gray-300'} rounded-sm`}
-                                    style={{ backgroundColor: index < (userRating ?? 0) ? fillColour : 'transparent' }}
-                                    onClick={() => setUserRating(index + 1)}
-                                    />
-                                ))}
+                                    {Array.from({ length: 5 }).map((_, index) => (
+                                        <Square
+                                        key={index}
+                                        className={`cursor-pointer ${index < (userRating ?? 0) ? `text-black` : 'text-gray-300'} rounded-sm`}
+                                        style={{ backgroundColor: index < (userRating ?? 0) ? fillColour : 'transparent' }}
+                                        onClick={() => setUserRating(index + 1)}
+                                        />
+                                    ))}
+                                </div>
+                                <div>
+                                    {(ratingName.toLowerCase() === "workload") && (
+                                        <div className='flex justify-between'>
+                                            <span className='opacity-60 text-xs'>{`1 - Very Manageable`}</span>
+                                            <span className='opacity-60 text-xs'>{`5 - Heavy Workload`}</span>
+                                        </div>
+                                    )}
+                                    {(ratingName.toLowerCase() === "practicality") && (
+                                        <div className='flex justify-between'>
+                                            <span className='opacity-60 text-xs'>{`1 - Very Impractical`}</span>
+                                            <span className='opacity-60 text-xs'>{`5 - Very Useful`}</span>
+                                        </div>
+                                    )}
+                                    {(ratingName.toLowerCase() === "interesting") && (
+                                        <div className='flex justify-between'>
+                                            <span className='opacity-60 text-xs'>{`1 - Very Boring`}</span>
+                                            <span className='opacity-60 text-xs'>{`5 - Very Interesting`}</span>
+                                        </div>
+                                    )}
                                 </div>
                                 <PopoverClose asChild>
                                     <Button variant="outline" className='mt-2' onClick={handleSubmitRating}>
