@@ -19,9 +19,11 @@ type RatingProps = {
     fillColour: string,
     ratingDescription: string,
     isRatingAllowed?: boolean
+    lowerBoundDescription?: string,
+    upperBoundDescription?: string,
 }
 
-export default function Rating({ courseId, ratingName, fillColour, ratingDescription, isRatingAllowed }: RatingProps) {
+export default function Rating({ courseId, ratingName, fillColour, ratingDescription, isRatingAllowed, lowerBoundDescription, upperBoundDescription }: RatingProps) {
     const { user } = useUser();
     const supabase = useSupabaseClient();
     const [userRating, setUserRating] = useState<number>(0);
@@ -139,22 +141,10 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
                                     ))}
                                 </div>
                                 <div>
-                                    {(ratingName.toLowerCase() === "workload") && (
+                                    {(lowerBoundDescription && upperBoundDescription) && (
                                         <div className='flex justify-between'>
-                                            <span className='opacity-60 text-xs'>{`1 - Very Manageable`}</span>
-                                            <span className='opacity-60 text-xs'>{`5 - Heavy Workload`}</span>
-                                        </div>
-                                    )}
-                                    {(ratingName.toLowerCase() === "practicality") && (
-                                        <div className='flex justify-between'>
-                                            <span className='opacity-60 text-xs'>{`1 - Very Impractical`}</span>
-                                            <span className='opacity-60 text-xs'>{`5 - Very Useful`}</span>
-                                        </div>
-                                    )}
-                                    {(ratingName.toLowerCase() === "interesting") && (
-                                        <div className='flex justify-between'>
-                                            <span className='opacity-60 text-xs'>{`1 - Very Boring`}</span>
-                                            <span className='opacity-60 text-xs'>{`5 - Very Interesting`}</span>
+                                            <span className='opacity-60 text-xs'>{`1 - ${lowerBoundDescription}`}</span>
+                                            <span className='opacity-60 text-xs'>{`5 - ${upperBoundDescription}`}</span>
                                         </div>
                                     )}
                                 </div>
