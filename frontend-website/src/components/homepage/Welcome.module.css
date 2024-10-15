@@ -1,21 +1,55 @@
 
-.button {
-    position: relative;
-    background: #fff; /* Changed to a vibrant blue */
-    color: #000; /* Ensure text is white for contrast */
-    text-decoration: none;
-    text-transform: uppercase;
-    font-size: 1.5em;
-    letter-spacing: 0.1em;
-    font-weight: 400;
-    padding: 10px 30px;
-    
-    transition: 0.5s;
+
+.wrapper {
+    display: flex;
+    margin-top: 2rem; /* Adjust as needed */
 }
 
-.button:hover {
-    background: #fff; /* Darker blue on hover */
-    color: #1e9bff;
-    letter-spacing: 0.25em;
-    box-shadow: 0 0 35px #1e9bff;
+.wrapper a {
+    display: block;
+    width: 200px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    font-family: sans-serif;
+    text-decoration: none;
+    color: #333;
+    border: 2px solid #333;
+    letter-spacing: 2px;
+    text-align: center;
+    position: relative;
+    transition: all 0.35s;
+    margin-right: 20px;
+}
+
+.wrapper a span {
+    position: relative;
+    z-index: 2;
+}
+
+.wrapper a::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: steelblue;
+    transition: all 0.35s;
+}
+
+.wrapper a:hover {
+    color: white;
+}
+
+.wrapper a:hover::after {
+    width: 100%;
+}
+
+/* Center the buttons on small devices */
+@media (max-width: 768px) {
+    .wrapper {
+        justify-content: center;
+    }
+    
 }

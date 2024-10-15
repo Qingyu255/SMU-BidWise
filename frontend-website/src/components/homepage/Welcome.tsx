@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { container } from "../../../public/motion"; 
+import styles from './Welcome.module.css'
 
 const WelcomeMessage = () => {
   const { theme } = useTheme(); // Get the current theme
@@ -35,21 +35,6 @@ const WelcomeMessage = () => {
   // Determine device type based on screen size
   const isMobile = screenSize < 768; // Mobile
   const isTablet = screenSize >= 768 && screenSize < 1024; // Tablet
-
-  // Button styles based on theme
-  const buttonStyles = {
-    marginTop: '1rem',
-    padding: '0.75rem 1.5rem',
-    fontSize: isMobile ? '1rem' : isTablet ? '1.05rem' : '1.25rem',
-    backgroundColor: theme === 'dark' ? 'white' : 'black', // Set background color
-    color: theme === 'dark' ? 'black' : 'white', // Set text color
-    border: 'none',
-    borderRadius: '1.75rem',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease, color 0.3s ease', // Add transition for color changes
-  };
-
-  
 
   return (
     <motion.div
@@ -97,17 +82,9 @@ const WelcomeMessage = () => {
           Optimizing the module bidding process for SMU students.
         </p>
         {/* Button Section */}
-        <div style={{display:'flex', gap: '1rem', marginTop: '1rem', justifyContent: isMobile ? 'center' : 'left'}}>
-          <Link href="/courses" passHref>
-            <button style={buttonStyles}>
-              Get started
-            </button>
-          </Link>
-          <Link href="#about-section">
-            <button style={buttonStyles}>
-              Learn more about us
-            </button>
-          </Link>
+        <div className={styles.wrapper}>
+          <a href="/courses"><span>Get started</span></a>
+          <a href="#about-section"><span>Learn more about us</span></a>
         </div>
       </div>
 
