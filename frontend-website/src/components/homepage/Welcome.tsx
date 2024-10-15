@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { motion } from 'framer-motion';
-import { container } from "../../../public/motion"; 
 import styles from './Welcome.module.css'
 
 const WelcomeMessage = () => {
@@ -37,10 +36,7 @@ const WelcomeMessage = () => {
   const isTablet = screenSize >= 768 && screenSize < 1024; // Tablet
 
   return (
-    <motion.div
-      variants={container(0)} // Apply motion.js animation to the WelcomeMessage
-      initial="hidden"
-      animate="visible"
+    <div
       style={{ 
         display: 'flex',
         alignItems: isMobile ? 'center' : 'center',
@@ -83,8 +79,8 @@ const WelcomeMessage = () => {
         </p>
         {/* Button Section */}
         <div className={styles.wrapper}>
-          <a href="/courses"><span>Get started</span></a>
-          <a href="#about-section"><span>Learn more about us</span></a>
+          <a href="/courses" className='get-started'><span>Get started</span></a>
+          <a href="#about-section" className='learn-more'><span>Learn more about us</span></a>
         </div>
       </div>
 
@@ -122,7 +118,7 @@ const WelcomeMessage = () => {
           />
       </div>
 
-    </motion.div>
+    </div>
     
 
   );

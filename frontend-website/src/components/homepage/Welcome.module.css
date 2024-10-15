@@ -49,7 +49,52 @@
 /* Center the buttons on small devices */
 @media (max-width: 768px) {
     .wrapper {
+        display: flex;
         justify-content: center;
+        align-items: center;
     }
+
+    .wrapper a {
+        display: block;
+        width: 130px;
+        height: 40px;
+        line-height: 11px;
+        font-size: 11px;
+        font-family: sans-serif;
+        text-decoration: none;
+        color: #333;
+        border: 2px solid #333;
+        letter-spacing: 2px;
+        text-align: center;
+        position: relative;
+        transition: all 0.35s;
+        margin-right: 10px;
+        padding: 5px;
+    }
+
+    .wrapper a span {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .wrapper a::after {
+        position: absolute;
+        content: "";
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: steelblue;
+        transition: all 0.35s;
+    }
+    
+    .wrapper a:hover {
+        color: white;
+    }
+    
+    .wrapper a:hover::after {
+        width: 100%;
+    }
+
     
 }
