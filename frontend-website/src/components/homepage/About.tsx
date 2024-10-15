@@ -119,7 +119,10 @@ const About = () => {
                         borderRadius: '1rem',
                         padding: '1rem',
                         alignItems: 'center',
-                        backgroundColor: theme === 'dark' ? '#333' : '#f9f9f9'
+                        backgroundColor: theme === 'dark' ? '#333' : '#f9f9f9',
+                        height: '100%',
+                        minHeight: '300px',  // Set your minimum height here
+                        maxHeight: '800px',  // Set your maximum height here
                     }}>
                         <div style={{
                             textAlign: 'center',
@@ -128,7 +131,7 @@ const About = () => {
                         }}>
                             {activeIndex === 0 && (
                                 <>
-                                    <p style={{ fontSize: windowWidth >= 768 ? '30px' : '20px', fontWeight: '600', marginBottom: '' }}>
+                                    <p style={{ fontSize: windowWidth >= 768 ? '30px' : '20px', fontWeight: '600'}}>
                                         Timetable
                                     </p>
                                     <span style={{
@@ -161,7 +164,18 @@ const About = () => {
                                     <p style={{ fontSize: windowWidth >= 768 ? '16px' : '14px', color: theme === 'dark' ? '#d1d5db' : '#4b5563', marginBottom: '0.5rem' }}>
                                         Effortlessly browse and plan your courses. Our timetable feature allows you to visualize course availability, helping you build a schedule that fits your needs and preferences.
                                     </p>
-                                    <video src="/images/slide1Vid.mp4" controls />
+                                    <video 
+                                        src="/images/slide1Vid.mp4" 
+                                        controls 
+                                        style={{
+                                            width: '100%', // Make the video take the full width of the container
+                                            height: 'auto', // Let the height adjust automatically based on the width
+                                            maxHeight: '600px', // Set a maximum height for larger screens
+                                            objectFit: 'cover', // Maintain aspect ratio and cover the area
+                                            borderRadius: '8px', // Optional: add some styling
+                                        }} 
+                                    />
+
                                 </>
                             )}
                             {activeIndex === 1 && (
