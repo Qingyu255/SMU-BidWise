@@ -11,7 +11,7 @@ const ProfessorSelection: React.FC<ProfessorSelectionProps> = ({ professors, onP
   return (
     <div>
       {/* <Separator/> */}
-      <div className='font-semibold py-2'>View Sections by Professor: </div>
+      <div className='font-semibold py-2'>Filter Sections by Professor: </div>
       <Combobox selectedValue='' onSelect={(professor: string) => onProfessorClick(professor)} category='Professor' options={professors} clearOptionText='Show all'/>
     </div>
   );
