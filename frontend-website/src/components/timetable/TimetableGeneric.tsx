@@ -174,14 +174,14 @@ export default function TimetableGeneric({ classes, onClassSelect, isTimetablePa
 
   return (
     <div>
-    <div className='flex flex-row justify-end'>
+    <div className='flex flex-row pt-1'>
       <Info className='w-3 h-3 my-auto mr-2 text-sm text-muted-foreground'/>
       {(isTimetablePage) ? (
-        <span className='text-sm text-muted-foreground'>
+        <span className='text-xs text-muted-foreground'>
           Click <CalendarMinus className='inline w-3 h-3'/> to remove section from timetable
         </span>
       ) : (
-        <span className='text-sm text-muted-foreground'>
+        <span className='text-xs text-muted-foreground'>
           Click <CalendarPlus className='inline w-3 h-3'/> / <CalendarMinus className='inline w-3 h-3'/> to add or remove section from timetable
         </span>
       )}
