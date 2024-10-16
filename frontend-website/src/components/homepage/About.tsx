@@ -2,6 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button"
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+  } from "@/components/ui/carousel";
+import Autoplay from 'embla-carousel-autoplay'
+  
 
 const About = () => {
     const { theme } = useTheme(); // Get the current theme
@@ -28,6 +38,8 @@ const About = () => {
         textTransform: 'uppercase',
         letterSpacing: '0.1em',
     };
+
+    const carouselHeaderColor = theme === 'dark' ? '#2C3531' : '#4b5563';
 
     // Benefits section state and styles
     const [activeIndex, setActiveIndex] = useState(0);
@@ -67,6 +79,8 @@ const About = () => {
     const handlePrevious = () => {
         handleNavClick((activeIndex + 4) % 5);
     };
+
+    const autoplay = Autoplay({ delay: 3000 }); // Set your desired autoplay delay
 
     return (
         <div style={{ padding: '4rem 2rem', textAlign: 'center', height:'100%' }}>
@@ -119,10 +133,10 @@ const About = () => {
                         borderRadius: '1rem',
                         padding: '1rem',
                         alignItems: 'center',
-                        backgroundColor: theme === 'dark' ? '#333' : '#f9f9f9',
+                        backgroundColor: theme === '#202020' ? 'light' : '#f9f9f9',
                         height: '100%',
                         minHeight: '300px',  // Set your minimum height here
-                        maxHeight: '800px',  // Set your maximum height here
+                        maxHeight: '900px',  // Set your maximum height here
                     }}>
                         <div style={{
                             textAlign: 'center',
@@ -131,7 +145,7 @@ const About = () => {
                         }}>
                             {activeIndex === 0 && (
                                 <>
-                                    <p style={{ fontSize: windowWidth >= 768 ? '30px' : '20px', fontWeight: '600'}}>
+                                    <p style={{ fontSize: windowWidth >= 768 ? '40px' : '20px', fontWeight: '600', color: carouselHeaderColor}}>
                                         Timetable
                                     </p>
                                     <span style={{
@@ -161,7 +175,7 @@ const About = () => {
                                         fontWeight: '600',
                                         margin: '0 10px',
                                     }}>Intuitive.</span>
-                                    <p style={{ fontSize: windowWidth >= 768 ? '16px' : '14px', color: theme === 'dark' ? '#d1d5db' : '#4b5563', marginBottom: '0.5rem' }}>
+                                    <p style={{ fontSize: windowWidth >= 768 ? '16px' : '14px', color: theme === 'dark' ? '#8c8c8c' : '#4b5563', marginBottom: '0.5rem' }}>
                                         Effortlessly browse and plan your courses. Our timetable feature allows you to visualize course availability, helping you build a schedule that fits your needs and preferences.
                                     </p>
                                     <video 
@@ -176,18 +190,60 @@ const About = () => {
                                         }} 
                                     />
 
+                                    <Button style={{marginTop:'15px'}}>
+                                        <a href="/timetable">View Timetable</a>
+                                    </Button>
+
                                 </>
                             )}
                             {activeIndex === 1 && (
                                 <>
-                                    <p style={{ fontSize: windowWidth >= 768 ? '30px' : '20px', fontWeight: '600', marginBottom: '1rem' }}>
+                                    <p style={{ fontSize: windowWidth >= 768 ? '40px' : '20px', fontWeight: '600', color: carouselHeaderColor}}>
                                         Courses
                                     </p>
-                                    <p style={{ fontSize: windowWidth >= 768 ? '16px' : '14px', color: theme === 'dark' ? '#d1d5db' : '#4b5563', marginBottom: '0.5rem' }}>
+                                    <p style={{ fontSize: windowWidth >= 768 ? '16px' : '14px', color: theme === 'dark' ? '#8c8c8c' : '#4b5563', marginBottom: '0.5rem' }}>
                                         Discover a wide range of courses offered by SMU. Our platform makes it easy to filter, compare, and select the best courses for your academic journey.
                                     </p>
+
+                                    {windowWidth >= 768 ? (
+                                        // Display images in a row for larger screens
+                                        <div style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <img src="/images/filter.png" alt="Filter" style={{ maxWidth: '30%', height: 'auto'}} />
+                                            <img src="/images/ratings.png" alt="Ratings" style={{ maxWidth: '30%', height: 'auto'}} />
+                                            <img src="/images/course.png" alt="Course" style={{ maxWidth: '30%', height: 'auto'}} />
+                                        </div>
+                                    ) : (
+                                        // Display images in a carousel for small screens
+                                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <Carousel plugins={[autoplay]} style={{ width: '100%' }}>
+                                                <CarouselContent>
+                                                    <CarouselItem>
+                                                        <img src="/images/filter.png" alt="Filter" style={{ width: '100%', height: 'auto' }} />
+                                                    </CarouselItem>
+                                                    <CarouselItem>
+                                                        <img src="/images/ratings.png" alt="Ratings" style={{ width: '100%', height: 'auto' }} />
+                                                    </CarouselItem>
+                                                    <CarouselItem>
+                                                        <img src="/images/course.png" alt="Course" style={{ width: '100%', height: 'auto' }} />
+                                                    </CarouselItem>
+                                                </CarouselContent>
+                                                {/* Adjust button styles */}
+                                                {/* <CarouselPrevious style={{ position: 'absolute', left: '10px', zIndex: 1 }} /> */}
+                                                {/* <CarouselNext style={{ position: 'absolute', right: '10px', zIndex: 1 }} /> */}
+                                            </Carousel>
+                                        </div>
+                                    )}
+
+                                    <Button>
+                                        <a href="/courses" style={{ textDecoration: 'none', color: 'inherit' }}>View Courses</a>
+                                    </Button>
                                 </>
                             )}
+
                             {activeIndex === 2 && (
                                 <>
                                     <p style={{ fontSize: windowWidth >= 768 ? '30px' : '20px', fontWeight: '600', marginBottom: '1rem' }}>
@@ -257,3 +313,6 @@ const About = () => {
 };
 
 export default About;
+
+
+
