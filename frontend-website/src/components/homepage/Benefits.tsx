@@ -5,7 +5,8 @@ const Benefits = () => {
     const { theme } = useTheme();
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [activeIndex, setActiveIndex] = useState(0);
-    const [fadeIn, setFadeIn] = useState(false); // State for fade-in effect
+    const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+    const [fadeIn, setFadeIn] = useState(true); // State for fade-in effect
 
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
@@ -26,17 +27,32 @@ const Benefits = () => {
         letterSpacing: '0.1em',
     };
 
+    const borderColor = theme === 'dark' ? 'white' : 'black';
+
     const navLinkStyle: React.CSSProperties = {
         fontSize: '15px',
         textTransform: 'uppercase',
-        color: 'white',
+        color: '#828282',
         textDecoration: 'none',
         position: 'relative',
         zIndex: '1',
-        margin: '0 10px'
+        margin: '0 10px',
+        paddingBottom: '1px',
+        transition: 'color 0.3s ease, transform 0.3s ease', // Added transition for hover effect
     };
 
-    const borderColor = theme === 'dark' ? 'white' : 'black';
+    // Style for active link with rounded underline
+    const activeNavLinkStyle: React.CSSProperties = {
+        ...navLinkStyle,
+        borderBottom: `3px solid ${borderColor}`,
+        borderRadius: '8px',
+    };
+
+    const hoverEffectStyle: React.CSSProperties = {
+        ...navLinkStyle,
+        color: theme === 'dark' ? '#f3f4f6' : '#000',
+        transform: 'scale(1.05)', // Slight scale effect on hover
+    };
 
     const handleNavClick = (index: number) => {
         setFadeIn(false); // Trigger fade-out
@@ -46,7 +62,6 @@ const Benefits = () => {
         }, 300); // Match this to your transition duration
     };
 
-    // Handle next and previous carousel navigation
     const handleNext = () => {
         handleNavClick((activeIndex + 1) % 5);
     };
@@ -64,17 +79,32 @@ const Benefits = () => {
 
             <div style={{ marginTop: '10px' }}>
                 {/* Navigation for carousel */}
-                {/* Conditionally render the nav or carousel controls based on screen size */}
                 {windowWidth >= 768 ? (
-                    <nav className="hidden md:flex w-full h-[40px] min-[1190px]:h-[50px] justify-between relative" style={{ backgroundColor: '#34495e', borderRadius: '8px', alignItems: 'center', boxShadow: '0 2px 3px 0 rgba(0,0,0,.1)', padding: '10px' }}>
-                        <button style={navLinkStyle} onClick={() => handleNavClick(0)}>Timetable</button>
-                        <button style={navLinkStyle} onClick={() => handleNavClick(1)}>Courses</button>
-                        <button style={navLinkStyle} onClick={() => handleNavClick(2)}>Bid Price Analytics</button>
-                        <button style={navLinkStyle} onClick={() => handleNavClick(3)}>Senior Roadmaps</button>
-                        <button style={navLinkStyle} onClick={() => handleNavClick(4)}>Community Threads</button>
+                    <nav
+                        className="hidden md:flex w-full h-[60px] min-[1190px]:h-[60px] justify-between"
+                        style={{
+                            borderRadius: '8px',
+                            alignItems: 'center',
+                            boxShadow: '0px 2px 3px 1px rgba(0,0,0,.5)',
+                            padding: '20px',
+                        }}
+                    >
+                        {['Timetable', 'Courses', 'Bid Price Analytics', 'Senior Roadmaps', 'Community Threads'].map((label, index) => (
+                            <button
+                                key={index}
+                                style={{
+                                    ...activeIndex === index ? activeNavLinkStyle : { ...navLinkStyle, ...(hoverIndex === index ? hoverEffectStyle : {}) },
+                                }}
+                                onMouseEnter={() => setHoverIndex(index)} // Set hover index
+                                onMouseLeave={() => setHoverIndex(null)} // Reset hover index
+                                onClick={() => handleNavClick(index)}
+                            >
+                                {label}
+                            </button>
+                        ))}
                     </nav>
                 ) : (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 20px', marginTop: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', padding: '0 20px', marginTop: '10px' }}>
                         <button onClick={handlePrevious}>Previous</button>
                         <button onClick={handleNext}>Next</button>
                     </div>
@@ -84,15 +114,18 @@ const Benefits = () => {
                 <div id="carousel-content" style={{ marginTop: '1rem' }}>
                     <div style={{
                         display: 'flex',
-                        flexDirection: windowWidth < 768 ? 'column' : 'row',
+                        flexDirection: 'column', // Set to column for vertical layout
                         border: `2px solid ${borderColor}`,
                         borderRadius: '1rem',
                         padding: '1rem',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
+                        alignItems: 'center', // Center items horizontally
                         backgroundColor: theme === 'dark' ? '#333' : '#f9f9f9'
                     }}>
-                        <div style={{ flexBasis: '40%', textAlign: windowWidth >= 768 ? 'left' : 'center', opacity: fadeIn ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }}>
+                        <div style={{
+                            textAlign: 'center', // Center text
+                            opacity: fadeIn ? 1 : 0,
+                            transition: 'opacity 0.3s ease-in-out'
+                        }}>
                             {activeIndex === 0 && (
                                 <>
                                     <p style={{ fontSize: windowWidth >= 768 ? '30px' : '20px', fontWeight: '600', fontFamily: 'Poppins, sans-serif', marginBottom: '1rem' }}>
@@ -100,6 +133,33 @@ const Benefits = () => {
                                     </p>
                                     <p style={{ fontSize: windowWidth >= 768 ? '16px' : '14px', color: theme === 'dark' ? '#d1d5db' : '#4b5563', marginBottom: '0.5rem' }}>
                                         Effortlessly browse and plan your courses. Our timetable feature allows you to visualize course availability, helping you build a schedule that fits your needs and preferences.
+                                    </p>
+                                    <video src="/images/slide1Vid.mp4"></video>
+                                    <p style={{ fontSize: windowWidth >= 768 ? '40px' : '30px', fontWeight: '600', fontFamily: 'Poppins, sans-serif', marginBottom: '1rem' }}>
+                                    <span style={{
+                                        backgroundColor: '#4158D0',
+                                        backgroundImage: 'linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)',
+                                        WebkitBackgroundClip: 'text', // For Safari
+                                        backgroundClip: 'text',
+                                        color: 'transparent', // Makes the text transparent so only the gradient is visible
+                                        fontWeight: 'bold', // Optional: make text bold
+                                    }}>Concise. </span>
+                                    <span style={{
+                                        backgroundColor: '#4158D0',
+                                        backgroundImage: 'linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)',
+                                        WebkitBackgroundClip: 'text', // For Safari
+                                        backgroundClip: 'text',
+                                        color: 'transparent', // Makes the text transparent so only the gradient is visible
+                                        fontWeight: 'bold', // Optional: make text bold
+                                    }}>Flexible. </span>
+                                    <span style={{
+                                        backgroundColor: '#4158D0',
+                                        backgroundImage: 'linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)',
+                                        WebkitBackgroundClip: 'text', // For Safari
+                                        backgroundClip: 'text',
+                                        color: 'transparent', // Makes the text transparent so only the gradient is visible
+                                        fontWeight: 'bold', // Optional: make text bold
+                                    }}>Intuitive.</span>                                    
                                     </p>
                                 </>
                             )}
@@ -109,7 +169,7 @@ const Benefits = () => {
                                         Courses
                                     </p>
                                     <p style={{ fontSize: windowWidth >= 768 ? '16px' : '14px', color: theme === 'dark' ? '#d1d5db' : '#4b5563', marginBottom: '0.5rem' }}>
-                                        Explore a wide range of courses available to enhance your skills and knowledge.
+                                        Discover a wide range of courses offered by SMU. Our platform makes it easy to filter, compare, and select the best courses for your academic journey.
                                     </p>
                                 </>
                             )}
@@ -119,7 +179,7 @@ const Benefits = () => {
                                         Bid Price Analytics
                                     </p>
                                     <p style={{ fontSize: windowWidth >= 768 ? '16px' : '14px', color: theme === 'dark' ? '#d1d5db' : '#4b5563', marginBottom: '0.5rem' }}>
-                                        Utilize advanced analytics to optimize your bidding strategy.
+                                        Maximize your chances of securing your preferred modules with our bid price analytics tool. Gain insights into bidding trends and make informed decisions.
                                     </p>
                                 </>
                             )}
@@ -129,7 +189,7 @@ const Benefits = () => {
                                         Senior Roadmaps
                                     </p>
                                     <p style={{ fontSize: windowWidth >= 768 ? '16px' : '14px', color: theme === 'dark' ? '#d1d5db' : '#4b5563', marginBottom: '0.5rem' }}>
-                                        Access personalized senior roadmaps to guide your academic journey.
+                                        Navigate your academic path with our senior roadmaps. Our guides help you plan your semesters efficiently, ensuring you meet all your graduation requirements.
                                     </p>
                                 </>
                             )}
@@ -139,21 +199,9 @@ const Benefits = () => {
                                         Community Threads
                                     </p>
                                     <p style={{ fontSize: windowWidth >= 768 ? '16px' : '14px', color: theme === 'dark' ? '#d1d5db' : '#4b5563', marginBottom: '0.5rem' }}>
-                                        Join discussions and collaborate with peers in community threads.
+                                        Engage with your peers through our community threads. Share insights, ask questions, and build connections with fellow students in a collaborative environment.
                                     </p>
                                 </>
-                            )}
-                        </div>
-                        <div style={{ flexBasis: '60%', textAlign: windowWidth >= 768 ? 'right' : 'center', padding: '10px', margin:'10px' , backgroundColor: 'lightgrey', borderRadius: '10px', opacity: fadeIn ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }}>
-                            {activeIndex === 0 && (
-                                <video
-                                    src="./images/timetable.mp4"
-                                    controls
-                                    autoPlay
-                                    loop
-                                    style={{ width: '100%', borderRadius: '8px' }}
-                                    onError={() => console.error('Error loading video')}
-                                />
                             )}
                         </div>
                     </div>

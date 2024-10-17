@@ -19,9 +19,11 @@ type RatingProps = {
     fillColour: string,
     ratingDescription: string,
     isRatingAllowed?: boolean
+    lowerBoundDescription?: string,
+    upperBoundDescription?: string,
 }
 
-export default function Rating({ courseId, ratingName, fillColour, ratingDescription, isRatingAllowed }: RatingProps) {
+export default function Rating({ courseId, ratingName, fillColour, ratingDescription, isRatingAllowed, lowerBoundDescription, upperBoundDescription }: RatingProps) {
     const { user } = useUser();
     const supabase = useSupabaseClient();
     const [userRating, setUserRating] = useState<number>(0);
@@ -88,7 +90,7 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
     return (
         <div id={`${ratingName.toLowerCase()}rating`} className='inline-block pr-2'>
             <div className="flex items-center space-x-2">
-                <p className="text-sm font-semibold my-2">{ratingName}:</p>
+                <p className="text-sm font-semibold my-2">{ratingName}</p>
                     <Popover>
                         <PopoverTrigger asChild>
                             <Info className="w-5 h-5 text-gray-600 cursor-pointer opacity-60" />
@@ -129,14 +131,22 @@ export default function Rating({ courseId, ratingName, fillColour, ratingDescrip
                             <div className='text-center'>
                                 <h3 className="text-center font-semibold mb-2">Select {ratingName} rating</h3>
                                 <div className="flex space-x-2 justify-center">
-                                {Array.from({ length: 5 }).map((_, index) => (
-                                    <Square
-                                    key={index}
-                                    className={`cursor-pointer ${index < (userRating ?? 0) ? `text-black` : 'text-gray-300'} rounded-sm`}
-                                    style={{ backgroundColor: index < (userRating ?? 0) ? fillColour : 'transparent' }}
-                                    onClick={() => setUserRating(index + 1)}
-                                    />
-                                ))}
+                                    {Array.from({ length: 5 }).map((_, index) => (
+                                        <Square
+                                        key={index}
+                                        className={`cursor-pointer ${index < (userRating ?? 0) ? `text-black` : 'text-gray-300'} rounded-sm`}
+                                        style={{ backgroundColor: index < (userRating ?? 0) ? fillColour : 'transparent' }}
+                                        onClick={() => setUserRating(index + 1)}
+                                        />
+                                    ))}
+                                </div>
+                                <div>
+                                    {(lowerBoundDescription && upperBoundDescription) && (
+                                        <div className='flex justify-between'>
+                                            <span className='opacity-60 text-xs'>{`1 - ${lowerBoundDescription}`}</span>
+                                            <span className='opacity-60 text-xs'>{`5 - ${upperBoundDescription}`}</span>
+                                        </div>
+                                    )}
                                 </div>
                                 <PopoverClose asChild>
                                     <Button variant="outline" className='mt-2' onClick={handleSubmitRating}>

@@ -9,18 +9,17 @@ export default function Home() {
   return (
     <div style={{ margin: '0', padding: '0', position: 'relative' }}>
       {/* Welcome Message Component */}
-      <div style={{ height: 'calc(100vh - 70px)', border: '2px solid black', display: 'flex', paddingBottom: '10rem', position: 'relative', overflow: 'hidden' }}>
+      <div>
         {/* Welcome Message */}
         <WelcomeMessage />
       </div>
 
       {/* About + Benefits Section */}
-      <div id='about-section' style={{ height: '100vh', display: 'flex', flexDirection: 'column', border: '2px solid black' }}>
+      <div id='about-section'>
         <About />
-        <Benefits />
       </div>
 
-      <div id='reviews-section' style={{ height: '100vh', display: 'flex', flexDirection: 'column', border: '2px solid black' }}>
+      <div id='reviews-section'>
         <Reviews />
       </div>
 
