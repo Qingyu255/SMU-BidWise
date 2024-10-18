@@ -190,14 +190,14 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const y1s1: Course[] = await fetchRoadmap(seniorName, 'Y1S1') as Course[];
-      const y1s2: Course[] = await fetchRoadmap(seniorName, 'Y1S2') as Course[];
-      const y2s1: Course[] = await fetchRoadmap(seniorName, 'Y2S1') as Course[];
-      const y2s2: Course[] = await fetchRoadmap(seniorName, 'Y2S2') as Course[];
-      const y3s1: Course[] = await fetchRoadmap(seniorName, 'Y3S1') as Course[];
-      const y3s2: Course[] = await fetchRoadmap(seniorName, 'Y3S2') as Course[];
-      const y4s1: Course[] = await fetchRoadmap(seniorName, 'Y4S1') as Course[];
-      const y4s2: Course[] = await fetchRoadmap(seniorName, 'Y4S2') as Course[];
+      const y1s1: Course[] = await fetchRoadmap(seniorName, 'Semester 1') as Course[];
+      const y1s2: Course[] = await fetchRoadmap(seniorName, 'Semester 2') as Course[];
+      const y2s1: Course[] = await fetchRoadmap(seniorName, 'Semester 3') as Course[];
+      const y2s2: Course[] = await fetchRoadmap(seniorName, 'Semester 4') as Course[];
+      const y3s1: Course[] = await fetchRoadmap(seniorName, 'Semester 5') as Course[];
+      const y3s2: Course[] = await fetchRoadmap(seniorName, 'Semester 6') as Course[];
+      const y4s1: Course[] = await fetchRoadmap(seniorName, 'Semester 7') as Course[];
+      const y4s2: Course[] = await fetchRoadmap(seniorName, 'Semester 8') as Course[];
       
       let semArr = [y1s1, y1s2, y2s1, y2s2, y3s1, y3s2, y4s1, y4s2];
 

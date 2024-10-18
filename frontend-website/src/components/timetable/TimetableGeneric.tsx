@@ -9,15 +9,17 @@ import {
 } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { Button } from '../ui/button';
-import { CalendarPlus, CalendarMinus } from 'lucide-react';
+import { CalendarPlus, CalendarMinus, Info } from 'lucide-react';
 import { Badge } from '../ui/badge';
+import { CardDescription } from '../ui/card';
 
 export type TimetableProps = {
   classes: ClassItem[];
   onClassSelect: (e: any) => void;
+  isTimetablePage?: boolean
 };
 
-export default function TimetableGeneric({ classes, onClassSelect }: TimetableProps) {
+export default function TimetableGeneric({ classes, onClassSelect, isTimetablePage }: TimetableProps) {
   const { selectedClasses } = useTimetable();
 
   // Map short form day names to full names used in timetable
@@ -171,6 +173,19 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
   const daysArr: string[]= Object.values(dayMapping)
 
   return (
+    <div>
+    <div className='flex flex-row pt-1'>
+      <Info className='w-3 h-3 my-auto mr-2 text-sm text-muted-foreground'/>
+      {(isTimetablePage) ? (
+        <span className='text-xs text-muted-foreground'>
+          Click <CalendarMinus className='inline w-3 h-3'/> to remove section from timetable
+        </span>
+      ) : (
+        <span className='text-xs text-muted-foreground'>
+          Click <CalendarPlus className='inline w-3 h-3'/> / <CalendarMinus className='inline w-3 h-3'/> to add or remove section from timetable
+        </span>
+      )}
+    </div>
     <div style={{ overflowX: 'auto' }}> {/* Allow horizontal scrolling */}
       <div style={timetableStyle}>
         {/* Fill Time Labels */}
@@ -320,16 +335,19 @@ export default function TimetableGeneric({ classes, onClassSelect }: TimetablePr
       </div>
       <div className="flex justify-between pb-1">
         <div className="flex items-center space-x-2">
-          <Badge variant="outline" className="flex items-center ">
-            <div style={{backgroundColor: unselectedClassColour}} className={`w-4 h-4 rounded-sm mr-2`}></div>
-            Available
-          </Badge>
+          {(!isTimetablePage) && (
+            <Badge variant="outline" className="flex items-center ">
+              <div style={{backgroundColor: unselectedClassColour}} className={`w-4 h-4 rounded-sm mr-2`}></div>
+              Available
+            </Badge>
+          )}
           <Badge variant="outline" className="flex items-center">
             <div style={{backgroundColor: selectedClassColour}} className={`w-4 h-4 rounded-sm mr-2`}></div>
             Selected
           </Badge>
         </div>
       </div>
+    </div>
     </div>
   );
 }

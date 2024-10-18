@@ -195,8 +195,88 @@ export interface HeadingCardProps {
   handleClick: () => void;
 }
 
-export type FormStep = 1 | 2;
+// export type FormStep = 1 | 2;
 
 export type RoadmapFormProps = {
   setFormStep: React.Dispatch<React.SetStateAction<FormStep>>;
 };
+
+
+
+// TEST
+// src/types/formTypes.ts
+
+import { z } from "zod";
+
+// Type Definitions
+export type FormStep = 1 | 2;
+
+export type RoadmapInfo = {
+  name: string;
+  major: string;
+  graduation_year: number;
+  courses_summary: string;
+  current_job: string;
+  advice: string;
+};
+
+export type Module = {
+  course_code: string;
+  title: string;
+};
+
+export type ModuleSelection = {
+  selectedModule: string; 
+};
+
+export type ModuleOption = {
+  label: string;
+  value: string;
+};
+
+export type SemestersObj = {
+  [key: number]: string
+}
+
+export type Semester = {
+  sem_count: number; // Added sem_count here
+  semester_name: string;
+  modules: ModuleSelection[];
+};
+
+export type RoadmapFormData = {
+  roadmap: RoadmapInfo;
+  semesters: Semester[];
+};
+
+// Zod Schemas
+export const ModuleSchema = z.object({
+  course_code: z.string().min(1, "Module code is required"),
+  title: z.string().min(1, "Module name is required"),
+});
+
+export const ModuleSelectionSchema = z.object({
+  selectedModule: z.string().nonempty("Module selection is required"),
+});
+
+export const SemesterSchema = z.object({
+  sem_count: z.number().min(1, "Semester count must be at least 1").max(10, "Semester count cannot exceed 10"), // Added sem_count here
+  semester_name: z.string().min(1, "Semester name is required"),
+  modules: z.array(ModuleSelectionSchema).min(1, "At least one module is required"),
+});
+
+export const RoadmapInfoSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters").max(50, "Name must be at most 50 characters"),
+  major: z.string().min(2, "Major must be at least 2 characters").max(80, "Major must be at most 80 characters"),
+  graduation_year: z.coerce.number().min(2003, "Graduation year cannot be before 2003").max(new Date().getFullYear(), "Graduation year cannot be in the future"),
+  courses_summary: z.string().min(2, "Summary must be at least 2 characters").max(300, "Summary must be at most 300 characters"),
+  current_job: z.string().min(2, "Current job must be at least 2 characters").max(80, "Current job must be at most 80 characters"),
+  advice: z.string().min(2, "Advice must be at least 2 characters").max(500, "Advice must be at most 500 characters"),
+});
+
+export const RoadmapFormSchema = z.object({
+  roadmap: RoadmapInfoSchema,
+  semesters: z.array(SemesterSchema).min(1, "At least one semester is required"),
+});
+
+export type RoadmapFormSchemaType = z.infer<typeof RoadmapFormSchema>;
