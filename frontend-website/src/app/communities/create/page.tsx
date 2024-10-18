@@ -21,7 +21,7 @@ const Page = () => {
                 name: input,
 
             }
-            const data = await Axios.POST('/api/subreddit', payload)
+            const data = await Axios.post('/api/subreddit', payload)
             return data as string
         },
         onError: (err) => {

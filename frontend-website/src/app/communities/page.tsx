@@ -2,7 +2,6 @@ import React from "react";
 import Link from 'next/link';
 import { buttonVariants } from '@/components/ui/button'; // Adjust this path as needed based on your file structure
 
-
 export default function Page() {
     return (
         <>
