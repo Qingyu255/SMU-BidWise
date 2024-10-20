@@ -250,16 +250,12 @@ export default function Page({ params }: { params: { course_code: string }}) {
                     <ProfessorSelection professors={professors} onProfessorClick={updateTimetable} />
                     <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
                   </div>
-                  {selectedProfessor ? (
-                    <>
-                      <TimetableGeneric classes={sections} onClassSelect={handleClassSelect}/>
-                    </>
-                  ): (
-                    <div>
+                  <div>
+                    {selectedProfessor && (
                       <p className='text-gray-400 text-sm py-2'>Showing all sections:</p>
-                      <TimetableGeneric classes={sections} onClassSelect={handleClassSelect}/>
-                    </div>
-                  )}
+                    )}
+                    <TimetableGeneric classes={sections} onClassSelect={handleClassSelect} allowAddRemoveSections={(selectedTermName == latestTerm)}/>
+                  </div>
                 </div>
               )}
             </div>

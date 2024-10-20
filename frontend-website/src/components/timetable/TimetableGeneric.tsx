@@ -14,12 +14,13 @@ import { Badge } from '../ui/badge';
 import { CardDescription } from '../ui/card';
 
 export type TimetableProps = {
-  classes: ClassItem[];
-  onClassSelect: (e: any) => void;
-  isTimetablePage?: boolean
+  classes: ClassItem[],
+  onClassSelect: (e: any) => void,
+  isTimetablePage?: boolean,
+  allowAddRemoveSections? : boolean
 };
 
-export default function TimetableGeneric({ classes, onClassSelect, isTimetablePage }: TimetableProps) {
+export default function TimetableGeneric({ classes, onClassSelect, isTimetablePage, allowAddRemoveSections = true }: TimetableProps) {
   const { selectedClasses } = useTimetable();
 
   // Map short form day names to full names used in timetable
@@ -167,7 +168,6 @@ export default function TimetableGeneric({ classes, onClassSelect, isTimetablePa
     borderRadius: '5px',
     padding: '5px 4px',
     overflow: 'hidden',
-    cursor: 'pointer',
   };
 
   const daysArr: string[]= Object.values(dayMapping)
@@ -264,52 +264,54 @@ export default function TimetableGeneric({ classes, onClassSelect, isTimetablePa
                 key={overlapIndex}
               >
                 <div className='w-full flex justify-end'>
-                  <Popover key={classItem.id}>
-                    <PopoverTrigger className='p-1 hover:bg-white hover:bg-opacity-70 rounded-md h-[32px]'>
-                      {selectedClasses.has(classItem.id) ? (
-                        <CalendarMinus className='text-gray-600'/>
-                      ) : (
-                        <CalendarPlus className='text-gray-600'/>
-                      )}
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      {selectedClasses.has(classItem.id) ? (
-                        <div className="text-center">
-                          <h3 className="font-semibold py-2">
-                            Remove{' '}
-                            {classItem.courseCode ? `${classItem.courseCode} - ` : ''}
-                            {classItem.section} from Timetable?
-                          </h3>
-                          <PopoverClose asChild>
-                            <Button
-                              onClick={async () => {
-                                await new Promise((resolve) => setTimeout(resolve, 200));
-                                onClassSelect(classItem);
-                              }}
-                            >
-                              Remove
-                            </Button>
-                          </PopoverClose>
-                        </div>
-                      ) : (
-                        <div className="text-center">
-                          <h3 className="font-semibold py-2">
-                            Add {classItem.section} to Timetable?
-                          </h3>
-                          <PopoverClose asChild>
-                            <Button
-                              onClick={async () => {
-                                await new Promise((resolve) => setTimeout(resolve, 200));
-                                onClassSelect(classItem);
-                              }}
-                            >
-                              Add
-                            </Button>
-                          </PopoverClose>
-                        </div>
-                      )}
-                    </PopoverContent>
-                  </Popover>
+                  {(allowAddRemoveSections) && (
+                    <Popover key={classItem.id}>
+                      <PopoverTrigger className='p-1 hover:bg-white hover:bg-opacity-70 rounded-md h-[32px]'>
+                        {selectedClasses.has(classItem.id) ? (
+                          <CalendarMinus className='text-gray-600'/>
+                        ) : (
+                          <CalendarPlus className='text-gray-600'/>
+                        )}
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        {selectedClasses.has(classItem.id) ? (
+                          <div className="text-center">
+                            <h3 className="font-semibold py-2">
+                              Remove{' '}
+                              {classItem.courseCode ? `${classItem.courseCode} - ` : ''}
+                              {classItem.section} from Timetable?
+                            </h3>
+                            <PopoverClose asChild>
+                              <Button
+                                onClick={async () => {
+                                  await new Promise((resolve) => setTimeout(resolve, 200));
+                                  onClassSelect(classItem);
+                                }}
+                              >
+                                Remove
+                              </Button>
+                            </PopoverClose>
+                          </div>
+                        ) : (
+                          <div className="text-center">
+                            <h3 className="font-semibold py-2">
+                              Add {classItem.section} to Timetable?
+                            </h3>
+                            <PopoverClose asChild>
+                              <Button
+                                onClick={async () => {
+                                  await new Promise((resolve) => setTimeout(resolve, 200));
+                                  onClassSelect(classItem);
+                                }}
+                              >
+                                Add
+                              </Button>
+                            </PopoverClose>
+                          </div>
+                        )}
+                      </PopoverContent>
+                    </Popover>
+                  )}
                 </div>
                 <div
                   style={{
