@@ -275,7 +275,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
             </div>
           ) : (
             <div className='py-2'>
-              <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""} allowAddRemoveSections={(selectedTermName == latestTerm)}/>
+              <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>
             </div>
           )}
         </div>
