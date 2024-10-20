@@ -2,7 +2,24 @@ import createClient  from '@/utils/supabase/client';
 
 const supabase = createClient();
 
-export const getLatestTerm = async () => {
+export type TermObjType = {
+  term: string,
+  id: string
+}
+
+export const getTerms = async (): Promise<TermObjType[] | null> => {
+  const { data: terms, error: termsError } = await supabase
+    .rpc('get_terms') // call the custom rpc supabase sql function
+    .single();
+
+  if (termsError) {
+    console.error('Error fetching terms:', termsError.message);
+    return null;
+  }
+  return terms;
+}
+
+export const getLatestTerm = async (): Promise<TermObjType | null> => {
   const { data: latestTerm, error: latestTermError } = await supabase
     .rpc('get_latest_term') // call the custom rpc supabase sql function
     .single();

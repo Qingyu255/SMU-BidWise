@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'; 
 import createClient  from '@/utils/supabase/client';
 import ProfessorSelection from './components/ProfessorSelection'; 
-import { getLatestTerm } from '@/utils/supabase/supabaseRpcFunctions';
+import { getTerms, getLatestTerm, TermObjType } from '@/utils/supabase/supabaseRpcFunctions';
 import NoResultCard from '@/components/NoResultCard';
 import { CourseInfo, CourseInfoProps } from './components/CourseInfo';
 import { Card, CardDescription, CardFooter } from '@/components/ui/card';
@@ -20,6 +20,8 @@ import { useRouter } from 'next/navigation';
 import TimetableGeneric from '../../../components/timetable/TimetableGeneric';
 import { useTimetable } from '../../../components/providers/timetableProvider';
 import { useToast } from "@/hooks/use-toast";
+import TermSelection from './components/TermSelection';
+import { Spinner } from '@nextui-org/react';
 
 const supabase = createClient();
 
@@ -29,14 +31,35 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const [sections, setSections] = useState<any[]>([]);
   const [professors, setProfessors] = useState<string[]>([]);
   const [selectedProfessor, setSelectedProfessor] = useState<string | null>(null);
+  const [allTerms, setAllTerms] = useState<TermObjType[]>([]);
   const [latestTerm, setLatestTerm] = useState<string>(""); // this is normal name eg, 2024-25 Term 1
+  const [selectedTermName, setSelectedTermName] = useState<string>(""); // will remain as empty string until user selects term different term besides the default selected latest term
+  const [selectedTermId, setSelectedTermId] = useState<string>(""); // will remain as empty string until user selects term different term besides the default selected latest term
   const [latestTermId, setLatestTermId] = useState<string>(""); // this is uuid
   const [courseInfo, setCourseInfo] = useState<CourseInfoProps>();
   const [courseAreas, setCourseAreas] = useState<string[]>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [isFetchingSections, setIsFetchingSections] = useState<boolean>(false);
+
   const router = useRouter();
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const { toast } = useToast();
+
+  async function getTerms() {
+    try {
+      const { data, error }: any = await supabase.rpc('get_terms');
+      
+      if (error) {
+        console.error('Error fetching course info:', error.message);
+        return [];
+      }
+      return data;
+
+    } catch (error) {
+      console.error("error in fetching of rpc: getCourseInfoByCourseCode - " + error);
+      return [];
+    }
+  }
 
   async function getCourseInfoByCourseCode(course_code: string) {
     try {
@@ -108,13 +131,14 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const updateTimetable = async (professor: string) => {
     if (professor === "") {
       // fetch all sections
-      const { sections, professors }: any = await getSectionDetails(courseUUID, latestTermId);
+      const { sections, professors }: any = await getSectionDetails(courseUUID, (selectedTermId ? selectedTermId : latestTermId));
       setSections(sections);
       setSelectedProfessor(professor);
       return;
     }
-  
-    const { sections } = await getSectionDetails(courseUUID, latestTermId);
+    
+    //  honestly should be fetching here again: can be optimised in the future
+    const { sections } = await getSectionDetails(courseUUID, (selectedTermId ? selectedTermId : latestTermId));
     const filteredSections = sections.filter(section => section.instructor === professor);
     
     setSelectedProfessor(professor);
@@ -137,13 +161,22 @@ export default function Page({ params }: { params: { course_code: string }}) {
       });
     }
   }
+
+  const handleTermSelectionChange = (selectedTermName: string, selectedTermId: string) => {
+    setSelectedTermId(selectedTermId); // this will trigger below use effect to query new sections for term
+    setSelectedTermName(selectedTermName);
+  }
   
   useEffect(() => {
-    (async () => {
+    // for initial load
+    const fetchPageData = async () => {
       try {
-        const latestTermObj: any = await getLatestTerm();
-        const latestTermStr = latestTermObj.term;
-        const latestTermIdStr = latestTermObj.id;
+        const terms: TermObjType[] = await getTerms();
+        setAllTerms(terms);
+
+        const latestTermObj: TermObjType | null = await getLatestTerm();
+        const latestTermStr = latestTermObj?.term ?? "";
+        const latestTermIdStr = latestTermObj?.id ?? "";
         setLatestTerm(latestTermStr);
         setLatestTermId(latestTermIdStr);
 
@@ -154,8 +187,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
         setCourseAreas(courseAreas);
         setCourseInfo(courseInfo);
 
-        // console.log('Fetching sections and professors for course_code: ' + course_code + " for latest term: " + latestTermStr);
-        const { sections, professors }: any = await getSectionDetails(courseInfo.id, latestTermIdStr);
+        // if user toggle selected term, we will query sections for that term instead of latest (latest of queried on first load)
+        const { sections, professors }: any = await getSectionDetails(courseInfo.id, (selectedTermId ? selectedTermId : latestTermIdStr)); 
         setSections(sections);
         setProfessors(professors);
         // console.log('Professors:', professors);
@@ -164,8 +197,32 @@ export default function Page({ params }: { params: { course_code: string }}) {
       } finally {
         setLoading(false);
       }
-    })();
+    };
+    fetchPageData();
   }, [course_code]);
+
+  useEffect(() => {
+    // for subsequent selections in term selected
+    const fetchSectionsDataForSelctedTerm = async () => {
+      if (!courseUUID || !latestTerm) {
+        // fetching of course data not complete (eg. we dont want this to run on first load)
+        return;
+      }
+      try {
+        setIsFetchingSections(true);
+        // if user toggle selected term, we will query sections for that term instead of latest (latest of queried on first load)
+        const { sections, professors }: any = await getSectionDetails(courseUUID, (selectedTermId ? selectedTermId : latestTerm)); 
+        setSections(sections);
+        setProfessors(professors);
+        // console.log('Professors:', professors);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsFetchingSections(false);
+      }
+    }
+    fetchSectionsDataForSelctedTerm();
+  }, [selectedTermId]);
 
   return (
     <>
@@ -189,27 +246,37 @@ export default function Page({ params }: { params: { course_code: string }}) {
               <CourseInfo courseInfo={courseInfo} courseAreas={courseAreas}/>
               {(professors && professors.length > 0) && (
                 <div className='py-2'>
-                  <ProfessorSelection professors={professors} onProfessorClick={updateTimetable} />
-                  {selectedProfessor ? (
-                    <>
-                      <TimetableGeneric classes={sections} onClassSelect={handleClassSelect}/>
-                    </>
-                  ): (
-                    <div>
+                  <div className='sm:flex sm:gap-5'>
+                    <ProfessorSelection professors={professors} onProfessorClick={updateTimetable} />
+                    <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
+                  </div>
+                  <div>
+                    {selectedProfessor && (
                       <p className='text-gray-400 text-sm py-2'>Showing all sections:</p>
-                      <TimetableGeneric classes={sections} onClassSelect={handleClassSelect}/>
-                    </div>
-                  )}
+                    )}
+                    <TimetableGeneric classes={sections} onClassSelect={handleClassSelect} allowAddRemoveSections={(selectedTermName == latestTerm)}/>
+                  </div>
                 </div>
               )}
             </div>
           )}
           
           {((!sections || sections.length === 0)) ? (
-            <NoResultCard searchCategory={"sections for " + latestTerm}/>
+          <div>
+            {(!isFetchingSections)? (
+              <div>
+                <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
+                <NoResultCard searchCategory={"sections for " + (selectedTermName ? selectedTermName : latestTerm)}/>
+              </div>
+            ): (
+              <div className='py-5 flex items-center justify-center'>
+                  <Spinner color="default"/>
+              </div>
+            )}
+            </div>
           ) : (
             <div className='py-2'>
-              <SectionInformationTable courseCode={course_code} sections={sections} latestTerm={latestTerm} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""}/>
+              <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""} allowAddRemoveSections={(selectedTermName == latestTerm)}/>
             </div>
           )}
         </div>

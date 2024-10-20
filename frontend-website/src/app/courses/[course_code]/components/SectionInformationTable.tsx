@@ -26,11 +26,12 @@ import {
 import { PopoverClose } from "@radix-ui/react-popover";
 import { ClassItem } from '@/types';
 
-export interface SectionInformationTableProps {
-  sections: ClassItem[];
-  latestTerm: string;
-  singleProfOnly: boolean;
-  courseCode: string;
+export type SectionInformationTableProps = {
+  sections: ClassItem[],
+  termName: string,
+  singleProfOnly: boolean,
+  courseCode: string,
+  allowAddRemoveSections? : boolean
 }
 
 const sortBySection = (sections: ClassItem[]): ClassItem[] => {
@@ -42,7 +43,7 @@ const sortBySection = (sections: ClassItem[]): ClassItem[] => {
   });
 }
 
-export const SectionInformationTable = ({ courseCode, sections, latestTerm, singleProfOnly }: SectionInformationTableProps) => {
+export const SectionInformationTable = ({ courseCode, sections, termName, singleProfOnly, allowAddRemoveSections = true }: SectionInformationTableProps) => {
   let temp: string = "";
   const sortedSections = sortBySection(sections);
   const { selectedClasses, addClass, removeClass } = useTimetable();
@@ -62,7 +63,7 @@ export const SectionInformationTable = ({ courseCode, sections, latestTerm, sing
   return (
     <Card className="rounded-lg">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold">Section Information ({latestTerm})</CardTitle>
+        <CardTitle className="text-xl font-semibold">Section Information ({termName})</CardTitle>
       </CardHeader>    
       <CardContent>
         {singleProfOnly ? (
@@ -88,7 +89,10 @@ export const SectionInformationTable = ({ courseCode, sections, latestTerm, sing
               <TableHead>Reserved Seats</TableHead>
               <TableHead>Available Seats</TableHead>
               <TableHead>Current Enrolled</TableHead>
-              <TableHead>Add to Timetable</TableHead>
+              {(!allowAddRemoveSections) && (
+                <TableHead>Add to Timetable</TableHead>
+              )}
+              
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -112,60 +116,62 @@ export const SectionInformationTable = ({ courseCode, sections, latestTerm, sing
                 <TableCell>
                   {section.availability ? section.availability.current_enrolled : 'N/A'}
                 </TableCell>
-                <TableCell>
-                  <Popover key={section.id}>
-                    <PopoverTrigger>
-                      <Button>
+                {!allowAddRemoveSections && (
+                  <TableCell>
+                    <Popover key={section.id}>
+                      <PopoverTrigger>
+                        <Button>
+                          {selectedClasses.has(section.id) ? (
+                            <CalendarMinus/>
+                          ) : (
+                            <CalendarPlus/>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
                         {selectedClasses.has(section.id) ? (
-                          <CalendarMinus/>
+                          <div className="text-center">
+                            <h3 className="font-semibold py-2">
+                              Remove {courseCode} - {section.section} from Timetable?
+                            </h3>
+                            <PopoverClose asChild>
+                              <Button
+                                onClick={async () => {
+                                  await new Promise((resolve) => setTimeout(resolve, 200));
+                                  handleClassSelect(section);
+                                  toast({
+                                    title: `Removed ${courseCode} - ${section.section} from Timetable`,
+                                  })
+                                }}
+                              >
+                                Remove
+                              </Button>
+                            </PopoverClose>
+                          </div>
                         ) : (
-                          <CalendarPlus/>
+                          <div className="text-center">
+                            <h3 className="font-semibold py-2">
+                              Add {section.section} to Timetable?
+                            </h3>
+                            <PopoverClose asChild>
+                              <Button
+                                onClick={async () => {
+                                  await new Promise((resolve) => setTimeout(resolve, 200));
+                                  handleClassSelect(section);
+                                  toast({
+                                    title: `Added ${courseCode} - ${section.section} to Timetable`,
+                                  })
+                                }}
+                              >
+                                Add
+                              </Button>
+                            </PopoverClose>
+                          </div>
                         )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      {selectedClasses.has(section.id) ? (
-                        <div className="text-center">
-                          <h3 className="font-semibold py-2">
-                            Remove {courseCode} - {section.section} from Timetable?
-                          </h3>
-                          <PopoverClose asChild>
-                            <Button
-                              onClick={async () => {
-                                await new Promise((resolve) => setTimeout(resolve, 200));
-                                handleClassSelect(section);
-                                toast({
-                                  title: `Removed ${courseCode} - ${section.section} from Timetable`,
-                                })
-                              }}
-                            >
-                              Remove
-                            </Button>
-                          </PopoverClose>
-                        </div>
-                      ) : (
-                        <div className="text-center">
-                          <h3 className="font-semibold py-2">
-                            Add {section.section} to Timetable?
-                          </h3>
-                          <PopoverClose asChild>
-                            <Button
-                              onClick={async () => {
-                                await new Promise((resolve) => setTimeout(resolve, 200));
-                                handleClassSelect(section);
-                                toast({
-                                  title: `Added ${courseCode} - ${section.section} to Timetable`,
-                                })
-                              }}
-                            >
-                              Add
-                            </Button>
-                          </PopoverClose>
-                        </div>
-                      )}
-                    </PopoverContent>
-                  </Popover>
-                </TableCell>
+                      </PopoverContent>
+                    </Popover>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
