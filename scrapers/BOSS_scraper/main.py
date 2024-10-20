@@ -142,7 +142,7 @@ def main():
     driver.get(url)
     loginToBOSS(wait)
 
-    acadTerm = "2320"
+    acadTerm = "2420"
 
     for classNumber in range(1000, 3001):
         try:

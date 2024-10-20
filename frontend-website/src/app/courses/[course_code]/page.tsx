@@ -21,6 +21,7 @@ import TimetableGeneric from '../../../components/timetable/TimetableGeneric';
 import { useTimetable } from '../../../components/providers/timetableProvider';
 import { useToast } from "@/hooks/use-toast";
 import TermSelection from './components/TermSelection';
+import { Spinner } from '@nextui-org/react';
 
 const supabase = createClient();
 
@@ -38,6 +39,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const [courseInfo, setCourseInfo] = useState<CourseInfoProps>();
   const [courseAreas, setCourseAreas] = useState<string[]>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [isFetchingSections, setIsFetchingSections] = useState<boolean>(false);
+
   const router = useRouter();
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const { toast } = useToast();
@@ -164,6 +167,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
   }
   
   useEffect(() => {
+    // for initial load
     const fetchPageData = async () => {
       try {
         const terms: TermObjType[] = await getTerms();
@@ -194,7 +198,30 @@ export default function Page({ params }: { params: { course_code: string }}) {
       }
     };
     fetchPageData();
-  }, [selectedTermId, course_code]);
+  }, [course_code]);
+
+  useEffect(() => {
+    // for subsequent selections in term selected
+    const fetchSectionsDataForSelctedTerm = async () => {
+      if (!courseUUID || !latestTerm) {
+        // fetching of course data not complete (eg. we dont want this to run on first load)
+        return;
+      }
+      try {
+        setIsFetchingSections(true);
+        // if user toggle selected term, we will query sections for that term instead of latest (latest of queried on first load)
+        const { sections, professors }: any = await getSectionDetails(courseUUID, (selectedTermId ? selectedTermId : latestTerm)); 
+        setSections(sections);
+        setProfessors(professors);
+        // console.log('Professors:', professors);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsFetchingSections(false);
+      }
+    }
+    fetchSectionsDataForSelctedTerm();
+  }, [selectedTermId]);
 
   return (
     <>
@@ -220,7 +247,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
                 <div className='py-2'>
                   <div className='sm:flex sm:gap-5'>
                     <ProfessorSelection professors={professors} onProfessorClick={updateTimetable} />
-                    <TermSelection termObjects={allTerms} latestTermSelected={latestTerm} onTermSelect={handleTermSelectionChange}/>
+                    <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
                   </div>
                   {selectedProfessor ? (
                     <>
@@ -238,9 +265,17 @@ export default function Page({ params }: { params: { course_code: string }}) {
           )}
           
           {((!sections || sections.length === 0)) ? (
-            <div>
-              <TermSelection termObjects={allTerms} latestTermSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
-              <NoResultCard searchCategory={"sections for " + (selectedTermName ? selectedTermName : latestTerm)}/>
+          <div>
+            {(!isFetchingSections)? (
+              <div>
+                <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
+                <NoResultCard searchCategory={"sections for " + (selectedTermName ? selectedTermName : latestTerm)}/>
+              </div>
+            ): (
+              <div className='py-5 flex items-center justify-center'>
+                  <Spinner color="default"/>
+              </div>
+            )}
             </div>
           ) : (
             <div className='py-2'>

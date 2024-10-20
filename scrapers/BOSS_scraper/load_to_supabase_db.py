@@ -209,7 +209,7 @@ def process_json_files(directory):
             logger.warning(f"Skipped non-JSON file: {filename}")
 
 # Directory containing JSON files
-directory_path = "scrapedData/2410"
+directory_path = "scrapedData/2420"
 
 # Start processing
 process_json_files(directory_path)
