@@ -37,6 +37,7 @@ setupChannel().catch(err => console.error("Error setting up channel:", err));
 
 export async function POST(req: Request) {
     console.log("Received a Post request");
+    console.log("it work")
     try {
         const { userId } = getAuth(req);
         const user = userId ? await clerkClient.users.getUser(userId) : null;
