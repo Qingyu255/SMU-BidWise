@@ -254,8 +254,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
                     {selectedProfessor && (
                       <p className='text-gray-400 text-sm py-2'>Showing all sections:</p>
                     )}
-                    <TimetableGeneric classes={sections} onClassSelect={handleClassSelect} allowAddRemoveSections={(selectedTermName == latestTerm)}/>
-                  </div>
+                    <TimetableGeneric classes={sections} onClassSelect={handleClassSelect} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>                  </div>
                 </div>
               )}
             </div>

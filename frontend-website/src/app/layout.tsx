@@ -9,7 +9,6 @@ import TopBar from "@/components/TopBar";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { TimetableProvider } from "../components/providers/timetableProvider"; // Import your context provider
 import { Toaster } from "@/components/ui/toaster";
-import CommunityProviders from "@/components/providers/community-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,14 +42,12 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <TimetableProvider> {/* Wrap your context provider here */}
-              <CommunityProviders>
               <Sidebar />
               <main className='lg:ml-[290px] mx-5'>
                 <TopBar />
                 {children}
               </main>
               <Toaster />
-              </CommunityProviders>
             </TimetableProvider> {/* Close context provider */}
           </ThemeProvider>
         </body>

@@ -89,7 +89,7 @@ export const SectionInformationTable = ({ courseCode, sections, termName, single
               <TableHead>Reserved Seats</TableHead>
               <TableHead>Available Seats</TableHead>
               <TableHead>Current Enrolled</TableHead>
-              {(!allowAddRemoveSections) && (
+              {(allowAddRemoveSections) && (
                 <TableHead>Add to Timetable</TableHead>
               )}
               
@@ -116,7 +116,7 @@ export const SectionInformationTable = ({ courseCode, sections, termName, single
                 <TableCell>
                   {section.availability ? section.availability.current_enrolled : 'N/A'}
                 </TableCell>
-                {!allowAddRemoveSections && (
+                {allowAddRemoveSections && (
                   <TableCell>
                     <Popover key={section.id}>
                       <PopoverTrigger>
