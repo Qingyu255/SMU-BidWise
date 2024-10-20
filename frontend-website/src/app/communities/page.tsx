@@ -2,6 +2,7 @@ import React from "react";
 import Link from 'next/link';
 import { buttonVariants } from '@/components/ui/button'; // Adjust this path as needed based on your file structure
 
+
 export default function Page() {
     return (
         <>
@@ -28,7 +29,7 @@ export default function Page() {
                         className={buttonVariants({
                             className: 'w-11/12 mt-4 mb-6',
                         })}
-                        href={`/communities/create`}>
+                        href={`/communities/r/create`}>
                         Create A Community
                     </Link>
                 </div>
