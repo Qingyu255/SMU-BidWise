@@ -131,13 +131,14 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const updateTimetable = async (professor: string) => {
     if (professor === "") {
       // fetch all sections
-      const { sections, professors }: any = await getSectionDetails(courseUUID, latestTermId);
+      const { sections, professors }: any = await getSectionDetails(courseUUID, (selectedTermId ? selectedTermId : latestTermId));
       setSections(sections);
       setSelectedProfessor(professor);
       return;
     }
-  
-    const { sections } = await getSectionDetails(courseUUID, latestTermId);
+    
+    //  honestly should be fetching here again: can be optimised in the future
+    const { sections } = await getSectionDetails(courseUUID, (selectedTermId ? selectedTermId : latestTermId));
     const filteredSections = sections.filter(section => section.instructor === professor);
     
     setSelectedProfessor(professor);
