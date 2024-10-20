@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'; 
 import createClient  from '@/utils/supabase/client';
 import ProfessorSelection from './components/ProfessorSelection'; 
-import { getLatestTerm } from '@/utils/supabase/supabaseRpcFunctions';
+import { getTerms, getLatestTerm, TermObjType } from '@/utils/supabase/supabaseRpcFunctions';
 import NoResultCard from '@/components/NoResultCard';
 import { CourseInfo, CourseInfoProps } from './components/CourseInfo';
 import { Card, CardDescription, CardFooter } from '@/components/ui/card';
@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import TimetableGeneric from '../../../components/timetable/TimetableGeneric';
 import { useTimetable } from '../../../components/providers/timetableProvider';
 import { useToast } from "@/hooks/use-toast";
+import TermSelection from './components/TermSelection';
 
 const supabase = createClient();
 
@@ -29,7 +30,10 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const [sections, setSections] = useState<any[]>([]);
   const [professors, setProfessors] = useState<string[]>([]);
   const [selectedProfessor, setSelectedProfessor] = useState<string | null>(null);
+  const [allTerms, setAllTerms] = useState<TermObjType[]>([]);
   const [latestTerm, setLatestTerm] = useState<string>(""); // this is normal name eg, 2024-25 Term 1
+  const [selectedTermName, setSelectedTermName] = useState<string>(""); // will remain as empty string until user selects term different term besides the default selected latest term
+  const [selectedTermId, setSelectedTermId] = useState<string>(""); // will remain as empty string until user selects term different term besides the default selected latest term
   const [latestTermId, setLatestTermId] = useState<string>(""); // this is uuid
   const [courseInfo, setCourseInfo] = useState<CourseInfoProps>();
   const [courseAreas, setCourseAreas] = useState<string[]>();
@@ -37,6 +41,22 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const router = useRouter();
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const { toast } = useToast();
+
+  async function getTerms() {
+    try {
+      const { data, error }: any = await supabase.rpc('get_terms');
+      
+      if (error) {
+        console.error('Error fetching course info:', error.message);
+        return [];
+      }
+      return data;
+
+    } catch (error) {
+      console.error("error in fetching of rpc: getCourseInfoByCourseCode - " + error);
+      return [];
+    }
+  }
 
   async function getCourseInfoByCourseCode(course_code: string) {
     try {
@@ -137,13 +157,21 @@ export default function Page({ params }: { params: { course_code: string }}) {
       });
     }
   }
+
+  const handleTermSelectionChange = (selectedTermName: string, selectedTermId: string) => {
+    setSelectedTermId(selectedTermId); // this will trigger below use effect to query new sections for term
+    setSelectedTermName(selectedTermName);
+  }
   
   useEffect(() => {
-    (async () => {
+    const fetchPageData = async () => {
       try {
-        const latestTermObj: any = await getLatestTerm();
-        const latestTermStr = latestTermObj.term;
-        const latestTermIdStr = latestTermObj.id;
+        const terms: TermObjType[] = await getTerms();
+        setAllTerms(terms);
+
+        const latestTermObj: TermObjType | null = await getLatestTerm();
+        const latestTermStr = latestTermObj?.term ?? "";
+        const latestTermIdStr = latestTermObj?.id ?? "";
         setLatestTerm(latestTermStr);
         setLatestTermId(latestTermIdStr);
 
@@ -154,8 +182,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
         setCourseAreas(courseAreas);
         setCourseInfo(courseInfo);
 
-        // console.log('Fetching sections and professors for course_code: ' + course_code + " for latest term: " + latestTermStr);
-        const { sections, professors }: any = await getSectionDetails(courseInfo.id, latestTermIdStr);
+        // if user toggle selected term, we will query sections for that term instead of latest (latest of queried on first load)
+        const { sections, professors }: any = await getSectionDetails(courseInfo.id, (selectedTermId ? selectedTermId : latestTermIdStr)); 
         setSections(sections);
         setProfessors(professors);
         // console.log('Professors:', professors);
@@ -164,8 +192,9 @@ export default function Page({ params }: { params: { course_code: string }}) {
       } finally {
         setLoading(false);
       }
-    })();
-  }, [course_code]);
+    };
+    fetchPageData();
+  }, [selectedTermId, course_code]);
 
   return (
     <>
@@ -189,7 +218,10 @@ export default function Page({ params }: { params: { course_code: string }}) {
               <CourseInfo courseInfo={courseInfo} courseAreas={courseAreas}/>
               {(professors && professors.length > 0) && (
                 <div className='py-2'>
-                  <ProfessorSelection professors={professors} onProfessorClick={updateTimetable} />
+                  <div className='sm:flex sm:gap-5'>
+                    <ProfessorSelection professors={professors} onProfessorClick={updateTimetable} />
+                    <TermSelection termObjects={allTerms} latestTermSelected={latestTerm} onTermSelect={handleTermSelectionChange}/>
+                  </div>
                   {selectedProfessor ? (
                     <>
                       <TimetableGeneric classes={sections} onClassSelect={handleClassSelect}/>
@@ -206,10 +238,13 @@ export default function Page({ params }: { params: { course_code: string }}) {
           )}
           
           {((!sections || sections.length === 0)) ? (
-            <NoResultCard searchCategory={"sections for " + latestTerm}/>
+            <div>
+              <TermSelection termObjects={allTerms} latestTermSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
+              <NoResultCard searchCategory={"sections for " + (selectedTermName ? selectedTermName : latestTerm)}/>
+            </div>
           ) : (
             <div className='py-2'>
-              <SectionInformationTable courseCode={course_code} sections={sections} latestTerm={latestTerm} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""}/>
+              <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""}/>
             </div>
           )}
         </div>

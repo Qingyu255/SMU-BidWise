@@ -23,11 +23,12 @@ type comboboxProps = {
     selectedValue: string,
     onSelect: (option: string) => void,
     clearOptionText?: string,
+    hideClearText?: boolean
     // showFirstOption?: boolean // optional
     // hideCategoryAsPrefix?: boolean // optional
 }
 
-export function Combobox({category, options, selectedValue, onSelect, clearOptionText}: comboboxProps) {
+export function Combobox({category, options, selectedValue, onSelect, clearOptionText, hideClearText = false}: comboboxProps) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState(selectedValue)
 
@@ -57,17 +58,19 @@ export function Combobox({category, options, selectedValue, onSelect, clearOptio
             <CommandList>
                 <CommandEmpty>No framework found.</CommandEmpty>
                 <CommandGroup>
-                    <CommandItem
-                        // value={""}
-                        className="text-gray-400 hover:underline hover:text-gray-500"
-                        onSelect={(option) => {
-                            onSelect("");
-                            setValue("");
-                            setOpen(false);
-                        }}
-                    >
-                    {clearOptionText? clearOptionText : 'Clear'}
-                    </CommandItem>
+                    {!hideClearText && (
+                        <CommandItem
+                            // value={""}
+                            className="text-gray-400 hover:underline hover:text-gray-500"
+                            onSelect={(option) => {
+                                onSelect("");
+                                setValue("");
+                                setOpen(false);
+                            }}
+                        >
+                        {clearOptionText? clearOptionText : 'Clear'}
+                        </CommandItem>
+                    )}
                 {options?.map((option) => (
                     <CommandItem
                     key={option}

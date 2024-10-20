@@ -28,7 +28,7 @@ import { ClassItem } from '@/types';
 
 export interface SectionInformationTableProps {
   sections: ClassItem[];
-  latestTerm: string;
+  termName: string;
   singleProfOnly: boolean;
   courseCode: string;
 }
@@ -42,7 +42,7 @@ const sortBySection = (sections: ClassItem[]): ClassItem[] => {
   });
 }
 
-export const SectionInformationTable = ({ courseCode, sections, latestTerm, singleProfOnly }: SectionInformationTableProps) => {
+export const SectionInformationTable = ({ courseCode, sections, termName, singleProfOnly }: SectionInformationTableProps) => {
   let temp: string = "";
   const sortedSections = sortBySection(sections);
   const { selectedClasses, addClass, removeClass } = useTimetable();
@@ -62,7 +62,7 @@ export const SectionInformationTable = ({ courseCode, sections, latestTerm, sing
   return (
     <Card className="rounded-lg">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold">Section Information ({latestTerm})</CardTitle>
+        <CardTitle className="text-xl font-semibold">Section Information ({termName})</CardTitle>
       </CardHeader>    
       <CardContent>
         {singleProfOnly ? (

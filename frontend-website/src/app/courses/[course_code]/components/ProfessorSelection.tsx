@@ -9,9 +9,9 @@ interface ProfessorSelectionProps {
 
 const ProfessorSelection: React.FC<ProfessorSelectionProps> = ({ professors, onProfessorClick }) => {
   return (
-    <div>
+    <div className='w-fit'>
       {/* <Separator/> */}
-      <div className='font-semibold py-2'>Filter Sections by Professor: </div>
+      <div className='font-semibold py-2 w-fit'>Filter Sections by Professor: </div>
       <Combobox selectedValue='' onSelect={(professor: string) => onProfessorClick(professor)} category='Professor' options={professors} clearOptionText='Show all'/>
     </div>
   );
