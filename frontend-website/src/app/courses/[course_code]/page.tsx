@@ -254,7 +254,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
                     {selectedProfessor && (
                       <p className='text-gray-400 text-sm py-2'>Showing all sections:</p>
                     )}
-                    <TimetableGeneric classes={sections} onClassSelect={handleClassSelect} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>
+                    <TimetableGeneric classes={sections} onClassSelect={handleClassSelect} allowAddRemoveSections={(selectedTermName == latestTerm)}/>
                   </div>
                 </div>
               )}
@@ -276,7 +276,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
             </div>
           ) : (
             <div className='py-2'>
-              <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>
+              <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""} allowAddRemoveSections={(selectedTermName == latestTerm)}/>
             </div>
           )}
         </div>
