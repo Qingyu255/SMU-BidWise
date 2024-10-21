@@ -1,8 +1,8 @@
 import { SubredditValidator } from '@/lib/validators/subreddit';
 import { z } from 'zod';
 import createClient from '@/utils/supabase/server';
-import { clerkClient, getAuth } from '@clerk/nextjs/server'
-import { NextResponse } from 'next/server'; // Ensure you're using this import
+import { clerkClient, getAuth } from '@clerk/nextjs/server';
+import { NextResponse, NextRequest } from 'next/server'; // Ensure you're using this import
 
 
 const supabase = createClient()
@@ -35,7 +35,7 @@ async function setupChannel() {
 // Call the setupChannel function to initialize
 setupChannel().catch(err => console.error("Error setting up channel:", err));
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     console.log("Received a Post request");
     console.log("it work")
     try {
@@ -94,7 +94,7 @@ export async function POST(req: Request) {
         if (subredditData.length > 0) {
             return new Response('Subreddit already exists', { status: 409 });
         }
-
+        
         // Insert and create new subreddit 
         const { error: createSubredditError } = await supabase
             .from("subreddit")
