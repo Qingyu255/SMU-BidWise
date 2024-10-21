@@ -1,0 +1,82 @@
+/* Base card styles */
+.card {
+    min-height: 250px;
+    margin: 0 10px;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease;
+    flex: 1;
+}
+
+.card.dark {
+    background-color: #f0f0f0; /* Light background in dark mode */
+}
+
+.card.light {
+    background-color: #fff; /* Light background in light mode */
+}
+
+/* Header styles */
+.card-header {
+    color: black; /* Default text color for light mode */
+}
+
+.card-header.dark {
+    color: black; /* Text color for dark mode */
+}
+
+/* Content styles */
+.card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.card-content p {
+    margin-bottom: auto;
+    color: black; /* Default text color for light mode */
+    margin-bottom: 10px;
+}
+
+.card-content p.dark {
+    color: black; /* Text color for dark mode */
+}
+
+.card-content img {
+    align-self: center;
+    max-height: 200px;
+    width: auto;
+}
+
+/* Add this CSS for the header text container */
+.header-text {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping of spans */ 
+    justify-content: center; /* Center the text spans */
+}
+
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    /* Small screen styles */
+    .card {
+        min-height: 200px; /* Reduced card height */
+        max-width: 250px; /* Added a max width for compact size */
+        margin: 0 5px; /* Reduced margin between cards */
+        padding: 10px; /* Optional: Add padding to control internal spacing */
+        background-color: #f0f0f0; /* Card background color */
+    }
+
+    .card-content p {
+        font-size: 12px; /* Smaller font size for paragraphs */
+    }
+
+    .card-header {
+        font-size: 16px; /* Smaller title font size */
+    }
+
+    .card-content img {
+        margin-top: 10px;
+    }
+}

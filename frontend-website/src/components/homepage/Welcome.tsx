@@ -51,11 +51,8 @@ const WelcomeMessage = () => {
     >
 
       {/* Text Section */}
-      <div style={{ 
-        flex: 1, 
-        textAlign: isMobile ? 'center' : 'left',
-        paddingBottom: isMobile ? '1rem' : '0' 
-      }}>
+      <div style={{textAlign: 'center'}}
+      >
         <h1 style={{
           fontSize: isMobile ? '3rem' : isTablet ? '5rem' : '6rem',
           fontWeight: 'bold',

@@ -1,25 +1,28 @@
-
-
+/* Base styles */
 .wrapper {
     display: flex;
+    justify-content: center;
     margin-top: 2rem; /* Adjust as needed */
+    margin-bottom: 2rem;
 }
 
 .wrapper a {
-    display: block;
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center text horizontally */
+    align-items: center; /* Center text vertically */
     width: 200px;
     height: 40px;
-    line-height: 40px;
     font-size: 16px;
     font-family: sans-serif;
     text-decoration: none;
     color: #333;
     border: 2px solid #333;
     letter-spacing: 2px;
-    text-align: center;
     position: relative;
     transition: all 0.35s;
     margin-right: 20px;
+    text-align: center; /* Ensure horizontal alignment */
+    padding: 0; /* Remove padding */
 }
 
 .wrapper a span {
@@ -46,7 +49,43 @@
     width: 100%;
 }
 
-/* Center the buttons on small devices */
+/* Light mode styles */
+@media (prefers-color-scheme: light) {
+    .wrapper a {
+        color: #333;
+        border: 2px solid #333;
+        background-color: #fff; /* Light background */
+    }
+
+    .wrapper a:hover {
+        color: white;
+        background-color: #333; /* Darker background on hover */
+    }
+
+    .wrapper a::after {
+        background: steelblue;
+    }
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+    .wrapper a {
+        color: #f5f5f5;
+        border: 2px solid #f5f5f5;
+        background-color: #333; /* Dark background */
+    }
+
+    .wrapper a:hover {
+        color: #111; /* Darker text on hover */
+        background-color: #f5f5f5; /* Lighter background on hover */
+    }
+
+    .wrapper a::after {
+        background: #8ab4f8; /* Light blue hover effect */
+    }
+}
+
+/* Mobile view adjustments */
 @media (max-width: 768px) {
     .wrapper {
         display: flex;
@@ -55,51 +94,13 @@
     }
 
     .wrapper a {
-        display: block;
         width: 130px;
         height: 40px;
-        line-height: 11px;
-        font-size: 11px;
-        font-family: sans-serif;
-        text-decoration: none;
-        color: #333;
-        border: 2px solid #333;
-        letter-spacing: 2px;
-        text-align: center;
-        position: relative;
-        transition: all 0.35s;
-        margin-right: 10px;
-        padding: 5px;
+        font-size: 12px;
+        margin-right: 30px;
     }
 
-    .wrapper a span {
-        position: relative;
-        z-index: 2;
+    .wrapper a:last-child {
+        margin-right: 0;
     }
-    
-    .wrapper a::after {
-        position: absolute;
-        content: "";
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 100%;
-        background: steelblue;
-        transition: all 0.35s;
-    }
-    
-    .wrapper a:hover {
-        color: white;
-    }
-    
-    .wrapper a:hover::after {
-        width: 100%;
-    }
-
-    
 }
-
-
-
-
-  
