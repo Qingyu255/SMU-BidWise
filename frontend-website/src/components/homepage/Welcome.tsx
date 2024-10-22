@@ -8,7 +8,7 @@ import styles from './Welcome.module.css'
 const WelcomeMessage = () => {
   const { theme } = useTheme(); // Get the current theme
   const [textColor, setTextColor] = useState('white'); // State to manage text color
-  const [screenSize, setScreenSize] = useState(window.innerWidth); // State to manage screen size
+  const [screenSize, setScreenSize] = useState(0); // State to manage screen size
 
   // Use useEffect to change text color based on the theme
   useEffect(() => {
