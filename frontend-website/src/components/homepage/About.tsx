@@ -28,12 +28,16 @@ const About = () => {
   const { theme } = useTheme(); // Get the current theme
 
   // Hook to handle window resizing
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(0); // Initialize to 0 or any default value
 
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    // Only set window width if window is defined (i.e., in the browser)
+    if (typeof window !== "undefined") {
+      setWindowWidth(window.innerWidth); // Set initial window width
+      const handleResize = () => setWindowWidth(window.innerWidth);
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   // Styles based on window width and current theme

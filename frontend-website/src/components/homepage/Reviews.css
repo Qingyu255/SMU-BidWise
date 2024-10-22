@@ -11,11 +11,6 @@ img {
   display: block;
 }
 
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f6f6f6;
-}
-
 /* Testimonial Container */
 .testimonial-container {
     max-width: 800px;
@@ -148,4 +143,34 @@ opacity: 1;
     .content {
         max-width: 80%; /* Optional: limit content width */
     }
+}
+
+
+/* Review form */
+.review-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+}
+
+.review-form input,
+.review-form textarea,
+.review-form select {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.review-form button {
+  padding: 0.5rem;
+  background-color: #ff6f59;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.review-form button:hover {
+  background-color: #e65c47; /* Darker shade on hover */
 }

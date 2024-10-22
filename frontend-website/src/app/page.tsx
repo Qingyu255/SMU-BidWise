@@ -21,7 +21,6 @@ export default function Home() {
 
       <div id='reviews-section'>
         <Reviews />
-        <ReadReviews />
       </div>
 
       {/* Global Style for Smooth Scrolling and Video Fade Animation */}
