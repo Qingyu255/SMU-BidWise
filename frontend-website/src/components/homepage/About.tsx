@@ -188,73 +188,220 @@ const About = () => {
                   >
                     Timetable
                   </p>
-                  <span
-                    style={{
-                      backgroundColor: "#4158D0",
-                      backgroundImage:
-                        "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      fontSize: windowWidth >= 768 ? "30px" : "20px",
-                      fontWeight: "600",
-                      margin: "0 10px",
-                    }}
-                  >
-                    Concise.{" "}
-                  </span>
-                  <span
-                    style={{
-                      backgroundColor: "#4158D0",
-                      backgroundImage:
-                        "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      fontSize: windowWidth >= 768 ? "30px" : "20px",
-                      fontWeight: "600",
-                      margin: "0 10px",
-                    }}
-                  >
-                    Flexible.{" "}
-                  </span>
-                  <span
-                    style={{
-                      backgroundColor: "#4158D0",
-                      backgroundImage:
-                        "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      fontSize: windowWidth >= 768 ? "30px" : "20px",
-                      fontWeight: "600",
-                      margin: "0 10px",
-                    }}
-                  >
-                    Intuitive.
-                  </span>
-                  <p
+                  <div className="header-text">
+                    <span
+                      style={{
+                        backgroundColor: "#4158D0",
+                        backgroundImage:
+                          "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        fontSize: windowWidth >= 768 ? "30px" : "20px",
+                        fontWeight: "600",
+                        margin: "0 10px",
+                      }}
+                    >
+                      Concise.
+                    </span>
+                    <span
+                      style={{
+                        backgroundColor: "#4158D0",
+                        backgroundImage:
+                          "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        fontSize: windowWidth >= 768 ? "30px" : "20px",
+                        fontWeight: "600",
+                        margin: "0 10px",
+                      }}
+                    >
+                      Flexible.
+                    </span>
+                    <span
+                      style={{
+                        backgroundColor: "#4158D0",
+                        backgroundImage:
+                          "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        fontSize: windowWidth >= 768 ? "30px" : "20px",
+                        fontWeight: "600",
+                        margin: "0 10px",
+                      }}
+                    >
+                      Intuitive.
+                    </span>
+                  </div>
+                  {/* <p
                     style={{
                       fontSize: windowWidth >= 768 ? "16px" : "14px",
                       color: theme === "dark" ? "#8c8c8c" : "#4b5563",
                       marginBottom: "0.5rem",
                     }}
                   >
-                    Effortlessly browse and plan your courses. Our timetable
-                    feature allows you to visualize course availability, helping
-                    you build a schedule that fits your needs and preferences.
-                  </p>
-                  <video
-                    src="/images/slide1Vid.mp4"
-                    controls
-                    style={{
-                      width: "100%", // Make the video take the full width of the container
-                      height: "auto", // Let the height adjust automatically based on the width
-                      maxHeight: "600px", // Set a maximum height for larger screens
-                      objectFit: "cover", // Maintain aspect ratio and cover the area
-                      borderRadius: "8px", // Optional: add some styling
-                    }}
-                  />
+                    Explore a diverse selection of courses at SMU. Our platform
+                    simplifies the process of filtering, comparing, and choosing
+                    the ideal courses for your academic path, while also
+                    providing ratings for each course.
+                  </p> */}
+
+                  {windowWidth >= 768 ? (
+                    // Display cards in a row for larger screens
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "stretch", // Ensures cards stretch to equal height
+                      }}
+                    >
+                      <Card className={`card ${theme}`}>
+                        <CardHeader className={`card-header ${theme}`}>
+                          <CardTitle>Sync to Cloud</CardTitle>
+                        </CardHeader>
+                        <CardContent className="card-content">
+                          <p className={theme}>
+                            {/* Pass the theme for paragraph color */}
+                            Access your schedule anytime, anywhere, with
+                            seamless cloud integration
+                          </p>
+                          <img src="/images/cloud.gif" alt="Sync to Cloud" />
+                        </CardContent>
+                      </Card>
+
+                      <Card className={`card ${theme}`}>
+                        <CardHeader className={`card-header ${theme}`}>
+                          <CardTitle>Customize</CardTitle>
+                        </CardHeader>
+                        <CardContent className="card-content">
+                          <p className={theme}>
+                            {/* Pass the theme for paragraph color */}
+                            Add or remove modules with just a few clicks,
+                            keeping your schedule flexible and up-to-date
+                          </p>
+                          <img src="/images/calendar.gif" alt="Customize" />
+                        </CardContent>
+                      </Card>
+
+                      <Card className={`card ${theme}`}>
+                        <CardHeader className={`card-header ${theme}`}>
+                          <CardTitle>Module Overview</CardTitle>
+                        </CardHeader>
+                        <CardContent className="card-content">
+                          <p className={theme}>
+                            {/* Pass the theme for paragraph color */}
+                            Instantly see a clear summary of all your modules,
+                            helping you stay organized
+                          </p>
+                          <img src="/images/look.gif" alt="Module Overview" />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ) : (
+                    // Display cards in a carousel for small screens
+                    <Carousel plugins={[autoplay]} style={{ width: "100%" }}>
+                      <CarouselContent>
+                        {/* Ratings Card in Carousel */}
+                        <CarouselItem
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <Card
+                            className="card"
+                            style={{ backgroundColor: "#f0f0f0" }}
+                          >
+                            <CardHeader>
+                              <CardTitle
+                                style={{ fontSize: "16px", color: "black" }}
+                              >
+                                Sync to Cloud
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <p
+                                style={{
+                                  marginBottom: "auto",
+                                  fontSize: "12px",
+                                  color: "black", // Paragraph text color
+                                }}
+                              >
+                                Access your schedule anytime, anywhere, with
+                                seamless cloud integration
+                              </p>
+                              <img
+                                src="/images/cloud.gif"
+                                alt="Sync to Cloud"
+                              />
+                            </CardContent>
+                          </Card>
+                        </CarouselItem>
+
+                        <CarouselItem
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <Card
+                            className="card"
+                            style={{ backgroundColor: "#f0f0f0" }}
+                          >
+                            <CardHeader>
+                              <CardTitle
+                                style={{ fontSize: "16px", color: "black" }}
+                              >
+                                Customize
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <p
+                                style={{
+                                  marginBottom: "20px",
+                                  fontSize: "12px",
+                                  color: "black", // Paragraph text color
+                                }}
+                              >
+                                Add or remove modules with just a few clicks,
+                                keeping your schedule flexible and up-to-date
+                              </p>
+                              <img src="/images/calendar.gif" alt="Customize" />
+                            </CardContent>
+                          </Card>
+                        </CarouselItem>
+
+                        <CarouselItem
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <Card
+                            className="card"
+                            style={{ backgroundColor: "#f0f0f0" }}
+                          >
+                            <CardHeader>
+                              <CardTitle
+                                style={{ fontSize: "16px", color: "black" }}
+                              >
+                                Module Overview
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <p
+                                style={{
+                                  marginBottom: "10px",
+                                  fontSize: "12px",
+                                  color: "black", // Paragraph text color
+                                }}
+                              >
+                                Instantly see a clear summary of all your
+                                modules, helping you stay organized
+                              </p>
+                              <img
+                                src="/images/look.gif"
+                                alt="Module Overview"
+                              />
+                            </CardContent>
+                          </Card>
+                        </CarouselItem>
+                      </CarouselContent>
+                    </Carousel>
+                  )}
 
                   <Button style={{ marginTop: "15px" }}>
-                    <a href="/timetable">View Timetable</a>
+                    <a href="/courses">Search Courses</a>
                   </Button>
                 </>
               )}
@@ -372,10 +519,7 @@ const About = () => {
                             Access course descriptions and enrollment
                             requirements in one view
                           </p>
-                          <img
-                            src="/images/info.gif"
-                            alt="CourseInfo"
-                          />
+                          <img src="/images/info.gif" alt="CourseInfo" />
                         </CardContent>
                       </Card>
                     </div>
@@ -468,10 +612,7 @@ const About = () => {
                                 Access course descriptions and enrollment
                                 requirements in one view
                               </p>
-                              <img
-                                src="/images/info.gif"
-                                alt="Courses"
-                              />
+                              <img src="/images/info.gif" alt="Courses" />
                             </CardContent>
                           </Card>
                         </CarouselItem>
@@ -724,7 +865,10 @@ const About = () => {
                         <CardContent className="card-content">
                           <p className={theme}>
                             {/* Pass the theme for paragraph color */}
-                            Discover your senior&apos;s course selections and strategies, empowering you to make informed decisions and navigate your academic path with confidence
+                            Discover your senior&apos;s course selections and
+                            strategies, empowering you to make informed
+                            decisions and navigate your academic path with
+                            confidence
                           </p>
                           <img
                             src="/images/unlock.gif"
@@ -760,7 +904,10 @@ const About = () => {
                                   color: "black",
                                 }}
                               >
-                                Discover your senior&apos;s course selections and strategies, empowering you to make informed decisions and navigate your academic path with confidence
+                                Discover your senior&apos;s course selections
+                                and strategies, empowering you to make informed
+                                decisions and navigate your academic path with
+                                confidence
                               </p>
                               <img
                                 src="/images/unlock.gif"
@@ -783,24 +930,163 @@ const About = () => {
                 <>
                   <p
                     style={{
-                      fontSize: windowWidth >= 768 ? "30px" : "20px",
+                      fontSize: windowWidth >= 768 ? "40px" : "20px",
                       fontWeight: "600",
-                      marginBottom: "1rem",
+                      color: carouselHeaderColor,
                     }}
                   >
                     Community Threads
                   </p>
-                  <p
+                  <div className="header-text">
+                    <span
+                      style={{
+                        backgroundColor: "#4158D0",
+                        backgroundImage:
+                          "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        fontSize: windowWidth >= 768 ? "30px" : "20px",
+                        fontWeight: "600",
+                        margin: "0 10px",
+                      }}
+                    >
+                      Connect.
+                    </span>
+                    <span
+                      style={{
+                        backgroundColor: "#4158D0",
+                        backgroundImage:
+                          "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        fontSize: windowWidth >= 768 ? "30px" : "20px",
+                        fontWeight: "600",
+                        margin: "0 10px",
+                      }}
+                    >
+                      Discuss.
+                    </span>
+                  </div>
+                  {/* <p
                     style={{
                       fontSize: windowWidth >= 768 ? "16px" : "14px",
-                      color: theme === "dark" ? "#d1d5db" : "#4b5563",
+                      color: theme === "dark" ? "#8c8c8c" : "#4b5563",
                       marginBottom: "0.5rem",
                     }}
                   >
-                    Connect with peers and faculty through our community
-                    threads. Share insights, ask questions, and collaborate on
-                    projects to enhance your learning experience.
-                  </p>
+                    Explore a diverse selection of courses at SMU. Our platform
+                    simplifies the process of filtering, comparing, and choosing
+                    the ideal courses for your academic path, while also
+                    providing ratings for each course.
+                  </p> */}
+
+                  {windowWidth >= 768 ? (
+                    // Display cards in a row for larger screens
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "stretch", // Ensures cards stretch to equal height
+                      }}
+                    >
+                      <Card className={`card ${theme}`}>
+                        <CardHeader className={`card-header ${theme}`}>
+                          <CardTitle>Share Insights</CardTitle>
+                        </CardHeader>
+                        <CardContent className="card-content">
+                          <p className={theme}>
+                            {/* Pass the theme for paragraph color */}
+                            Gain valuable advice and tips from peers, helping you make informed decisions
+                          </p>
+                          <img src="/images/share.gif" alt="Share Insights" />
+                        </CardContent>
+                      </Card>
+
+                      <Card className={`card ${theme}`}>
+                        <CardHeader className={`card-header ${theme}`}>
+                          <CardTitle>Collaborate</CardTitle>
+                        </CardHeader>
+                        <CardContent className="card-content">
+                          <p className={theme}>
+                            {/* Pass the theme for paragraph color */}
+                            Discuss challenges & exchange resources, boosting your success
+                          </p>
+                          <img src="/images/teamwork.gif" alt="Collaborate" />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ) : (
+                    // Display cards in a carousel for small screens
+                    <Carousel plugins={[autoplay]} style={{ width: "100%" }}>
+                      <CarouselContent>
+                        {/* Ratings Card in Carousel */}
+                        <CarouselItem
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <Card
+                            className="card"
+                            style={{ backgroundColor: "#f0f0f0" }}
+                          >
+                            <CardHeader>
+                              <CardTitle
+                                style={{ fontSize: "16px", color: "black" }}
+                              >
+                                Share Insights
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <p
+                                style={{
+                                  marginBottom: "auto",
+                                  fontSize: "12px",
+                                  color: "black", // Paragraph text color
+                                }}
+                              >
+                                Gain valuable advice and tips from peers, helping you make informed decisions
+                              </p>
+                              <img
+                                src="/images/share.gif"
+                                alt="Share Insights"
+                              />
+                            </CardContent>
+                          </Card>
+                        </CarouselItem>
+
+                        <CarouselItem
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <Card
+                            className="card"
+                            style={{ backgroundColor: "#f0f0f0" }}
+                          >
+                            <CardHeader>
+                              <CardTitle
+                                style={{ fontSize: "16px", color: "black" }}
+                              >
+                                Collaborate
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <p
+                                style={{
+                                  marginBottom: "20px",
+                                  fontSize: "12px",
+                                  color: "black", // Paragraph text color
+                                }}
+                              >
+                                Discuss challenges & exchange resources, boosting your success
+                              </p>
+                              <img src="/images/teamwork.gif" alt="Collaborate" />
+                            </CardContent>
+                          </Card>
+                        </CarouselItem>
+                      </CarouselContent>
+                    </Carousel>
+                  )}
+
+                  <Button style={{ marginTop: "15px" }}>
+                    <a href="/communities">View Threads</a>
+                  </Button>
                 </>
               )}
             </div>
