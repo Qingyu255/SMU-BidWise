@@ -2,7 +2,7 @@
 
 import About from '../components/homepage/About';
 import WelcomeMessage from '../components/homepage/Welcome'; 
-import Benefits from '../components/homepage/Benefits';
+import ReadReviews from '../components/homepage/Test';
 import Reviews from '../components/homepage/Reviews';
 
 export default function Home() {
@@ -21,6 +21,7 @@ export default function Home() {
 
       <div id='reviews-section'>
         <Reviews />
+        <ReadReviews />
       </div>
 
       {/* Global Style for Smooth Scrolling and Video Fade Animation */}
