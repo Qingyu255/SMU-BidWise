@@ -36,27 +36,6 @@ const RoadmapForm: React.FC<RoadmapFormProps> = ({ setFormStep }) => {
   const supabase = useSupabaseClient();
   const {user} = useUser();
 
-  // TEST IF NOT IN USE IN THIS FORM
-  // const [courses, setCourses] = useState<courseInfo[]>([])
-
-  // useEffect(() => {
-  //   const fetchCourses = async () => {
-  //     const { data, error } = await supabase
-  //       .from('course_info')
-  //       .select('*');
-      
-  //     if (error) {
-  //       console.log('Error fetching courses', error);
-  //     } else if (data) {
-  //       setCourses(data);
-  //     }
-  //   };
-
-  //   fetchCourses();
-
-
-  // }, [supabase]);
-
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({

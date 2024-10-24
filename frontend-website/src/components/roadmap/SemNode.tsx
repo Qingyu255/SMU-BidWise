@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
+import '@/components/roadmap/roadmap.css'; 
 
 
 type SemNodeProps = {
@@ -11,12 +12,31 @@ type SemNodeProps = {
 
 const SemNode = ({ data }: SemNodeProps) => {
 
+  const nodeStyle: React.CSSProperties = {
+    borderRadius: '8px', 
+    fontWeight: '600',
+    padding: '10px 10px',
+    width: '150px',
+    height: '70px',
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // border: '2px solid #906f46',
+    backgroundColor: '#121a50',
+    color: '#E1D9D1',
+    fontSize: '24px',
+
+
+    
+  }
     
     return (
       
 
       <div style={{
         padding: '10px 40px',
+        ...nodeStyle
         
       }}>
         <div>{data.course_code}</div>

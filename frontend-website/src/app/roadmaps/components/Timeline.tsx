@@ -43,7 +43,7 @@ type FlowRendererProps = {
 const supabase = createClient();
 
 // Colors:
-// edge: #2b78e4
+// edge: #4283bb
 // node: #fdff00
 // sub-node: #ffe59a
 
@@ -205,19 +205,17 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
         {
           id: 'n1',
           type: 'SemNode',
-          sourcePosition: Position.Left,
+          sourcePosition: Position.Bottom,
           data: { course_code: 'Y1S1' },
           position: { x: 0, y: 0 },
-          style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
         },
         {
           id: 'n2',
           type: 'SemNode',
-          targetPosition: Position.Left,
-          sourcePosition: Position.Left,
+          targetPosition: Position.Top,
+          sourcePosition: Position.Bottom,
           data: { course_code: 'Y1S2' },
-          position: { x: 200, y: 200 },
-          style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: 0, y: 250 },
         },
 
         {
@@ -225,48 +223,42 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'SemNode',
           sourcePosition: Position.Left,
           data: { course_code: 'Y2S1' },
-          position: { x: -40, y: 200 },
-          style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: 0, y: 500 },
         },
         {
           id: 'n4',
           type: 'SemNode',
           sourcePosition: Position.Left,
           data: { course_code: 'Y2S2' },
-          position: { x: 80, y: 360 },
-          style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: 0, y: 750 },
         },
         {
           id: 'n5',
           type: 'SemNode',
           sourcePosition: Position.Bottom,
           data: { course_code: 'Y3S1' },
-          position: { x: 80, y: 480 },
-          style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: 0, y: 1000 },
         },
         {
           id: 'n6',
           type: 'SemNode',
           sourcePosition: Position.Bottom,
           data: { course_code: 'Y3S2' },
-          position: { x: -120, y: 680 },
-          style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: 0, y: 1250 },
         },
         {
           id: 'n7',
           type: 'SemNode',
           sourcePosition: Position.Bottom,
           data: { course_code: 'Y4S1' },
-          position: { x: 120, y: 960 },
-          style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: 0, y: 1500 },
         },
         {
           id: 'n8',
           type: 'SemNode',
           sourcePosition: Position.Bottom,
           data: { course_code: 'Y4S2' },
-          position: { x: -120, y: 1050 },
-          style: { backgroundColor: '#fdff00', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: 0, y: 1750 },
         },
     
       ];
@@ -277,30 +269,30 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           source: 'n1',
           type: 'default',
           target: 'n2',
-          sourceHandle: 'r-src',
-          targetHandle: 'l-target',
+          sourceHandle: 'b-src',
+          targetHandle: 't-target',
           animated: false,
-          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+          style: { stroke: '#4283bb', strokeWidth: 2, strokeDasharray: 'none' },
         },
         {
           id: 'n2-s1n2',
           source: 'n2',
-          type: 'default',
+          type: 'step',
           target: 's1n2',
-          sourceHandle: 't-src',
-          targetHandle: 'b-target',
+          sourceHandle: 'b-src',
+          targetHandle: 't-target',
           animated: true,
-          style: { stroke: '#2b78e4', strokeWidth: 2 },
+          style: { stroke: '#4283bb', strokeWidth: 2 },
         },
         {
           id: 'n2-n3',
           source: 'n2',
           type: 'default',
           target: 'n3',
-          sourceHandle: 'l-src',
-          targetHandle: 'r-target',
+          sourceHandle: 'b-src',
+          targetHandle: 't-target',
           animated: false,
-          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+          style: { stroke: '#4283bb', strokeWidth: 2, strokeDasharray: 'none' },
         },
         {
           id: 'n3-n4',
@@ -308,9 +300,9 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'step',
           target: 'n4',
           sourceHandle: 'b-src',
-          targetHandle: 'l-target',
+          targetHandle: 't-target',
           animated: false,
-          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+          style: { stroke: '#4283bb', strokeWidth: 2, strokeDasharray: 'none' },
         },
         {
           id: 'n4-n5',
@@ -320,7 +312,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           sourceHandle: 'b-src',
           targetHandle: 't-target',
           animated: false,
-          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+          style: { stroke: '#4283bb', strokeWidth: 2, strokeDasharray: 'none' },
         },
  
         {
@@ -329,55 +321,76 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'default',
           target: 'n6',
           sourceHandle: 'b-src',
-          targetHandle: 'r-target',
+          targetHandle: 't-target',
           animated: false,
-          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+          style: { stroke: '#4283bb', strokeWidth: 2, strokeDasharray: 'none' },
         },
         {
           id: 'n6-n7',
           source: 'n6',
           type: 'smoothstep',
           target: 'n7',
-          sourceHandle: 'r-src',
-          targetHandle: 'l-target',
+          sourceHandle: 'b-src',
+          targetHandle: 't-target',
           animated: false,
-          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+          style: { stroke: '#4283bb', strokeWidth: 2, strokeDasharray: 'none' },
         },
         {
           id: 'n7-n8',
           source: 'n7',
           type: 'smoothstep',
           target: 'n8',
-          sourceHandle: 'l-src',
+          sourceHandle: 'b-src',
           targetHandle: 't-target',
           animated: false,
-          style: { stroke: '#2b78e4', strokeWidth: 2, strokeDasharray: 'none' },
+          style: { stroke: '#4283bb', strokeWidth: 2, strokeDasharray: 'none' },
         },
       ];
       
       // Populate y1s1 courses
       let snCounter = 1
+      let leftSide = false
       y1s1.forEach((course) => {
+        let xAxis;
+        let yAxis;
+        let src;
+        let tgt;
+
+        if(leftSide == false) {
+          xAxis = -345
+          yAxis = -120 + (40 * snCounter)
+          src = 'l-src'
+          tgt = 'r-target'
+          leftSide = true
+        } else {
+          xAxis = 245
+          yAxis = -120 + (40 * (snCounter - 1))
+          src = 'r-src'
+          tgt = 'l-target'
+          leftSide = false
+          
+        }
         let subnode = {
           id: 's' + snCounter.toString() + 'n1',
           type: 'CourseNode',
           // sourcePosition: Position.Top,
           targetPosition: Position.Right,
           data: { course_code: course.course_code },
-          position: { x: -250, y: -135 + (45 * snCounter) },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: xAxis, y: yAxis },
         }
         fetchedNodes.push(subnode)
+
+
 
         let edge = {
           id: 'n1-s' + snCounter.toString() + 'n1',
           source: 'n1',
-          type: 'default',
-          sourceHandle: 'l-src',
-          targetHandle: 'r-target',
+          type: 'smoothstep',
+          sourceHandle: src,
+          targetHandle: tgt,
           target: 's' + snCounter.toString() + 'n1',
           animated: true,
-          style: { stroke: '#2b78e4', strokeWidth: 2 },
+          style: { stroke: '#4283bb', strokeWidth: 2 },
         }
 
         fetchedEdges.push(edge)
@@ -387,43 +400,102 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
       
       // Populate y1s2 courses
       snCounter = 1
+      leftSide = false
       y1s2.forEach((course: { course_code: string }) => {
+        // initialise variables
+        let xAxis;
+        let yAxis;
+        let src;
+        let tgt;
+
+        // position subnodes
+        if(leftSide == false) {
+          xAxis = -345
+          yAxis = 130 + (40 * snCounter)
+          src = 'l-src'
+          tgt = 'r-target'
+          leftSide = true
+        } else {
+          xAxis = 245
+          yAxis = 130 + (40 * (snCounter - 1))
+          src = 'r-src'
+          tgt = 'l-target'
+          leftSide = false
+          
+        }
+
         let subnode = {
           id: 's' + snCounter.toString() + 'n2',
           type: 'CourseNode',
-          sourcePosition: Position.Top,
+          sourcePosition: Position.Right,
           targetPosition: Position.Bottom,
           data: { course_code: course.course_code },
-          position: { x: 250, y: 135 - (45 * snCounter) },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: xAxis, y: yAxis },
         }
         fetchedNodes.push(subnode)
+
+        let edge = {
+          id: 'n2-s' + snCounter.toString() + 'n2',
+          source: 'n2',
+          type: 'smoothstep',
+          sourceHandle: src,
+          targetHandle: tgt,
+          target: 's' + snCounter.toString() + 'n2',
+          animated: true,
+          style: { stroke: '#4283bb', strokeWidth: 2 },
+        }
+
+        fetchedEdges.push(edge)
 
         snCounter += 1
       })
 
       // Populate y2s1 courses
       snCounter = 1
+      leftSide = false
       y2s1.forEach((course) => {
+
+        // initialise variables
+        let xAxis;
+        let yAxis;
+        let src;
+        let tgt;
+
+        // position subnodes
+        if(leftSide == false) {
+          xAxis = -345
+          yAxis = 380 + (40 * snCounter)
+          src = 'l-src'
+          tgt = 'r-target'
+          leftSide = true
+        } else {
+          xAxis = 245
+          yAxis = 380 + (40 * (snCounter - 1))
+          src = 'r-src'
+          tgt = 'l-target'
+          leftSide = false
+          
+        }
+
+
         let subnode = {
           id: 's' + snCounter.toString() + 'n3',
           targetPosition: Position.Right,
           type: 'CourseNode',
           data: { course_code: course.course_code },
-          position: { x: -250, y: 113 + (45 * snCounter) },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: xAxis, y: yAxis },
         }
         fetchedNodes.push(subnode)
 
         let edge = {
           id: 'n3-s' + snCounter.toString() + 'n3',
           source: 'n3',
-          type: 'default',
+          type: 'smoothstep',
           target: 's' + snCounter.toString() + 'n3',
-          sourceHandle: 'l-src',
-          targetHandle: 'r-target',
+          sourceHandle: src,
+          targetHandle: tgt,
           animated: true,
-          style: { stroke: '#2b78e4', strokeWidth: 2 },
+          style: { stroke: '#4283bb', strokeWidth: 2 },
         }
 
         fetchedEdges.push(edge)
@@ -434,14 +506,36 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
       // Populate y2s2 courses
       snCounter = 1
+      leftSide = false
       y2s2.forEach((course) => {
+        // initialise variables
+        let xAxis;
+        let yAxis;
+        let src;
+        let tgt;
+
+        // position subnodes
+        if(leftSide == false) {
+          xAxis = -345
+          yAxis = 630 + (40 * snCounter)
+          src = 'l-src'
+          tgt = 'r-target'
+          leftSide = true
+        } else {
+          xAxis = 245
+          yAxis = 630 + (40 * (snCounter - 1))
+          src = 'r-src'
+          tgt = 'l-target'
+          leftSide = false
+          
+        }
+
         let subnode = {
           id: 's' + snCounter.toString() + 'n4',
           targetPosition: Position.Left,
           type: 'CourseNode',
           data: { course_code: course.course_code },
-          position: { x: 250, y: 255 + (45 * snCounter) },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: xAxis, y: yAxis },
         }
         fetchedNodes.push(subnode)
 
@@ -450,10 +544,10 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           source: 'n4',
           type: 'smoothstep',
           target: 's' + snCounter.toString() + 'n4',
-          sourceHandle: 'r-src',
-          targetHandle: 'l-target',
+          sourceHandle: src,
+          targetHandle: tgt,
           animated: true,
-          style: { stroke: '#2b78e4', strokeWidth: 2 },
+          style: { stroke: '#4283bb', strokeWidth: 2 },
         }
 
         fetchedEdges.push(edge)
@@ -463,14 +557,35 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
     
       // Populate y3s1 courses
       snCounter = 1
+      leftSide = false
       y3s1.forEach((course) => {
+        // initialise variables
+        let xAxis;
+        let yAxis;
+        let src;
+        let tgt;
+
+        // position subnodes
+        if(leftSide == false) {
+          xAxis = -345
+          yAxis = 880 + (40 * snCounter)
+          src = 'l-src'
+          tgt = 'r-target'
+          leftSide = true
+        } else {
+          xAxis = 245
+          yAxis = 880 + (40 * (snCounter - 1))
+          src = 'r-src'
+          tgt = 'l-target'
+          leftSide = false
+          
+        }
         let subnode = {
           id: 's' + snCounter.toString() + 'n5',
           targetPosition: Position.Right,
           type: 'CourseNode',
           data: { course_code: course.course_code },
-          position: { x: -200, y: 390 + (45 * snCounter) },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: xAxis, y: yAxis },
         }
         fetchedNodes.push(subnode)
 
@@ -479,10 +594,10 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           source: 'n5',
           type: 'smoothstep',
           target: 's' + snCounter.toString() + 'n5',
-          sourceHandle: 'l-src',
-          targetHandle: 'r-target',
+          sourceHandle: src,
+          targetHandle: tgt,
           animated: true,
-          style: { stroke: '#2b78e4', strokeWidth: 2 },
+          style: { stroke: '#4283bb', strokeWidth: 2 },
         }
 
         fetchedEdges.push(edge)
@@ -492,14 +607,37 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
       // Populate y3s2 courses
       snCounter = 1
+      leftSide = false
       y3s2.forEach((course) => {
+
+        // initialise variables
+        let xAxis;
+        let yAxis;
+        let src;
+        let tgt;
+
+        // position subnodes
+        if(leftSide == false) {
+          xAxis = -345
+          yAxis = 1130 + (40 * snCounter)
+          src = 'l-src'
+          tgt = 'r-target'
+          leftSide = true
+        } else {
+          xAxis = 245
+          yAxis = 1130 + (40 * (snCounter - 1))
+          src = 'r-src'
+          tgt = 'l-target'
+          leftSide = false
+          
+        }
+
         let subnode = {
           id: 's' + snCounter.toString() + 'n6',
           targetPosition: Position.Right,
           type: 'CourseNode',
           data: { course_code: course.course_code },
-          position: { x: -250, y: 710 + (45 * snCounter) },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: xAxis, y: yAxis },
         }
         fetchedNodes.push(subnode)
 
@@ -508,10 +646,10 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           source: 'n6',
           type: 'smoothstep',
           target: 's' + snCounter.toString() + 'n6',
-          sourceHandle: 'b-src',
-          targetHandle: 'r-target',
+          sourceHandle: src,
+          targetHandle: tgt,
           animated: true,
-          style: { stroke: '#2b78e4', strokeWidth: 2 },
+          style: { stroke: '#4283bb', strokeWidth: 2 },
         }
 
         fetchedEdges.push(edge)
@@ -521,26 +659,48 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
       // Populate y4s1 courses
       snCounter = 1
+      leftSide = false
       y4s1.forEach((course) => {
+        // initialise variables
+        let xAxis;
+        let yAxis;
+        let src;
+        let tgt;
+
+        // position subnodes
+        if(leftSide == false) {
+          xAxis = -345
+          yAxis = 1380 + (40 * snCounter)
+          src = 'l-src'
+          tgt = 'r-target'
+          leftSide = true
+        } else {
+          xAxis = 245
+          yAxis = 1380 + (40 * (snCounter - 1))
+          src = 'r-src'
+          tgt = 'l-target'
+          leftSide = false
+          
+        }
+
         let subnode = {
           id: 's' + snCounter.toString() + 'n7',
           targetPosition: Position.Left,
           type: 'CourseNode',
           data: { course_code: course.course_code },
-          position: { x: 250, y: 665 + (45 * snCounter) },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: xAxis, y: yAxis },
         }
         fetchedNodes.push(subnode)
 
         let edge = {
           id: 'n7-s' + snCounter.toString() + 'n7',
           source: 'n7',
-          type: 'default',
+          type: 'smoothstep',
           target: 's' + snCounter.toString() + 'n7',
-          sourceHandle: 't-src',
-          targetHandle: 'l-target',
+          sourceHandle: src,
+          targetHandle: tgt,
           animated: true,
-          style: { stroke: '#2b78e4', strokeWidth: 2 },
+          style: { stroke: '#4283bb', strokeWidth: 2 },
         }
 
         fetchedEdges.push(edge)
@@ -550,26 +710,47 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
       // Populate y4s2 courses
       snCounter = 1
+      leftSide = false
       y4s2.forEach((course) => {
+        // initialise variables
+        let xAxis;
+        let yAxis;
+        let src;
+        let tgt;
+
+        // position subnodes
+        if(leftSide == false) {
+          xAxis = -345
+          yAxis = 1630 + (40 * snCounter)
+          src = 'l-src'
+          tgt = 'r-target'
+          leftSide = true
+        } else {
+          xAxis = 245
+          yAxis = 1630 + (40 * (snCounter - 1))
+          src = 'r-src'
+          tgt = 'l-target'
+          leftSide = false
+          
+        }
         let subnode = {
           id: 's' + snCounter.toString() + 'n8',
           targetPosition: Position.Left,
           type: 'CourseNode',
           data: { course_code: course.course_code },
-          position: { x: 200, y: 1015 + (45 * snCounter) },
-          style: { backgroundColor: '#ffe59a', border: '1px solid black', borderRadius: '8px', fontWeight: '600', },
+          position: { x: xAxis, y: yAxis },
         }
         fetchedNodes.push(subnode)
 
         let edge = {
           id: 'n8-s' + snCounter.toString() + 'n8',
           source: 'n8',
-          type: 'default',
+          type: 'smoothstep',
           target: 's' + snCounter.toString() + 'n8',
-          sourceHandle: 'r-src',
-          targetHandle: 'l-target',
+          sourceHandle: src,
+          targetHandle: tgt,
           animated: true,
-          style: { stroke: '#2b78e4', strokeWidth: 2 },
+          style: { stroke: '#4283bb', strokeWidth: 2 },
         }
 
         fetchedEdges.push(edge)

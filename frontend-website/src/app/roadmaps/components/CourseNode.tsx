@@ -46,13 +46,29 @@ const CourseNode = ({ data }: CourseNodeProps) => {
           } else if (courseData) {
             
             setCourseData(courseData as unknown as courseInfo[]);
+            console.log(courseData)
           }
       };
       fetchCourseData();
     }, [data.course_code, supabase]);
+  const [isHovered, setIsHovered] = useState(false);
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
 
-  // console.log(courseData)
-
+  const nodeStyle: React.CSSProperties = {
+    borderRadius: '8px', 
+    fontWeight: '600',
+    padding: '10px 10px',
+    width: '250px',
+    height: '70px',
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '2px solid #906f46',
+    color: '#E1D9D1',
+    
+  }
     
 
      
@@ -61,11 +77,15 @@ const CourseNode = ({ data }: CourseNodeProps) => {
 
           <Sheet>
             <SheetTrigger asChild>
-              <div style={{
-                padding: '10px 40px',
-                
-              }}>
-                <div>{data.course_code}</div>
+              <div 
+                style={{
+                  ...nodeStyle,
+                  backgroundColor: isHovered ? '#D9A633' : '#c69214'
+                }}              
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>{courseData[0] ? courseData[0].title : '' }</div>
                 
 
                 
@@ -164,6 +184,7 @@ const CourseNode = ({ data }: CourseNodeProps) => {
               </ScrollArea>
               <SheetFooter>
                 <SheetClose asChild>
+                  <button>Close</button>
                 </SheetClose>
               </SheetFooter>
             </SheetContent>
