@@ -31,6 +31,10 @@ export default function Page() {
 
     // Find user in the database
     const fetchUserData = async () => {
+        if (!user?.id) {
+            console.error('User is not signed in or user ID is missing');
+            return;
+        }
         try {
             const { data: userData, error: userError } = await supabase
                 .from("user")

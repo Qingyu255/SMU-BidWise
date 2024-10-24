@@ -72,7 +72,7 @@ const Page = () => {
             // Insert and create new subreddit 
             const { error: createSubredditError } = await supabase
                 .from("subreddit")
-                .insert([{ name: subredditName, creator_clerk: user.id }]); // Ensure user.id is correct
+                .insert([{ name: subredditName, creator_clerk: user?.id }]); // Ensure user.id is correct
 
             if (createSubredditError) {
                 setError("Error creating subreddit: " + createSubredditError.message); // Improved error message
@@ -91,24 +91,12 @@ const Page = () => {
                 return;
             }
 
-            //get user id
-            const { data: userData, error: userError } = await supabase
-                .from('user')
-                .select('id')
-                .eq('clerk_user_id', subredditName)
-                .single();
-
-            if (userError || !userData) {
-                setError("Error retrieving subreddit ID: " + (userError?.message || "No data found"));
-                return;
-            }
-            const userID = userData.id;
             const subredditId = subredditIdData.id;
 
             // Insert into subscription
             const { error: subscriptionError } = await supabase
-                .from("subscription")
-                .insert([{ subreddit_id: subredditId, clerk_user_id: user.id, user_id: userID }]);
+                .from("subscriptions")
+                .insert([{ subreddit_id: subredditId, clerk_user_id: user?.id}]);
 
             if (subscriptionError) {
                 console.error("Subscription Error:", subscriptionError); // Log the entire error object
@@ -120,7 +108,11 @@ const Page = () => {
 
         } catch (err) {
             console.error('Error in handleSubmit:', err);
-            setError('An unexpected error occurred: ' + err.message); // Improved error reporting
+            if (err instanceof Error) {
+                setError('An unexpected error occurred: ' + err.message); // Access message safely
+            } else {
+                setError('An unexpected error occurred'); // Generic fallback message
+            }
         }
     };
 
@@ -163,44 +155,3 @@ const Page = () => {
 
 
 export default Page
-
-
-// const [input, setInput] = useState<string>('')
-// const router = useRouter()
-
-// const mutation = useMutation({
-//     mutationFn: async () => {
-//         const payload = {
-//             name: input.trim(), // Trim whitespace from input
-//         };
-
-//         const response = await fetch('/api/communities/subreddit', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify(payload),
-//         });
-
-//         if (!response.ok) {
-//             const errorData = await response.json(); // Parse the response to get the error message
-//             throw new Error(errorData.message || 'Network response was not ok');
-//         }
-
-//         return response.json();
-//     },
-//     onError: (err) => {
-//         const message = err.message;
-//         Toast({
-//             title: 'Error',
-//             children: 'does not work',
-//             variant: 'destructive',
-//         });
-//     },
-//     onSuccess: (data) => {
-//         console.log('Subreddit created:', data);
-//         router.replace(`/communities/r/${data.name}`); // Use replace instead of push
-//     }
-// });
-
-// const isLoading = mutation.status === 'pending'; // Get loading status from mutation
