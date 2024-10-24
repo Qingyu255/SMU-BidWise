@@ -55,6 +55,8 @@ export default function Page() {
 
                 console.log("User added");
             }
+        
+        
 
         } catch (error) {
             console.log('Error fetching or inserting user data')

@@ -7,6 +7,7 @@ import { Description } from '@radix-ui/react-toast'
 import createClient from '@/utils/supabase/client'
 import { useUser } from '@clerk/clerk-react'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'; // For navigation
 
 
 const Page = () => {
@@ -14,6 +15,8 @@ const Page = () => {
     const [error, setError] = useState<string | null>(null); // State for error message
     const supabase = createClient(); // Initialize Supabase client
     const { user, isLoaded, isSignedIn } = useUser(); // Extract user data and loading states
+    const router = useRouter(); // Initialize the useRouter hook for navigation
+
 
     useEffect(() => {
         const setupChannel = async () => {
@@ -31,7 +34,7 @@ const Page = () => {
                 .on('postgres_changes', {
                     event: '*',
                     schema: 'public',
-                    table: 'subscription',
+                    table: 'subscriptions',
                 }, (payload) => console.log('Subreddit subscribed:', payload))
                 .subscribe((status) => {
                     console.log('Channel subscribed with status:', status);
@@ -105,6 +108,7 @@ const Page = () => {
             }
 
             console.log(`Subreddit ${subredditName} created successfully with ID: ${subredditId}`);
+            router.push(`/communities/r/${subredditName}?subredditId=${subredditId}`);
 
         } catch (err) {
             console.error('Error in handleSubmit:', err);
