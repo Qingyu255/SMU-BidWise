@@ -320,10 +320,10 @@ export default function TimetableGeneric({ classes, onClassSelect, isTimetablePa
                   }}
                 >
                   {classItem.courseCode && (
-                    // <div className='font-bold'>{classItem.courseCode}</div>
-                    <Link href={"courses/" + classItem.courseCode} className='font-bold hover:underline hover:cursor-pointer hover:opacity-70'>
-                      {classItem.courseCode}
-                    </Link>
+                    <div className='font-bold'>{classItem.courseCode}</div>
+                    // <Link href={"courses/" + classItem.courseCode} className='font-bold hover:underline hover:cursor-pointer hover:opacity-70'>
+                    //   {classItem.courseCode}
+                    // </Link>
                   )}
                   <div>
                     <div className='font-bold'>
