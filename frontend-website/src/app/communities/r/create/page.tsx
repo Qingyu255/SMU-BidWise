@@ -108,7 +108,7 @@ const Page = () => {
             }
 
             console.log(`Subreddit ${subredditName} created successfully with ID: ${subredditId}`);
-            router.push(`/communities/r/${subredditName}?subredditId=${subredditId}`);
+            router.push(`/communities/r/${subredditName}`);
 
         } catch (err) {
             console.error('Error in handleSubmit:', err);
