@@ -105,7 +105,13 @@ const CourseNode = ({ data }: CourseNodeProps) => {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
-                <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>{courseData[0] ? courseData[0].title : '' }</div>
+                <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>{courseData[0] ? 
+                (
+                  courseData[0].title.length > 50
+                  ? `${courseData[0].title.substring(0, 50)}...` 
+                  : courseData[0].title
+                )
+                : '' }</div>
                 
 
                 
