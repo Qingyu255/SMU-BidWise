@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
 import '@/components/roadmap/roadmap.css'; 
+import { useTheme } from 'next-themes';
 
 
 type SemNodeProps = {
@@ -11,6 +12,25 @@ type SemNodeProps = {
 
 
 const SemNode = ({ data }: SemNodeProps) => {
+
+  const { resolvedTheme } = useTheme();
+
+  let bgColor;
+  // let bgColorHovered;
+  let borderTheme;
+  let textColorTheme;
+
+  if (resolvedTheme == 'light') {
+    // bgColorHovered = '#D9A633'
+    bgColor = '#121a50'
+    borderTheme = '2px solid #906f46'
+    textColorTheme = '#E1D9D1'
+  } else if (resolvedTheme == 'dark') {
+    // bgColorHovered = '#282828'
+    bgColor = '#0f172a'
+    // borderTheme = '2px solid #906f46'
+    textColorTheme = '#E1D9D1'
+  }
 
   const nodeStyle: React.CSSProperties = {
     borderRadius: '8px', 
@@ -23,8 +43,10 @@ const SemNode = ({ data }: SemNodeProps) => {
     alignItems: 'center',
     justifyContent: 'center',
     // border: '2px solid #906f46',
-    backgroundColor: '#121a50',
-    color: '#E1D9D1',
+    border: borderTheme,
+    color: textColorTheme,
+    backgroundColor: bgColor,
+    
     fontSize: '24px',
 
 

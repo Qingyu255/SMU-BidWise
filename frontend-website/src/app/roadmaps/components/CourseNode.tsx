@@ -64,14 +64,14 @@ const CourseNode = ({ data }: CourseNodeProps) => {
   let textColorTheme;
 
   if (resolvedTheme == 'light') {
-    bgColor = '#D9A633'
-    bgColorHovered = '#c69214'
+    bgColorHovered = '#D9A633'
+    bgColor = '#c69214'
     borderTheme = '2px solid #906f46'
     textColorTheme = '#E1D9D1'
   } else if (resolvedTheme == 'dark') {
-    bgColor = '#D9A633'
-    bgColorHovered = '#c69214'
-    borderTheme = '2px solid #906f46'
+    bgColorHovered = '#282828'
+    bgColor = '#575757'
+    // borderTheme = '2px solid #906f46'
     textColorTheme = '#E1D9D1'
   }
   const nodeStyle: React.CSSProperties = {
