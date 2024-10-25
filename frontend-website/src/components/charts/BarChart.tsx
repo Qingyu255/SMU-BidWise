@@ -30,6 +30,10 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
   const [isClickTimerRunning, setIsClickTimerRunning] = useState<boolean>(false) 
   const [clickCount, setClickCount] = useState<number>(0)
 
+  // adjust bar colour accordingly
+  chartData.datasets[0].backgroundColor = "#2463EB";
+  chartData.datasets[1].backgroundColor = "#60A8FB";
+
   const handleClick = (event: any, elements: any) => {
     if (elements.length === 0) {
       return
@@ -57,7 +61,7 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
         setIsClickTimerRunning(false)
         if (elements.length > 0) {
           const instructor_name = chart.data.labels[elements[0].index] as string;
-          const link = "https://www.afterclass.io/professor/smu-" + instructor_name.split(" ").join("-").toLowerCase()
+          const link = "https://www.afterclass.io/professor/smu-" + instructor_name.replace(".", "").split(" ").join("-").toLowerCase()
           window.open(link, '_blank') // will open link in a new tab
         }
       }
@@ -78,6 +82,9 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
       title: {
         display: true,
         text: title,
+        font: {
+          size: 16,
+        },
       },
     },
     scales: {

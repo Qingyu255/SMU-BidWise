@@ -80,9 +80,9 @@ export default function Page() {
                 console.error(error)
             }
         }
-        fetchCourseName()
-        fetchCourseMinMaxMeanMedianMedianData()
-        fetch_all_instructor_median_median_bid_by_course_code()
+        fetchCourseName();
+        // fetchCourseMinMaxMeanMedianMedianData()
+        fetch_all_instructor_median_median_bid_by_course_code();
         
     }, [courseCode, courseCodeParam, apiURL]);
 
@@ -123,11 +123,13 @@ export default function Page() {
                         </Button>
                     </Link>       
                 </div>
-                {/* <p className='py-3 md:py-8 text-lg sm:text-xl md:text-2xl font-bold'>{courseCode} - {courseName}</p> */}
+
                 {error ? (
                     <ErrorPopUp errorMessage={error.message}/>
                 ) 
-                : (chartDataOverview && chartDataInstructorOverview ? (
+                // : (chartDataOverview && chartDataInstructorOverview ? (
+                : (chartDataInstructorOverview ? (
+
                     <>
                         {/* {((courseCode.slice(0, 2) == "IS" || courseCode.slice(0, 2) == "CS" || courseCode.slice(0, 6) == "COR-IS" )) && (
                             <p onClick={() => navigateToISCourseDescriptionPage(courseCode)} className='flex justify-left p-1 px-1.5 mb-2 sm:mb-4 w-fit text-xs sm:text-sm cursor-pointer underline hover:text-gray-600'>
@@ -147,12 +149,6 @@ export default function Page() {
                             </div>
                             <hr></hr>
                             <div>
-                                <VisualiseBidPriceForSpecificInstructorTermSection
-                                    key={courseCode} // force re-render on courseCode change (temp fix)
-                                    courseCode={courseCode} 
-                                    width={chartWidthHeightArr[0]}  
-                                    height={chartWidthHeightArr[1]}
-                                />
                                 <VisualiseTrendAcrossSemesters 
                                     courseCode={courseCode} 
                                     width={chartWidthHeightArr[0]}  
@@ -163,17 +159,23 @@ export default function Page() {
                                     width={chartWidthHeightArr[0]}  
                                     height={chartWidthHeightArr[1]}
                                 />
+                                <VisualiseBidPriceForSpecificInstructorTermSection
+                                    key={courseCode} // force re-render on courseCode change (temp fix)
+                                    courseCode={courseCode} 
+                                    width={chartWidthHeightArr[0]}  
+                                    height={chartWidthHeightArr[1]}
+                                />
                             </div>
-                            <hr></hr>
+                            {/* <hr></hr>
                             <h1 className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Overview for {courseCode}</h1>
                             <BarChart 
                                 title={chartDataOverview.title} 
-                                chartData={chartDataOverview.chartData} 
+                                chartData={chartDataOverview.chartData}
                                 width={chartWidthHeightArr[0]} 
                                 height={chartWidthHeightArr[1]}
                                 key={`${chartWidthHeightArr[0]}-${chartWidthHeightArr[1]}-1`} // We are forcing a re-render whenever the width and height change since we need to display the updated canvas image
                                 // Note: When the key changes, React will unmount the current component instance and mount a new one, effectively forcing a re-render
-                            />
+                            /> */}
                         </div>
                     </>
                 ) : (

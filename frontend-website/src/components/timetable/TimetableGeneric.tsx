@@ -11,7 +11,7 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { Button } from '../ui/button';
 import { CalendarPlus, CalendarMinus, Info } from 'lucide-react';
 import { Badge } from '../ui/badge';
-import { CardDescription } from '../ui/card';
+import Link from 'next/link';
 
 export type TimetableProps = {
   classes: ClassItem[],
@@ -320,7 +320,10 @@ export default function TimetableGeneric({ classes, onClassSelect, isTimetablePa
                   }}
                 >
                   {classItem.courseCode && (
-                    <div className='font-bold'>{classItem.courseCode}</div>
+                    // <div className='font-bold'>{classItem.courseCode}</div>
+                    <Link href={"courses/" + classItem.courseCode} className='font-bold hover:underline hover:cursor-pointer hover:opacity-70'>
+                      {classItem.courseCode}
+                    </Link>
                   )}
                   <div>
                     <div className='font-bold'>

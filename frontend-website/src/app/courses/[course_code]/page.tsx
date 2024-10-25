@@ -155,6 +155,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
       });
     } else {
       classItem["courseCode"] = course_code;
+      classItem["courseTitle"] = courseInfo?.title;
+      
       addClass(classItem);
       toast({
         title: `Added ${course_code} - ${classItem.section} to Timetable`,

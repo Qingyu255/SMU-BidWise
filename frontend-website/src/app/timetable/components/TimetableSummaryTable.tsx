@@ -28,6 +28,7 @@ import {
 import { PopoverClose } from "@radix-ui/react-popover";
 import { Info } from 'lucide-react';
 import { ClassItem } from '@/types';
+import Image from 'next/image';
 
 export interface TimetableSummaryTableProps {
   sections: ClassItem[];
@@ -89,7 +90,9 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
               <TableHead>Reserved Seats</TableHead>
               <TableHead>Available Seats</TableHead>
               <TableHead>Current Enrolled</TableHead>
-              <TableHead>Planned Bid</TableHead>
+              <TableHead>Planned Bid <br/>
+                <Info className='inline w-3 h-3 my-auto mr-1 text-muted-foreground'/><span className='text-xs'>(for your planning!)</span>
+                </TableHead>
               <TableHead>View Bid Analytics</TableHead>
               <TableHead>Remove From Timetable</TableHead>
             </TableRow>
@@ -116,12 +119,26 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                   <Link href={"courses/" + section.courseCode} className='font-semibold lg:text-[16px] hover:underline hover:cursor-pointer'>
                     {section.courseCode}
                   </Link>
+                  {section.courseTitle && " - " + section.courseTitle}
                 </TableCell>
                 <TableCell>{section.section}</TableCell>
                 <TableCell>{section.day}</TableCell>
                 <TableCell>{section.start_time}</TableCell>
                 <TableCell>{section.end_time}</TableCell>
-                <TableCell>{section.instructor}</TableCell>
+                <TableCell className='justify-end'>
+                  <div>
+                    {section.instructor}
+                  </div>
+                  <Link href={`https://www.afterclass.io/professor/smu-${section?.instructor.replace(".", "").split(" ").join("-").toLowerCase()}`} target='_blank'>
+                    <Image
+                      className='inline'
+                      src="/images/afterclassIcon.png"
+                      alt="afterclassIcon"
+                      width={18}
+                      height={18}
+                    />
+                  </Link>
+                </TableCell>
                 <TableCell>{section.venue}</TableCell>
                 <TableCell>
                   {section.availability ? section.availability.total_seats : 'N/A'}
@@ -196,6 +213,19 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
             ))}
           </TableBody>
         </Table>
+        {(sections.length > 0) && (
+          <CardDescription className='pt-1 mb-1 text-xs'>
+              Protip: Click
+              <Image
+                className='inline'
+                src="/images/afterclassIcon.png"
+                alt="afterclassIcon"
+                width={16}
+                height={16}
+              />
+            to view reviews on afterclass
+          </CardDescription>
+        )}
       </CardContent>
     </Card>
   );

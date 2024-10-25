@@ -166,7 +166,8 @@ export interface ClassItem {
   startOffset: number;
   endOffset: number;
   courseCode?: string;
-  plannedBid?: number
+  plannedBid?: number;
+  courseTitle?: string;
 }
 export interface SeniorRoadmap {
   name: string;

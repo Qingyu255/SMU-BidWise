@@ -35,6 +35,12 @@ ChartJS.register(
 )
 
 export default function MultitypeChart( {type, title, chartData, width, height} : chartAttributes ) {
+
+  chartData.datasets[0].borderColor = "#2463EB";
+  chartData.datasets[1].borderColor = "#60A8FB";
+  chartData.datasets[0].backgroundColor = "#2463EB";
+  chartData.datasets[1].backgroundColor = "#60A8FB";
+
   const chartType: ChartType = "line" 
   const options = {
     maintainAspectRatio: false,
@@ -52,6 +58,9 @@ export default function MultitypeChart( {type, title, chartData, width, height} 
       title: {
         display: true,
         text: title,
+        font: {
+          size: 16,
+        },
       }
     },
     scales: {

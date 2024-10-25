@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { ClassItem } from '@/types';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export type SectionInformationTableProps = {
   sections: ClassItem[],
@@ -102,7 +104,20 @@ export const SectionInformationTable = ({ courseCode, sections, termName, single
                 <TableCell>{section.day}</TableCell>
                 <TableCell>{section.start_time}</TableCell>
                 <TableCell>{section.end_time}</TableCell>
-                <TableCell>{section.instructor}</TableCell>
+                <TableCell className='justify-end'>
+                  <div>
+                    {section.instructor}
+                  </div>
+                  <Link href={`https://www.afterclass.io/professor/smu-${section?.instructor.replace(".", "").split(" ").join("-").toLowerCase()}`} target='_blank'>
+                    <Image
+                      className='inline'
+                      src="/images/afterclassIcon.png"
+                      alt="afterclassIcon"
+                      width={18}
+                      height={18}
+                    />
+                  </Link>
+                </TableCell>
                 <TableCell>{section.venue}</TableCell>
                 <TableCell>
                   {section.availability ? section.availability.total_seats : 'N/A'}
@@ -176,6 +191,17 @@ export const SectionInformationTable = ({ courseCode, sections, termName, single
             ))}
           </TableBody>
         </Table>
+        <CardDescription className='mb-1 text-xs'>
+          Protip: Click
+          <Image
+            className='inline'
+            src="/images/afterclassIcon.png"
+            alt="afterclassIcon"
+            width={16}
+            height={16}
+          />
+          to view reviews on afterclass
+        </CardDescription>
       </CardContent>
     </Card>
   );
