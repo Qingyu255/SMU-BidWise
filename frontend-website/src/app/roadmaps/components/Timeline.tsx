@@ -31,6 +31,7 @@ import CourseNode from './CourseNode';
 import createClient from '@/utils/supabase/client';
 import '@/components/roadmap/roadmap.css'; 
 import { Course, edgeData,SeniorData, NodeData, seniorsAttributes, TimelineProps } from '@/types';
+import { useTheme } from 'next-themes';
 
 type FlowRendererProps = {
   nodes: Node[];               // Array of Node type
@@ -46,6 +47,8 @@ const supabase = createClient();
 // edge: #4283bb
 // node: #fdff00
 // sub-node: #ffe59a
+
+
 
 async function fetchRoadmap(name: string, sem: string) {
   // Fetch the senior_id
@@ -162,6 +165,18 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
     setReactFlowInstance(instance);  // Save the initialized instance in the state
   };
 
+  const { resolvedTheme } = useTheme();
+  let controlTheme;
+  let flowClass;
+  if (resolvedTheme == 'dark') {
+    controlTheme = {
+      backgroundColor: 'black'
+    }
+    flowClass = 'dark'
+  } else if (resolvedTheme == 'light') {
+    flowClass = 'light'
+  }
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -176,14 +191,18 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
       // fitViewOptions={fitViewOptions}
       defaultEdgeOptions={defaultEdgeOptions}
       onInit={handleInit}
+      style={{ ...controlTheme }}
+      className={flowClass}
     >
-      <Controls />
-      <Background variant={BackgroundVariant.Lines} gap={12} size={1} />
+      <Controls/>
+      <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
     </ReactFlow>
   );
 };
 
+
 const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
+
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [loading, setLoading] = useState(true);
@@ -786,7 +805,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
   }
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '100%' }} >
       <ReactFlowProvider>
         <FlowRenderer
           nodes={nodes}
@@ -794,6 +813,8 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          
+          
         />
       </ReactFlowProvider>
     </div>

@@ -6,6 +6,7 @@ import createClient from '@/utils/supabase/client';
 import { SeniorName, SeniorRoadmap } from '@/types';
 import HeadingCard from '@/components/roadmap/HeadingCard';
 import RoadmapFormCard from './components/RoadmapFormCard';
+import { useTheme } from 'next-themes';
 
 
 export default function Page() {
@@ -30,7 +31,7 @@ export default function Page() {
     fetchSeniorNames();
   }, [supabase]);
 
-
+  
 // Define arrays of degrees and job descriptions
 const degrees = [
   'Bachelor of Business Management',

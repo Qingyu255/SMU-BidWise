@@ -20,6 +20,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import createClient  from '@/utils/supabase/client';
+import { useTheme } from 'next-themes';
 
 type CourseNodeProps = {
   data: {
@@ -55,6 +56,24 @@ const CourseNode = ({ data }: CourseNodeProps) => {
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
 
+  const { resolvedTheme } = useTheme();
+
+  let bgColor;
+  let bgColorHovered;
+  let borderTheme;
+  let textColorTheme;
+
+  if (resolvedTheme == 'light') {
+    bgColor = '#D9A633'
+    bgColorHovered = '#c69214'
+    borderTheme = '2px solid #906f46'
+    textColorTheme = '#E1D9D1'
+  } else if (resolvedTheme == 'dark') {
+    bgColor = '#D9A633'
+    bgColorHovered = '#c69214'
+    borderTheme = '2px solid #906f46'
+    textColorTheme = '#E1D9D1'
+  }
   const nodeStyle: React.CSSProperties = {
     borderRadius: '8px', 
     fontWeight: '600',
@@ -65,11 +84,12 @@ const CourseNode = ({ data }: CourseNodeProps) => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    border: '2px solid #906f46',
-    color: '#E1D9D1',
+    border: borderTheme,
+    color: textColorTheme,
     
   }
     
+
 
      
     return (
@@ -80,7 +100,7 @@ const CourseNode = ({ data }: CourseNodeProps) => {
               <div 
                 style={{
                   ...nodeStyle,
-                  backgroundColor: isHovered ? '#D9A633' : '#c69214'
+                  backgroundColor: isHovered ? bgColor : bgColorHovered
                 }}              
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
