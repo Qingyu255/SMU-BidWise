@@ -1,35 +1,44 @@
 'use client'
-import MiniCreatePost from "@/components/MiniCreatePost"
-import { Button } from "@/components/ui/button"
-import createClient from '@/utils/supabase/client'
-import { useUser } from '@clerk/clerk-react'
-import { notFound } from "next/navigation"
-import Editor from "@/components/Editor"
+import React, { useEffect, useState } from "react";
+import MiniCreatePost from "@/components/MiniCreatePost";
+import { Button } from "@/components/ui/button";
+import createClient from '@/utils/supabase/client';
+import { useUser } from '@clerk/clerk-react';
+import { notFound } from "next/navigation";
+import Editor from "@/components/Editor";
 
-interface pageProps {
+interface PageProps {
     params: {
-        slug: string
-    }
+        slug: string;
+    };
 }
 
-const page = async ({ params }: pageProps) => {
-    const subredditName = params.slug;
-    const { user } = useUser(); // Extract user data and loading states
-    const supabase = createClient(); // Initialize Supabase client
+const Page: React.FC<PageProps> = ({ params }) => {
+    const { user } = useUser();
+    const [subredditId, setSubredditId] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    const { data: subredditData, error: srError } = await supabase
-        .from("subreddit")
-        .select("subreddit_id")
-        .eq('name', subredditName)
-        .single();
+    useEffect(() => {
+        const fetchData = async () => {
+            const supabase = createClient();
+            const { data: subredditData, error: srError } = await supabase
+                .from("subreddit")
+                .select("id")
+                .eq('name', params.slug)
+                .single();
 
-      // Check for errors when fetching user data
-      if (srError) {
-        throw new Error(srError.message); // Handle error
-      }
-      if (!subredditData) return notFound()
+            if (srError || !subredditData) {
+                return notFound();
+            }
 
-    const subredditId = subredditData.subreddit_id
+            setSubredditId(subredditData.id as string);
+            setLoading(false);
+        };
+
+        fetchData();
+    }, [params.slug]);
+
+    if (loading) return <p>Loading...</p>;
 
     return (
         <div className='flex flex-col items-start gap-6'>
@@ -45,8 +54,9 @@ const page = async ({ params }: pageProps) => {
                 </div>
             </div>
 
-            {/* form
-            <Editor subredditId="subredditId" authorId='userId' /> */}
+            {/* Editor component (commented out if needed)
+            <Editor subredditId={subredditId} authorId={user?.id} />
+            */}
 
             <div className='w-full flex justify-end'>
                 <Button type='submit' className='w-full' form='subreddit-post-form'>
@@ -54,7 +64,7 @@ const page = async ({ params }: pageProps) => {
                 </Button>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default page
+export default Page;

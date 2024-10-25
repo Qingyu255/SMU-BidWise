@@ -6,6 +6,7 @@ import { useUser } from '@clerk/clerk-react'
 import { useState, useEffect } from 'react'
 import { INFINITE_SCROLL_PAGINATION_RESULTS } from '@/config';
 import MiniCreatePost from '@/components/MiniCreatePost'
+import Layout from './layout'
 
 interface pageProps {
   params: {

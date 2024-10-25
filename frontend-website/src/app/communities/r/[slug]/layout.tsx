@@ -1,10 +1,10 @@
 import React from "react"
-import Link from "next/link";
 import createClient from "@/utils/supabase/server"
 import SubredditStateWrapper from "@/components/SubredditStateWrapper";
 import { format } from 'date-fns'
-import { buttonVariants } from "@/components/ui/button";
 import SubscriptionCount from "@/components/SubscriptionCount"; // New import
+// import { buttonVariants } from "@/components/ui/button";
+import CreatePostButton from "@/components/CreatePostButton";
 
 const Layout = async (
     { children,
@@ -46,7 +46,13 @@ const Layout = async (
     //created by: 
     const creatorName = creatorData.name;
 
-    console.log(`Creating post link: /r/${slug}/submit`);
+   
+
+    // // Function to handle the button click and redirect
+    // const handleCreatePost = async () => {
+    //     redirect(`/r/${slug}/submit`);
+    // };
+
 
     return (<div className="sm:container max-w-7x1 mx-auto h-full pt-12">
         <div>
@@ -87,15 +93,10 @@ const Layout = async (
                             subredditName={subredditName.toString()}
                             slug={slug.toString()}
                         />
-                        {/* Create post link */}
-                        <Link
-                            className={buttonVariants({
-                                variant: 'outline',
-                                className: 'w-full mb-6',
-                            })}
-                            href={`/r/${slug.toString()}/submit`}>
-                            Create Post
-                        </Link>
+
+                            {/* Button for creating a post */}
+                            {/* Use the CreatePostButton component */}
+                            <CreatePostButton slug={subredditName as string}/>
                     </dl>
                 </div>
             </div>
@@ -105,4 +106,3 @@ const Layout = async (
 }
 
 export default Layout
-
