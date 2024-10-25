@@ -7,16 +7,44 @@ import { useUser } from "@clerk/clerk-react";
 
 
 export default function Page() {
-
     const { user, isLoaded, isSignedIn } = useUser(); // Extract user data and loading states
     const supabase = createClient()
 
     useEffect(() => {
+        const fetchUserData = async () => {
+            if (!user?.id) {
+                console.error('User is not signed in or user ID is missing');
+                return;
+            }
+            try {
+                const { data: userData, error: userError } = await supabase
+                    .from("user")
+                    .select("clerk_user_id")
+                    .eq('clerk_user_id', user.id)
+                    .limit(1);
+
+                if (userError) throw new Error(userError.message);
+                // If not found, insert data
+                if (userData.length === 0) {
+                    const { error: insertUserError } = await supabase
+                        .from("user")
+                        .insert([{ clerk_user_id: user.id, name: user.firstName, email: user.primaryEmailAddress }]);
+
+                    if (insertUserError) {
+                        return new Response("Error inserting User", { status: 404 });
+                    }
+
+                    console.log("User added");
+                }
+            } catch (error) {
+                console.log('Error fetching or inserting user data');
+            }
+        };
+
         if (isLoaded && isSignedIn && user) {
             fetchUserData();
         }
-    }, [isLoaded, isSignedIn, user]);
-
+    }, [isLoaded, isSignedIn, user]); // Remove fetchUserData from dependencies
 
     const setupChannel = async () => {
         const channel = supabase.channel('schema-db-changes')
@@ -27,42 +55,6 @@ export default function Page() {
             }, (payload) => console.log('User table change:', payload))
         return channel;
     }
-    
-
-    // Find user in the database
-    const fetchUserData = async () => {
-        if (!user?.id) {
-            console.error('User is not signed in or user ID is missing');
-            return;
-        }
-        try {
-            const { data: userData, error: userError } = await supabase
-                .from("user")
-                .select("clerk_user_id")
-                .eq('clerk_user_id', user.id)
-                .limit(1);
-
-            if (userError) throw new Error(userError.message);
-            // If not found, insert data
-            if (userData.length === 0) {
-                const { error: insertUserError } = await supabase
-                    .from("user")
-                    .insert([{ clerk_user_id: user.id, name: user.firstName, email: user.primaryEmailAddress }]);
-
-                if (insertUserError) {
-                    return new Response("Error inserting User", { status: 404 });
-                }
-
-                console.log("User added");
-            }
-        
-        
-
-        } catch (error) {
-            console.log('Error fetching or inserting user data')
-        }
-    }
-
     return (
         <>
             {/* <h1 className='font-bold text-3xl md:text-4xl'>Join Communities</h1>

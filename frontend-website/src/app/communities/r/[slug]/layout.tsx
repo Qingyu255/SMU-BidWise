@@ -4,6 +4,7 @@ import createClient from "@/utils/supabase/server"
 import SubredditStateWrapper from "@/components/SubredditStateWrapper";
 import { format } from 'date-fns'
 import { buttonVariants } from "@/components/ui/button";
+import SubscriptionCount from "@/components/SubscriptionCount"; // New import
 
 const Layout = async (
     { children,
@@ -45,17 +46,7 @@ const Layout = async (
     //created by: 
     const creatorName = creatorData.name;
 
-    // count of members subscribed
-    const { count, error: countError } = await supabase
-        .from("subscriptions")
-        .select("clerk_user_id", { count: 'exact' }) // Use 'exact' to get the precise count
-        .eq("subreddit_id", subredditId) // Filter by subreddit_id
-
-    // Check for errors
-    if (countError) {
-        throw new Error(countError.message); // Handle error
-    }
-    const subscriptionCount = count || 0;
+    console.log(`Creating post link: /r/${slug}/submit`);
 
     return (<div className="sm:container max-w-7x1 mx-auto h-full pt-12">
         <div>
@@ -82,7 +73,9 @@ const Layout = async (
                         <div className='flex justify-between gap-x-4 py-3'>
                             <dt className='text-gray-500'>Members</dt>
                             <dd className='flex items-start gap-x-2'>
-                                <div className='text-gray-900'>{subscriptionCount}</div>
+                                <div className='text-gray-900'>
+                                    {/* Use SubscriptionCount component for live updates */}
+                                    <SubscriptionCount subredditId={subredditId} /></div>
                             </dd>
                         </div>
                         <div className='flex justify-between gap-x-4 py-3'>
@@ -100,7 +93,7 @@ const Layout = async (
                                 variant: 'outline',
                                 className: 'w-full mb-6',
                             })}
-                            href={`/r/${slug}/submit`}>
+                            href={`/r/${slug.toString()}/submit`}>
                             Create Post
                         </Link>
                     </dl>
@@ -112,3 +105,4 @@ const Layout = async (
 }
 
 export default Layout
+

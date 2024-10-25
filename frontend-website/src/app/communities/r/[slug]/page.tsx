@@ -7,10 +7,14 @@ import { useState, useEffect } from 'react'
 import { INFINITE_SCROLL_PAGINATION_RESULTS } from '@/config';
 import MiniCreatePost from '@/components/MiniCreatePost'
 
+interface pageProps {
+  params: {
+      slug: string
+  }
+}
 
-const ClientSubredditPage = () => {
-  const { slug } = useParams();
-  const subredditName = slug;
+const ClientSubredditPage = ({params}: pageProps) => {
+  const subredditName = params.slug;
   const { user } = useUser(); // Extract user data and loading states
   const supabase = createClient(); // Initialize Supabase client
   const [userName, setUserName] = useState<string>(''); // State to hold user name

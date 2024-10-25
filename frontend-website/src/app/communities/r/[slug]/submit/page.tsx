@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import createClient from '@/utils/supabase/client'
 import { useUser } from '@clerk/clerk-react'
 import { notFound } from "next/navigation"
+import Editor from "@/components/Editor"
 
 interface pageProps {
     params: {
@@ -44,8 +45,8 @@ const page = async ({ params }: pageProps) => {
                 </div>
             </div>
 
-            {/* form */}
-            <Editor subredditId={subredditId} />
+            {/* form
+            <Editor subredditId="subredditId" authorId='userId' /> */}
 
             <div className='w-full flex justify-end'>
                 <Button type='submit' className='w-full' form='subreddit-post-form'>
