@@ -175,13 +175,17 @@ export interface SeniorRoadmap {
 }
 
 export interface RoadmapsProps {
-  seniorRoadmaps: SeniorRoadmap[];
-  onClick: (seniorName: string) => void;
+  roadmapInfo: RoadmapInfo[];
+  onClick: (name: string, roadmap: RoadmapInfo) => void;
 }
 
 export interface RoadmapCardProps {
-  title: string;
-  description: string;
+  name: string;
+  major: string;
+  graduation_year: number;
+  courses_summary: string;
+  current_job: string;
+  advice: string;
   onClick: () => void;
 }
 
@@ -193,6 +197,7 @@ export interface SeniorName {
 
 export interface HeadingCardProps {
   handleClick: () => void;
+  headingCardInfo: RoadmapInfo;
 }
 
 // export type FormStep = 1 | 2;
@@ -218,6 +223,7 @@ export type RoadmapInfo = {
   courses_summary: string;
   current_job: string;
   advice: string;
+  _clerk_user_id: string;
 };
 
 export type Module = {

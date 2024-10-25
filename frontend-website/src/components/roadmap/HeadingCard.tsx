@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft } from 'lucide-react';
 import { HeadingCardProps } from "@/types";
 
-const HeadingCard: React.FC<HeadingCardProps> = ({handleClick}) => {
+const HeadingCard: React.FC<HeadingCardProps> = ({handleClick, headingCardInfo}) => {
   return (
     
     <Card >
@@ -21,7 +21,7 @@ const HeadingCard: React.FC<HeadingCardProps> = ({handleClick}) => {
                     <ArrowLeft className="h-4 w-4" />
                 </Button>
                 <CardTitle className="place-self-center">
-                    Kylene
+                    {headingCardInfo.name}
                 </CardTitle>
             </div>
         </CardHeader>

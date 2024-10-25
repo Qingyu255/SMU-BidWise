@@ -16,15 +16,15 @@ import { RoadmapCardProps } from '@/types'
 
 
 
-const RoadmapCard: React.FC<RoadmapCardProps> = ({ title, description, onClick }) => {
+const RoadmapCard: React.FC<RoadmapCardProps> = ({ name, major, graduation_year, courses_summary, current_job, advice, onClick }) => {
   return (
     <Card>
         <CardHeader>
-            <CardTitle>{ title }</CardTitle>
+            <CardTitle>{ name }</CardTitle>
             
         </CardHeader>
         <CardContent>
-          { description }
+          { advice }
             
         </CardContent>
         <CardFooter>
