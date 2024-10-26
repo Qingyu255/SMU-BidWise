@@ -91,7 +91,6 @@ export const SectionInformationTable = ({ courseCode, sections, termName, onClas
                 <TableCell>{section.end_time}</TableCell>
                 <TableCell> 
                   {section.instructor}
-
                 </TableCell>
                 <TableCell>
                   <Link className='flex justify-center' href={`https://www.afterclass.io/professor/smu-${section?.instructor.replace(".", "").split(" ").join("-").toLowerCase()}`} target='_blank'>

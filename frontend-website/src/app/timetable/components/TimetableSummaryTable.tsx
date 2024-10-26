@@ -85,6 +85,7 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
               <TableHead>End Time</TableHead>
               {/* <TableHead>Instructor</TableHead> */}
               <TableHead>Professor</TableHead>
+              <TableHead>Reviews</TableHead>
               <TableHead>Venue</TableHead>
               <TableHead>Total Seats</TableHead>
               <TableHead>Reserved Seats</TableHead>
@@ -125,13 +126,12 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                 <TableCell>{section.day}</TableCell>
                 <TableCell>{section.start_time}</TableCell>
                 <TableCell>{section.end_time}</TableCell>
-                <TableCell className='justify-end'>
-                  <div>
-                    {section.instructor}
-                  </div>
-                  <Link href={`https://www.afterclass.io/professor/smu-${section?.instructor.replace(".", "").split(" ").join("-").toLowerCase()}`} target='_blank'>
+                <TableCell> 
+                  {section.instructor}
+                </TableCell>
+                <TableCell>
+                  <Link className='flex justify-center' href={`https://www.afterclass.io/professor/smu-${section?.instructor.replace(".", "").split(" ").join("-").toLowerCase()}`} target='_blank'>
                     <Image
-                      className='inline'
                       src="/images/afterclassIcon.png"
                       alt="afterclassIcon"
                       width={18}
