@@ -22,7 +22,14 @@ import { useTimetable } from '../../../components/providers/timetableProvider';
 import { useToast } from "@/hooks/use-toast";
 import TermSelection from './components/TermSelection';
 import { Spinner } from '@nextui-org/react';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 import { ExamInformationTable } from './components/ExamInformationTable';
+import NoExamsCard from './components/NoExamsCard';
 
 const supabase = createClient();
 
@@ -138,6 +145,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
       // .select('id, section, day, start_time, end_time, instructor, venue')
       .select(`
         id,
+        section,
         day,
         start_date,
         end_date,
@@ -153,7 +161,6 @@ export default function Page({ params }: { params: { course_code: string }}) {
       console.error('Error fetching section details:', examError.message);
       return { exams: [] };
     }
-    console.log(exams);
     return { exams };
   }
 
@@ -194,6 +201,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
   }
 
   const handleTermSelectionChange = (selectedTermName: string, selectedTermId: string) => {
+    setSelectedProfessor("");
     setSelectedTermId(selectedTermId); // this will trigger below use effect to query new sections for term
     setSelectedTermName(selectedTermName);
   }
@@ -222,6 +230,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
         const { sections, professors }: any = await getSectionDetails(courseInfo.id, (selectedTermId ? selectedTermId : latestTermIdStr)); 
         setSections(sections);
         setProfessors(professors);
+        const { exams }: any = await getExamDetails(courseInfo.id, (selectedTermId ? selectedTermId : latestTermIdStr)); 
+        setExams(exams);
         // console.log('Professors:', professors);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -243,11 +253,11 @@ export default function Page({ params }: { params: { course_code: string }}) {
         setIsFetchingSections(true);
         // if user toggle selected term, we will query sections for that term instead of latest (latest of queried on first load)
         const { sections, professors }: any = await getSectionDetails(courseUUID, (selectedTermId ? selectedTermId : latestTerm)); 
+        setSections(sections);
+        setProfessors(professors);
         // getExamDetails
         const { exams }: any = await getExamDetails(courseUUID, (selectedTermId ? selectedTermId : latestTerm)); 
         setExams(exams);
-        setSections(sections);
-        setProfessors(professors);
         // console.log('Professors:', professors);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -281,7 +291,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
               {(professors && professors.length > 0) && (
                 <div className='py-2'>
                   <div className='sm:flex sm:gap-5'>
-                    <ProfessorSelection professors={professors} onProfessorClick={updateTimetable} />
+                    {/* key forces rerender of component */}
+                    <ProfessorSelection key={selectedProfessor} professors={professors} onProfessorClick={updateTimetable} />
                     <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
                   </div>
                   <div>
@@ -295,21 +306,32 @@ export default function Page({ params }: { params: { course_code: string }}) {
           )}
           
           {((!sections || sections.length === 0)) ? (
-          <div>
-            {(!isFetchingSections)? (
-              <div>
-                <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
-                <NoResultCard searchCategory={"sections for " + (selectedTermName ? selectedTermName : latestTerm)}/>
-              </div>
-            ): (
-              <div className='py-5 flex items-center justify-center'>
-                  <Spinner color="default"/>
-              </div>
-            )}
+            <div>
+              {(!isFetchingSections)? (
+                <div>
+                  <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
+                  <NoResultCard searchCategory={"sections for " + (selectedTermName ? selectedTermName : latestTerm)}/>
+                </div>
+              ): (
+                <div className='py-5 flex items-center justify-center'>
+                    <Spinner color="default"/>
+                </div>
+              )}
             </div>
           ) : (
             <div className='py-2'>
-              <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} onClassSelect={handleClassSelect} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>
+              <Tabs defaultValue="sectionInformation">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="sectionInformation">Section Information</TabsTrigger>
+                  <TabsTrigger value="examInformation">Exam Information</TabsTrigger>
+                </TabsList>
+                <TabsContent value="sectionInformation">
+                  <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} onClassSelect={handleClassSelect} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>
+                </TabsContent>
+                <TabsContent value="examInformation">
+                  <ExamInformationTable courseCode={course_code} exams={exams} termName={(selectedTermName ? selectedTermName : latestTerm)}/>
+                </TabsContent>
+                </Tabs>
             </div>
           )}
         </div>

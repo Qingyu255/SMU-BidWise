@@ -21,6 +21,7 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { ClassItem } from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
+import { sortBySection } from './utils';
 
 export type SectionInformationTableProps = {
   sections: ClassItem[],
@@ -29,15 +30,6 @@ export type SectionInformationTableProps = {
   singleProfOnly: boolean,
   courseCode: string,
   allowAddRemoveSections? : boolean
-}
-
-const sortBySection = (sections: ClassItem[]): ClassItem[] => {
-  return sections.sort((a, b) => {
-    const numA = parseInt(a.section.replace(/^\D+/g, ''), 10);
-    const numB = parseInt(b.section.replace(/^\D+/g, ''), 10);
-    
-    return numA - numB; // Sort by numeric value
-  });
 }
 
 export const SectionInformationTable = ({ courseCode, sections, termName, onClassSelect, singleProfOnly, allowAddRemoveSections = true }: SectionInformationTableProps) => {
