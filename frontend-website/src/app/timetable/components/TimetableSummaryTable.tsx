@@ -29,12 +29,13 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { Info } from 'lucide-react';
 import { ClassItem } from '@/types';
 import Image from 'next/image';
+import { groupSections } from '@/app/courses/[course_code]/components/utils';
 
 export interface TimetableSummaryTableProps {
   sections: ClassItem[];
 }
 
-const sortByCourseCode = (sections: ClassItem[]): ClassItem[] => {
+const sortByCourseCode = (sections: any[]): any[] => {
   return sections.sort((a, b) => {
     const courseCodeA = a.courseCode ? a.courseCode : '';
     const courseCodeB = b.courseCode ? b.courseCode : '';
@@ -48,7 +49,8 @@ const sortByCourseCode = (sections: ClassItem[]): ClassItem[] => {
 
 export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) => {
   let temp: string = "";
-  const sortedSections = sortByCourseCode(sections);
+  const groupedSections = groupSections(sections)
+  const sortedGroupedSections = sortByCourseCode(groupedSections);
   const { selectedClasses, addClass, removeClass, updatePlannedBid } = useTimetable();
   const { toast } = useToast();
   
@@ -56,7 +58,7 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
     console.log("Class selected:", classItem);
     const isSelected = selectedClasses.has(classItem.id);
     if (isSelected) {
-      removeClass(classItem);
+      removeClass(classItem, true);
     } else {
       console.error("Attempting to remove class not selected in timetable provider");
     }
@@ -99,7 +101,7 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
             </TableRow>
           </TableHeader>
           <TableBody>
-            {(sections.length == 0) && (
+            {(sortedGroupedSections.length == 0) && (
               <TableRow>
                 <TableCell colSpan={14} className='text-center text-sm md:text-base'>
                   <div className='opacity-60 py-4'>
@@ -114,7 +116,7 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                 </TableCell>
               </TableRow>
             )}
-            {sections.map((section) => (
+            {sortedGroupedSections.map((section) => (
               <TableRow key={section.id}>
                 <TableCell>
                   <Link href={"courses/" + section.courseCode} className='font-semibold lg:text-[16px] hover:underline hover:cursor-pointer'>
@@ -123,9 +125,15 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                   {section.courseTitle && " - " + section.courseTitle}
                 </TableCell>
                 <TableCell>{section.section}</TableCell>
-                <TableCell>{section.day}</TableCell>
-                <TableCell>{section.start_time}</TableCell>
-                <TableCell>{section.end_time}</TableCell>
+                <TableCell>
+                  {section.days ? section.days.join(', ') : section.day}
+                </TableCell>
+                <TableCell>
+                  {section.start_times ? section.start_times.join(', ') : section.start_time}
+                </TableCell>
+                <TableCell>
+                  {section.end_times ? section.end_times.join(', ') : section.end_time}
+                </TableCell>
                 <TableCell> 
                   {section.instructor}
                 </TableCell>

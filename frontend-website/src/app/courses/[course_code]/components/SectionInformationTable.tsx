@@ -21,6 +21,8 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { ClassItem } from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
+import { sortBySection } from './utils';
+import { groupSections } from './utils';
 
 export type SectionInformationTableProps = {
   sections: ClassItem[],
@@ -31,18 +33,10 @@ export type SectionInformationTableProps = {
   allowAddRemoveSections? : boolean
 }
 
-const sortBySection = (sections: ClassItem[]): ClassItem[] => {
-  return sections.sort((a, b) => {
-    const numA = parseInt(a.section.replace(/^\D+/g, ''), 10);
-    const numB = parseInt(b.section.replace(/^\D+/g, ''), 10);
-    
-    return numA - numB; // Sort by numeric value
-  });
-}
-
 export const SectionInformationTable = ({ courseCode, sections, termName, onClassSelect, singleProfOnly, allowAddRemoveSections = true }: SectionInformationTableProps) => {
   let temp: string = "";
-  const sortedSections = sortBySection(sections);
+  const groupedSections = groupSections(sections);
+  const sortedGroupedSections = sortBySection(groupedSections);
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const { toast } = useToast();
 
@@ -83,12 +77,18 @@ export const SectionInformationTable = ({ courseCode, sections, termName, onClas
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sections.map((section) => (
+            {sortedGroupedSections.map((section) => (
               <TableRow key={section.id}>
                 <TableCell className='font-bold'>{section.section}</TableCell>
-                <TableCell>{section.day}</TableCell>
-                <TableCell>{section.start_time}</TableCell>
-                <TableCell>{section.end_time}</TableCell>
+                <TableCell>
+                  {section.days ? section.days.join(', ') : section.day}
+                </TableCell>
+                <TableCell>
+                  {section.start_times ? section.start_times.join(', ') : section.start_time}
+                </TableCell>
+                <TableCell>
+                  {section.end_times ? section.end_times.join(', ') : section.end_time}
+                </TableCell>
                 <TableCell> 
                   {section.instructor}
                 </TableCell>

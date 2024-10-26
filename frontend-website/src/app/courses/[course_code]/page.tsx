@@ -22,6 +22,14 @@ import { useTimetable } from '../../../components/providers/timetableProvider';
 import { useToast } from "@/hooks/use-toast";
 import TermSelection from './components/TermSelection';
 import { Spinner } from '@nextui-org/react';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import { ExamInformationTable } from './components/ExamInformationTable';
+import NoExamsCard from './components/NoExamsCard';
 
 const supabase = createClient();
 
@@ -29,6 +37,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const { course_code } = params;
   const [courseUUID, setCourseUUID] = useState<string>("");
   const [sections, setSections] = useState<any[]>([]);
+  const [exams, setExams] = useState<any[]>([]);
   const [professors, setProfessors] = useState<string[]>([]);
   const [selectedProfessor, setSelectedProfessor] = useState<string | null>(null);
   const [allTerms, setAllTerms] = useState<TermObjType[]>([]);
@@ -116,7 +125,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
         )
       `)
       .eq('course_id', course_id)
-      .eq("term", termId);
+      .eq("term", termId)
+      .neq("type", "EXAM");
   
     if (sectionsError) {
       console.error('Error fetching section details:', sectionsError.message);
@@ -128,6 +138,32 @@ export default function Page({ params }: { params: { course_code: string }}) {
     return { sections, professors };
   }
 
+  async function getExamDetails(course_id: string, termId: string) {
+  
+    const { data: exams, error: examError } = await supabase
+      .from('sections')
+      // .select('id, section, day, start_time, end_time, instructor, venue')
+      .select(`
+        id,
+        section,
+        day,
+        start_date,
+        end_date,
+        start_time,
+        end_time,
+        venue
+      `)
+      .eq('course_id', course_id)
+      .eq("term", termId)
+      .eq("type", "EXAM");
+  
+    if (examError) {
+      console.error('Error fetching section details:', examError.message);
+      return { exams: [] };
+    }
+    return { exams };
+  }
+
   const updateTimetable = async (professor: string) => {
     if (professor === "") {
       // fetch all sections
@@ -137,7 +173,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
       return;
     }
     
-    //  honestly should be fetching here again: can be optimised in the future
+    //  honestly shouldnt be fetching here again: can be optimised in the future
     const { sections } = await getSectionDetails(courseUUID, (selectedTermId ? selectedTermId : latestTermId));
     const filteredSections = sections.filter(section => section.instructor === professor);
     
@@ -146,18 +182,23 @@ export default function Page({ params }: { params: { course_code: string }}) {
   };
 
   const handleClassSelect = (classItem: any) => {
-    console.log("Class selected:", classItem);
+
     const isSelected = selectedClasses.has(classItem.id);
     if (isSelected) {
-      removeClass(classItem);
+      removeClass(classItem, false);
       toast({
         title: `Removed ${course_code} - ${classItem.section} from Timetable`,
       });
     } else {
-      classItem["courseCode"] = course_code;
-      classItem["courseTitle"] = courseInfo?.title;
-      
-      addClass(classItem);
+      // we want to add all sections with the same section code eg. G9 this is important for sections split into multiple timings
+      sections.forEach(sectionObj => {
+        if (sectionObj.section === classItem.section) {
+          let deepCopiedSectionObj = JSON.parse(JSON.stringify(sectionObj));
+          deepCopiedSectionObj["courseCode"] = course_code;
+          deepCopiedSectionObj["courseTitle"] = courseInfo?.title;
+          addClass(deepCopiedSectionObj);
+        }
+      })
       toast({
         title: `Added ${course_code} - ${classItem.section} to Timetable`,
       });
@@ -165,6 +206,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
   }
 
   const handleTermSelectionChange = (selectedTermName: string, selectedTermId: string) => {
+    setSelectedProfessor("");
     setSelectedTermId(selectedTermId); // this will trigger below use effect to query new sections for term
     setSelectedTermName(selectedTermName);
   }
@@ -193,6 +235,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
         const { sections, professors }: any = await getSectionDetails(courseInfo.id, (selectedTermId ? selectedTermId : latestTermIdStr)); 
         setSections(sections);
         setProfessors(professors);
+        const { exams }: any = await getExamDetails(courseInfo.id, (selectedTermId ? selectedTermId : latestTermIdStr)); 
+        setExams(exams);
         // console.log('Professors:', professors);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -216,6 +260,9 @@ export default function Page({ params }: { params: { course_code: string }}) {
         const { sections, professors }: any = await getSectionDetails(courseUUID, (selectedTermId ? selectedTermId : latestTerm)); 
         setSections(sections);
         setProfessors(professors);
+        // getExamDetails
+        const { exams }: any = await getExamDetails(courseUUID, (selectedTermId ? selectedTermId : latestTerm)); 
+        setExams(exams);
         // console.log('Professors:', professors);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -249,7 +296,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
               {(professors && professors.length > 0) && (
                 <div className='py-2'>
                   <div className='sm:flex sm:gap-5'>
-                    <ProfessorSelection professors={professors} onProfessorClick={updateTimetable} />
+                    {/* key forces rerender of component */}
+                    <ProfessorSelection key={selectedProfessor} professors={professors} onProfessorClick={updateTimetable} />
                     <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
                   </div>
                   <div>
@@ -263,21 +311,32 @@ export default function Page({ params }: { params: { course_code: string }}) {
           )}
           
           {((!sections || sections.length === 0)) ? (
-          <div>
-            {(!isFetchingSections)? (
-              <div>
-                <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
-                <NoResultCard searchCategory={"sections for " + (selectedTermName ? selectedTermName : latestTerm)}/>
-              </div>
-            ): (
-              <div className='py-5 flex items-center justify-center'>
-                  <Spinner color="default"/>
-              </div>
-            )}
+            <div>
+              {(!isFetchingSections)? (
+                <div>
+                  <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
+                  <NoResultCard searchCategory={"sections for " + (selectedTermName ? selectedTermName : latestTerm)}/>
+                </div>
+              ): (
+                <div className='py-5 flex items-center justify-center'>
+                    <Spinner color="default"/>
+                </div>
+              )}
             </div>
           ) : (
             <div className='py-2'>
-              <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} onClassSelect={handleClassSelect} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>
+              <Tabs defaultValue="sectionInformation">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="sectionInformation">Section Information</TabsTrigger>
+                  <TabsTrigger value="examInformation">Exam Information</TabsTrigger>
+                </TabsList>
+                <TabsContent value="sectionInformation">
+                  <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} onClassSelect={handleClassSelect} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>
+                </TabsContent>
+                <TabsContent value="examInformation">
+                  <ExamInformationTable courseCode={course_code} exams={exams} termName={(selectedTermName ? selectedTermName : latestTerm)}/>
+                </TabsContent>
+                </Tabs>
             </div>
           )}
         </div>

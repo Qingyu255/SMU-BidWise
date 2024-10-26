@@ -17,7 +17,7 @@ export default function Page() {
     console.log("Class selected:", classItem);
     const isSelected = selectedClasses.has(classItem.id);
     if (isSelected) {
-      removeClass(classItem);
+      removeClass(classItem, true);
       toast({
         title: `Removed ${classItem.courseCode} - ${classItem.section} from Timetable`,
       });

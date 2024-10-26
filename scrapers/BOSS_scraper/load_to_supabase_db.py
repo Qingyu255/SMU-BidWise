@@ -40,7 +40,8 @@ def get_section_id(section_info):
             .eq("instructor", section_info["instructor"])\
             .eq("start_date", section_info["start_date"])\
             .eq("end_date", section_info["end_date"])\
-            .eq("class_number", section_info["class_number"]).execute()
+            .eq("class_number", section_info["class_number"])\
+            .execute()
 
         if response.data and len(response.data) > 0:
             return response.data[0]["id"]
@@ -80,10 +81,15 @@ def upsert_course_section(section_info):
         existing_section = supabase.table("sections").select("id")\
             .eq("section", section_info['section'])\
             .eq("term", section_info['term'])\
-            .eq("course_id", section_info['course_id']).execute()
+            .eq("course_id", section_info['course_id'])\
+            .eq("type", section_info['type'])\
+            .eq("class_number", section_info['class_number'])\
+            .eq("day", section_info['day'])\
+            .eq("start_time", section_info['start_time'])\
+            .execute()
 
         if existing_section.data:
-            logger.warning(f"Section already exists for section: {section_info['section']}, course_id: {section_info['course_id']}, and term {section_info['term']}. Skipping upsert.")
+            logger.warning(f"Section already exists for section: {section_info['section']}, course_id: {section_info['course_id']}, and term {section_info['term']}, and type {section_info['type']}, and class_number {section_info['class_number']} and day, and start_time. Skipping upsert.")
             # Optionally, you can update the section instead of skipping if needed
             # supabase.table("sections").update(section_info).eq("id", existing_section.data[0]['id']).execute()
         else:
@@ -154,7 +160,8 @@ def process_json_files(directory):
 
                     # Process term
                     term_info = {
-                        "term": data.get("term")
+                        "term": data.get("term"),
+                        "term_code": data.get("term_code")
                     }
                     upsert_term(term_info)
 
@@ -170,6 +177,7 @@ def process_json_files(directory):
                             "course_id": course_id,
                             "term": term_id,
                             "section": data["section_info"].get("section"),
+                            "type": data["section_info"].get("type"),
                             "day": data["section_info"].get("day"),
                             "start_time": data["section_info"].get("start_time"),
                             "end_time": data["section_info"].get("end_time"),

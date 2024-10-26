@@ -75,7 +75,7 @@ def isCourseNumberInvalid(driver):
         return False
 
 
-def scrapeCourseDetails(driver, wait, course_data):
+def scrapeCourseDetails(driver, wait, course_data, i):
     try:
         courseCode, sectionCode = driver.find_element(By.XPATH, '//*[@id="lblClassInfoHeader"]').text.split(" - ")
         course_data['course_code'] = courseCode
@@ -95,13 +95,17 @@ def scrapeCourseDetails(driver, wait, course_data):
         section = {}
         # section['section'] = driver.find_element(By.XPATH, '//*[@id="lblClassInfoHeader"]').text.split(" - ")[-1]
         section['section'] = course_data['section']
-        section['day'] = driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[4]').text.strip()
-        section['start_time'] = driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[5]').text.strip()
-        section['end_time'] = driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[6]').text.strip()
-        section['venue'] = driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[7]').text.strip()
-        section['instructor'] = driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[8]').text.strip()
-        section['start_date'] = convertDateRange(driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[2]').text.strip())
-        section['end_date'] = convertDateRange(driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[3]').text.strip())
+
+        rows = driver.find_elements(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00"]/tbody/tr')
+        row = rows[i]
+        section['type'] = row.find_element(By.XPATH, './td[1]').text.strip() # 'class' or 'exam'
+        section['day'] = row.find_element(By.XPATH, './td[4]').text.strip()
+        section['start_time'] = row.find_element(By.XPATH, './td[5]').text.strip()
+        section['end_time'] = row.find_element(By.XPATH, './td[6]').text.strip()
+        section['venue'] = row.find_element(By.XPATH, './td[7]').text.strip()
+        section['instructor'] = row.find_element(By.XPATH, './td[8]').text.strip()
+        section['start_date'] = convertDateRange(row.find_element(By.XPATH, './td[2]').text.strip())
+        section['end_date'] = convertDateRange(row.find_element(By.XPATH, './td[3]').text.strip())
         course_data['section_info'] = section
         logging.info("Section details scraped successfully")
         # scrape course areas
@@ -109,17 +113,6 @@ def scrapeCourseDetails(driver, wait, course_data):
         list_items = span_element.find_elements(By.TAG_NAME, "li")
         courseAreas = [item.text for item in list_items]
         section["course_areas"] = courseAreas
-
-        meeting_info = {
-            "start_date": driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[2]').text.strip(),
-            "end_date": driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[3]').text.strip(),
-            "day": driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[4]').text.strip(),
-            "start_time": driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[5]').text.strip(),
-            "end_time": driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[6]').text.strip(),
-            "venue": driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[7]').text.strip(),
-            "instructor": driver.find_element(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00__0"]/td[8]').text.strip(),
-        }
-        section["meeting_info"] = meeting_info
 
         availability = {
             "total": driver.find_element(By.XPATH, '//*[@id="lblClassCapacity"]').text.strip(),
@@ -153,16 +146,19 @@ def main():
             if isCourseNumberInvalid(driver):
                 logging.info(f"Invalid class number: class_number of {classNumber} does not correspond to any records")
                 continue
-
-            course_data = {}
-            course_data["class_number"] = str(classNumber)
-            scrapeCourseDetails(driver, wait, course_data)
-            course_data_json = json.dumps(course_data, indent=4)
-            print(course_data_json)
-            filePath = f'scrapedData/{acadTerm}/course_data_{classNumber}_{course_data["course_code"]}.json'
-            with open(filePath, 'w') as json_file:
-                json.dump(course_data, json_file, indent=4)
-                logging.info(f"Data saved to {filePath}")
+            
+            rows = driver.find_elements(By.XPATH, '//*[@id="RadGrid_MeetingInfo_ctl00"]/tbody/tr')
+            for i in range(len(rows)):
+                course_data = {}
+                course_data["term_code"] = acadTerm
+                course_data["class_number"] = str(classNumber)
+                scrapeCourseDetails(driver, wait, course_data, i)
+                course_data_json = json.dumps(course_data, indent=4)
+                print(course_data_json)
+                filePath = f'scrapedData/{acadTerm}/course_data_{classNumber}_{course_data["course_code"]}_{i}.json'
+                with open(filePath, 'w') as json_file:
+                    json.dump(course_data, json_file, indent=4)
+                    logging.info(f"Data saved to {filePath}")
 
         except Exception as e:
             logging.error(f"Error scraping from class number {classNumber}: {e}")
