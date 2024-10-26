@@ -13,7 +13,7 @@ import { useUser } from "@clerk/nextjs";
 interface TimetableContextType {
   selectedClasses: Map<string, ClassItem>;
   addClass: (classItem: ClassItem) => void;
-  removeClass: (classItem: ClassItem) => void;
+  removeClass: (classItem: ClassItem, isInTimetablePage: boolean) => void;
   updatePlannedBid: (classId: string, bid: number) => void;
 }
 
@@ -157,12 +157,28 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const removeClass = (classItem: ClassItem) => {
-    setSelectedClasses((prev) => {
-      const updated = new Map(prev);
-      updated.delete(classItem.id);
-      return updated;
-    });
+  const removeClass = (classItem: ClassItem, isInTimetablePage: boolean) => {
+    // we want to remove all sections with the same section code eg. G9 this is important for sections split into multiple timings
+    selectedClasses.forEach(selectedClassObj => {
+      if (isInTimetablePage) {
+        if(selectedClassObj.courseCode === classItem.courseCode && selectedClassObj.section === classItem.section) {
+          setSelectedClasses((prev) => {
+            const updated = new Map(prev);
+            updated.delete(selectedClassObj.id);
+            return updated;
+          });
+        }
+      } else if (selectedClassObj.section === classItem.section) {
+        // not in timetable page => in course page
+        setSelectedClasses((prev) => {
+          const updated = new Map(prev);
+          updated.delete(selectedClassObj.id);
+          return updated;
+        });
+      }
+    })
+    
+
   };
 
   const updatePlannedBid = (classId: string, bid: number) => {

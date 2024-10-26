@@ -126,7 +126,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
       `)
       .eq('course_id', course_id)
       .eq("term", termId)
-      .eq("type", "CLASS");
+      .neq("type", "EXAM");
   
     if (sectionsError) {
       console.error('Error fetching section details:', sectionsError.message);
@@ -173,7 +173,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
       return;
     }
     
-    //  honestly should be fetching here again: can be optimised in the future
+    //  honestly shouldnt be fetching here again: can be optimised in the future
     const { sections } = await getSectionDetails(courseUUID, (selectedTermId ? selectedTermId : latestTermId));
     const filteredSections = sections.filter(section => section.instructor === professor);
     
@@ -182,18 +182,22 @@ export default function Page({ params }: { params: { course_code: string }}) {
   };
 
   const handleClassSelect = (classItem: any) => {
-    console.log("Class selected:", classItem);
+
     const isSelected = selectedClasses.has(classItem.id);
     if (isSelected) {
-      removeClass(classItem);
+      removeClass(classItem, false);
       toast({
         title: `Removed ${course_code} - ${classItem.section} from Timetable`,
       });
     } else {
-      classItem["courseCode"] = course_code;
-      classItem["courseTitle"] = courseInfo?.title;
-      
-      addClass(classItem);
+      // we want to add all sections with the same section code eg. G9 this is important for sections split into multiple timings
+      sections.forEach(sectionObj => {
+        if (sectionObj.section === classItem.section) {
+          sectionObj["courseCode"] = course_code;
+          sectionObj["courseTitle"] = courseInfo?.title;
+          addClass(sectionObj);
+        }
+      })
       toast({
         title: `Added ${course_code} - ${classItem.section} to Timetable`,
       });

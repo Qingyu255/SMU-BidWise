@@ -56,7 +56,7 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
     console.log("Class selected:", classItem);
     const isSelected = selectedClasses.has(classItem.id);
     if (isSelected) {
-      removeClass(classItem);
+      removeClass(classItem, true);
     } else {
       console.error("Attempting to remove class not selected in timetable provider");
     }
