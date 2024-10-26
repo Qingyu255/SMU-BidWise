@@ -8,7 +8,7 @@ import VisualiseTrendAcrossSemesters from '@/components/interactiveCharts/Visual
 import VisualiseTrendAcrossBiddingWindows from '@/components/interactiveCharts/VisualiseTrendAcrossBiddingWindows'
 import VisualiseBidPriceForSpecificInstructorTermSection from '@/components/interactiveCharts/VisualiseBidPriceForSpecificInstructorTermSection'
 import { Spinner, user } from '@nextui-org/react'
-import { ChartData, Dataset, chartAttributes } from '@/types';
+import { chartAttributes } from '@/types';
 import { SearchBox } from './components/SearchBox';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link'

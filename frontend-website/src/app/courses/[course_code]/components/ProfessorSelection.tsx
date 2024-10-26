@@ -1,6 +1,5 @@
 import React from 'react';
 import { Combobox } from '@/components/Combobox';
-import { Separator } from '@/components/ui/separator';
 
 interface ProfessorSelectionProps {
   professors: string[];

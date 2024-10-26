@@ -8,12 +8,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { CalendarPlus, CalendarMinus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTimetable } from '@/components/providers/timetableProvider';
@@ -31,6 +25,7 @@ import Image from 'next/image';
 export type SectionInformationTableProps = {
   sections: ClassItem[],
   termName: string,
+  onClassSelect: (e: any) => void,
   singleProfOnly: boolean,
   courseCode: string,
   allowAddRemoveSections? : boolean
@@ -45,22 +40,11 @@ const sortBySection = (sections: ClassItem[]): ClassItem[] => {
   });
 }
 
-export const SectionInformationTable = ({ courseCode, sections, termName, singleProfOnly, allowAddRemoveSections = true }: SectionInformationTableProps) => {
+export const SectionInformationTable = ({ courseCode, sections, termName, onClassSelect, singleProfOnly, allowAddRemoveSections = true }: SectionInformationTableProps) => {
   let temp: string = "";
   const sortedSections = sortBySection(sections);
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const { toast } = useToast();
-
-  const handleClassSelect = (section: any) => {
-    console.log("Class selected:", section);
-    const isSelected = selectedClasses.has(section.id);
-    if (isSelected) {
-      removeClass(section);
-    } else {
-      section["courseCode"] = courseCode;
-      addClass(section);
-    }
-  }
 
   return (
     <Card className="rounded-lg">
@@ -86,6 +70,7 @@ export const SectionInformationTable = ({ courseCode, sections, termName, single
               <TableHead>End Time</TableHead>
               {/* <TableHead>Instructor</TableHead> */}
               <TableHead>Professor</TableHead>
+              <TableHead>Reviews</TableHead>
               <TableHead>Venue</TableHead>
               <TableHead>Total Seats</TableHead>
               <TableHead>Reserved Seats</TableHead>
@@ -100,17 +85,17 @@ export const SectionInformationTable = ({ courseCode, sections, termName, single
           <TableBody>
             {sections.map((section) => (
               <TableRow key={section.id}>
-                <TableCell>{section.section}</TableCell>
+                <TableCell className='font-bold'>{section.section}</TableCell>
                 <TableCell>{section.day}</TableCell>
                 <TableCell>{section.start_time}</TableCell>
                 <TableCell>{section.end_time}</TableCell>
-                <TableCell className='justify-end'>
-                  <div>
-                    {section.instructor}
-                  </div>
-                  <Link href={`https://www.afterclass.io/professor/smu-${section?.instructor.replace(".", "").split(" ").join("-").toLowerCase()}`} target='_blank'>
+                <TableCell> 
+                  {section.instructor}
+
+                </TableCell>
+                <TableCell>
+                  <Link className='flex justify-center' href={`https://www.afterclass.io/professor/smu-${section?.instructor.replace(".", "").split(" ").join("-").toLowerCase()}`} target='_blank'>
                     <Image
-                      className='inline'
                       src="/images/afterclassIcon.png"
                       alt="afterclassIcon"
                       width={18}
@@ -153,7 +138,7 @@ export const SectionInformationTable = ({ courseCode, sections, termName, single
                               <Button
                                 onClick={async () => {
                                   await new Promise((resolve) => setTimeout(resolve, 200));
-                                  handleClassSelect(section);
+                                  onClassSelect(section);
                                   toast({
                                     title: `Removed ${courseCode} - ${section.section} from Timetable`,
                                   })
@@ -172,7 +157,7 @@ export const SectionInformationTable = ({ courseCode, sections, termName, single
                               <Button
                                 onClick={async () => {
                                   await new Promise((resolve) => setTimeout(resolve, 200));
-                                  handleClassSelect(section);
+                                  onClassSelect(section);
                                   toast({
                                     title: `Added ${courseCode} - ${section.section} to Timetable`,
                                   })
@@ -191,7 +176,7 @@ export const SectionInformationTable = ({ courseCode, sections, termName, single
             ))}
           </TableBody>
         </Table>
-        <CardDescription className='mb-1 text-xs'>
+        <CardDescription className='pt-1 mb-1 text-xs'>
           Protip: Click
           <Image
             className='inline'
