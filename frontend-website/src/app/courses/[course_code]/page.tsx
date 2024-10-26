@@ -193,9 +193,10 @@ export default function Page({ params }: { params: { course_code: string }}) {
       // we want to add all sections with the same section code eg. G9 this is important for sections split into multiple timings
       sections.forEach(sectionObj => {
         if (sectionObj.section === classItem.section) {
-          sectionObj["courseCode"] = course_code;
-          sectionObj["courseTitle"] = courseInfo?.title;
-          addClass(sectionObj);
+          let deepCopiedSectionObj = JSON.parse(JSON.stringify(sectionObj));
+          deepCopiedSectionObj["courseCode"] = course_code;
+          deepCopiedSectionObj["courseTitle"] = courseInfo?.title;
+          addClass(deepCopiedSectionObj);
         }
       })
       toast({
