@@ -22,6 +22,7 @@ import { useTimetable } from '../../../components/providers/timetableProvider';
 import { useToast } from "@/hooks/use-toast";
 import TermSelection from './components/TermSelection';
 import { Spinner } from '@nextui-org/react';
+import { ExamInformationTable } from './components/ExamInformationTable';
 
 const supabase = createClient();
 
@@ -29,6 +30,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const { course_code } = params;
   const [courseUUID, setCourseUUID] = useState<string>("");
   const [sections, setSections] = useState<any[]>([]);
+  const [exams, setExams] = useState<any[]>([]);
   const [professors, setProfessors] = useState<string[]>([]);
   const [selectedProfessor, setSelectedProfessor] = useState<string | null>(null);
   const [allTerms, setAllTerms] = useState<TermObjType[]>([]);
@@ -116,7 +118,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
         )
       `)
       .eq('course_id', course_id)
-      .eq("term", termId);
+      .eq("term", termId)
+      .eq("type", "CLASS");
   
     if (sectionsError) {
       console.error('Error fetching section details:', sectionsError.message);
@@ -126,6 +129,32 @@ export default function Page({ params }: { params: { course_code: string }}) {
     const professors = Array.from(new Set(sections.map(section => section.instructor)));
   
     return { sections, professors };
+  }
+
+  async function getExamDetails(course_id: string, termId: string) {
+  
+    const { data: exams, error: examError } = await supabase
+      .from('sections')
+      // .select('id, section, day, start_time, end_time, instructor, venue')
+      .select(`
+        id,
+        day,
+        start_date,
+        end_date,
+        start_time,
+        end_time,
+        venue
+      `)
+      .eq('course_id', course_id)
+      .eq("term", termId)
+      .eq("type", "EXAM");
+  
+    if (examError) {
+      console.error('Error fetching section details:', examError.message);
+      return { exams: [] };
+    }
+    console.log(exams);
+    return { exams };
   }
 
   const updateTimetable = async (professor: string) => {
@@ -214,6 +243,9 @@ export default function Page({ params }: { params: { course_code: string }}) {
         setIsFetchingSections(true);
         // if user toggle selected term, we will query sections for that term instead of latest (latest of queried on first load)
         const { sections, professors }: any = await getSectionDetails(courseUUID, (selectedTermId ? selectedTermId : latestTerm)); 
+        // getExamDetails
+        const { exams }: any = await getExamDetails(courseUUID, (selectedTermId ? selectedTermId : latestTerm)); 
+        setExams(exams);
         setSections(sections);
         setProfessors(professors);
         // console.log('Professors:', professors);

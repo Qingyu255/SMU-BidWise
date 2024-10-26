@@ -169,6 +169,18 @@ export interface ClassItem {
   plannedBid?: number;
   courseTitle?: string;
 }
+
+export interface ExamItem {
+  id: string;
+  section: string;
+  day: string;
+  start_date: string;
+  end_date: string;
+  start_time: string;
+  end_time: string;
+  venue: string;
+}
+
 export interface SeniorRoadmap {
   name: string;
   title: string;
