@@ -11,24 +11,34 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { RoadmapCardProps } from '@/types'
+import Link from 'next/link'
 
 
 
 
 
-const RoadmapCard: React.FC<RoadmapCardProps> = ({ name, major, graduation_year, courses_summary, current_job, advice, onClick }) => {
+const RoadmapCard: React.FC<RoadmapCardProps> = ({ name, major, graduation_year, courses_summary, current_job, advice }) => {
   return (
     <Card>
         <CardHeader>
-            <CardTitle>{ name }</CardTitle>
+            <CardTitle className='text-xl'>{ name } •	<span className='font-light'>{major}</span></CardTitle>
+            <CardDescription>
+              Year of Graduation: {graduation_year}
+              <br></br>
+              Current Job: {current_job}
+            </CardDescription>
             
         </CardHeader>
         <CardContent>
-          { advice }
-            
+          { advice.length > 250 ? `${advice.substring(0,250)}...` : advice } 
         </CardContent>
         <CardFooter>
-            <Button onClick={onClick}>View Roadmap</Button>
+            <Link href={"roadmaps/" + name}>
+            <Button>
+            View Roadmap
+            </Button>
+            
+            </Link>
         </CardFooter>
     </Card>
   )

@@ -6,7 +6,7 @@ import { RoadmapsProps } from '@/types'
 
 
 
-const Roadmaps: React.FC<RoadmapsProps> = ({ roadmapInfo, onClick }) => {
+const Roadmaps: React.FC<RoadmapsProps> = ({ roadmapInfo }) => {
     
 
 
@@ -21,7 +21,7 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ roadmapInfo, onClick }) => {
                         courses_summary={roadmap.courses_summary} 
                         current_job={roadmap.current_job} 
                         advice={roadmap.advice} 
-                        onClick={() => onClick(roadmap.name, roadmap)}/>
+                        />
                     ))}
             
         </div>

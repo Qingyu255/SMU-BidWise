@@ -177,7 +177,7 @@ export interface SeniorRoadmap {
 
 export interface RoadmapsProps {
   roadmapInfo: RoadmapInfo[];
-  onClick: (name: string, roadmap: RoadmapInfo) => void;
+  // onClick: (name: string, roadmap: RoadmapInfo) => void;
 }
 
 export interface RoadmapCardProps {
@@ -187,7 +187,6 @@ export interface RoadmapCardProps {
   courses_summary: string;
   current_job: string;
   advice: string;
-  onClick: () => void;
 }
 
 
@@ -197,7 +196,6 @@ export interface SeniorName {
 
 
 export interface HeadingCardProps {
-  handleClick: () => void;
   headingCardInfo: RoadmapInfo;
 }
 

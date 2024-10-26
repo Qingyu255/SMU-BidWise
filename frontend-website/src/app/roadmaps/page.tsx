@@ -61,61 +61,7 @@ export default function Page() {
     
   }, [supabase])
   
-// Define arrays of degrees and job descriptions
-const degrees = [
-  'Bachelor of Business Management',
-  'Bachelor of Accountancy',
-  'Bachelor of Science (Economics)',
-  'Bachelor of Laws',
-  'Bachelor of Information Systems',
-  'Bachelor of Science (Computer Science)',
-  // Add more degrees if needed
-];
 
-const jobDescriptions = [
-  'is now working as a Financial Analyst at a leading investment bank.',
-  'secured a position as an Accountant at a Big Four firm.',
-  'is employed as an Economist at a government agency.',
-  'started practicing as a Corporate Lawyer in a top law firm.',
-  'is a Systems Analyst at a multinational tech company.',
-  'became a Software Engineer at a prominent tech startup.',
-  // Add more job descriptions if needed
-];
-
-// Initialize the seniorRoadmaps array
-const seniorRoadmaps: SeniorRoadmap[] = [];
-
-// Check if seniorNames array is not empty
-
-  seniorNames.forEach((senior, index) => {
-    // Randomly select a degree and job description
-    const degree = degrees[Math.floor(Math.random() * degrees.length)];
-    const jobDescription = jobDescriptions[Math.floor(Math.random() * jobDescriptions.length)];
-
-    // Alternatively, assign degrees and jobs sequentially:
-    // const degree = degrees[index % degrees.length];
-    // const jobDescription = jobDescriptions[index % jobDescriptions.length];
-
-    // Push the senior's roadmap into the array
-    seniorRoadmaps.push({
-      name: senior.name,
-      title: degree,
-      description: `${senior.name} ${jobDescription}`,
-    });
-  });
-
-  // roadmapInfo.forEach((roadmap) => {
-
-  //   seniorRoadmaps.push({
-  //     name: roadmap.name,
-  //     title: degree,
-  //     description: `${senior.name} ${jobDescription}`,
-  //   });
-  // });
-
-
-
-const [showRoadmap, setShowRoadmap] = useState(false)
 const [timelinePayload, setTimelinePayload] = useState('')
 const [headingCardInfo, setHeadingCardInfo] = useState<RoadmapInfo>({
   name: '',
@@ -128,42 +74,14 @@ const [headingCardInfo, setHeadingCardInfo] = useState<RoadmapInfo>({
 })
 
 
-
-const handleClick = (name: string, roadmap:RoadmapInfo) => {
-  // console.log(roadmapInfo)
-  setShowRoadmap(true)
-  setTimelinePayload(name)
-  setHeadingCardInfo(roadmap)
-  window.scrollTo({ top: 0});
-}
-
-const handleBack = () => {
-  setShowRoadmap(false)
-}
-
-// const handleFormClick = () => {
-
-// }
-
   return (
     <div>
-      { showRoadmap ? 
-        <div className='flex flex-col overflow-hidden' style={{ width: '100%', height: '90vh'}}>
-          <div className='mb-2'>
-            <HeadingCard handleClick={handleBack} headingCardInfo={headingCardInfo}/>
-          </div>
-          <div className='container self-center flex-grow-1' style={{ height: 'inherit' }}>
-            
-            <Timeline seniorName={timelinePayload}/>
-          </div>
-        </div>
 
-      :
       <>
       <RoadmapFormCard/>
-      <Roadmaps roadmapInfo={roadmapInfo} onClick={handleClick}/>
+      <Roadmaps roadmapInfo={roadmapInfo}/>
       </>
-      }
+      
     </div>
   )
 

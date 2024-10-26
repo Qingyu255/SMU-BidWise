@@ -67,7 +67,7 @@ const CourseNode = ({ data }: CourseNodeProps) => {
     bgColorHovered = '#D9A633'
     bgColor = '#c69214'
     borderTheme = '2px solid #906f46'
-    textColorTheme = '#E1D9D1'
+    textColorTheme = '#FAF9F6'
   } else if (resolvedTheme == 'dark') {
     bgColorHovered = '#282828'
     bgColor = '#575757'

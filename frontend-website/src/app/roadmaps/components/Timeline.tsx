@@ -43,12 +43,6 @@ type FlowRendererProps = {
 
 const supabase = createClient();
 
-// Colors:
-// edge: #4283bb
-// node: #fdff00
-// sub-node: #ffe59a
-
-
 
 async function fetchRoadmap(name: string, sem: string) {
   // Fetch the senior_id
