@@ -25,7 +25,7 @@ const HeadingCard: React.FC<HeadingCardProps> = ({ headingCardInfo}) => {
                 </Link>
                 
                 <CardTitle className="place-self-center text-xl">
-                    { headingCardInfo.name } •	<span className='font-light'>{headingCardInfo.major}</span>
+                    { headingCardInfo.name } •	<span className='font-light'>{headingCardInfo.degree}</span>
                 </CardTitle>
             </div>
         </CardHeader>

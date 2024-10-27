@@ -32,6 +32,7 @@ import createClient from '@/utils/supabase/client';
 import '@/components/roadmap/roadmap.css'; 
 import { Course, edgeData,SeniorData, NodeData, seniorsAttributes, TimelineProps } from '@/types';
 import { useTheme } from 'next-themes';
+import { Skeleton } from "@/components/ui/skeleton"
 
 type FlowRendererProps = {
   nodes: Node[];               // Array of Node type
@@ -795,7 +796,14 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
   // Show a loading state while fetching data
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className='space-y-3 pt-2'>
+        <Skeleton className="h-8 w-100" />
+        <Skeleton className="h-8 w-100" />
+        <Skeleton className="h-8 w-3/4" />
+        <Skeleton className="h-8 w-3/4" />
+      </div>
+    );
   }
 
   return (
