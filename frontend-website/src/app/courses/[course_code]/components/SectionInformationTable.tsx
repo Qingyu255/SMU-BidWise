@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarPlus, CalendarMinus } from 'lucide-react';
+import { CalendarPlus, CalendarMinus, ChartNoAxesCombined } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTimetable } from '@/components/providers/timetableProvider';
 import { useToast } from "@/hooks/use-toast";
@@ -17,6 +17,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { ClassItem } from '@/types';
 import Link from 'next/link';
@@ -70,6 +76,7 @@ export const SectionInformationTable = ({ courseCode, sections, termName, onClas
               <TableHead>Reserved Seats</TableHead>
               <TableHead>Available Seats</TableHead>
               <TableHead>Current Enrolled</TableHead>
+              <TableHead>View Bid Analytics</TableHead>
               {(allowAddRemoveSections) && (
                 <TableHead>Add to Timetable</TableHead>
               )}
@@ -114,6 +121,22 @@ export const SectionInformationTable = ({ courseCode, sections, termName, onClas
                 </TableCell>
                 <TableCell>
                   {section.availability ? section.availability.current_enrolled : 'N/A'}
+                </TableCell>
+                <TableCell>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link href={"/bid-analytics?courseCode=" + courseCode + "&instructor=" + encodeURIComponent(section.instructor)}>
+                          <Button className='text-xs font-semibold w-fit'>
+                            <ChartNoAxesCombined/>
+                          </Button>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Analyse price trends for {courseCode} - {section.instructor}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </TableCell>
                 {allowAddRemoveSections && (
                   <TableCell>
@@ -176,7 +199,7 @@ export const SectionInformationTable = ({ courseCode, sections, termName, onClas
           </TableBody>
         </Table>
         <CardDescription className='pt-1 mb-1 text-xs'>
-          Protip: Click
+          Tip: Click
           <Image
             className='inline'
             src="/images/afterclassIcon.png"

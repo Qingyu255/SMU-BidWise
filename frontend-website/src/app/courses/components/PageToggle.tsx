@@ -47,13 +47,16 @@ export default function PageToggle({ currentPage, totalPages }: PageToggleProps)
   return (
     <Pagination className="py-2 sm:py-4">
       <PaginationContent>
-        <PaginationItem className="cursor-default">
-          <PaginationPrevious onClick={() => handlePageChange(Math.max(currentPage - 1, 1))} />
-        </PaginationItem>
+        {(currentPage > 1) && (
+          <PaginationItem className="cursor-pointer">
+            <PaginationPrevious onClick={() => handlePageChange(Math.max(currentPage - 1, 1))} />
+          </PaginationItem>
+        )}
+        
 
         {/* Show the group of pages (1,2,3 or 4,5,6 etc.) */}
         {Array.from({ length: currentGroupEnd - currentGroupStart + 1 }, (_, i) => (
-          <PaginationItem key={i} className="cursor-default">
+          <PaginationItem key={i} className="cursor-pointer">
             <PaginationLink isActive={currentGroupStart + i === currentPage} onClick={() => handlePageChange(currentGroupStart + i)}>
               {currentGroupStart + i}
             </PaginationLink>
@@ -62,14 +65,15 @@ export default function PageToggle({ currentPage, totalPages }: PageToggleProps)
 
         {/* Show clickable ellipsis that toggles to nest group of pages if there are more pages */}
         {currentGroupEnd < totalPages && (
-          <PaginationItem className="rounded-md hover:bg-gray-100 cursor-default">
+          <PaginationItem className="rounded-md hover:bg-gray-100 cursor-pointer">
             <PaginationEllipsis onClick={() => handlePageChange(nextGroupStart)} />
           </PaginationItem>
         )}
-
-        <PaginationItem className="cursor-default">
-          <PaginationNext onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))} />
-        </PaginationItem>
+        {(currentPage < totalPages) && (
+          <PaginationItem className="cursor-pointer">
+            <PaginationNext onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))} />
+          </PaginationItem>
+        )}
       </PaginationContent>
       {isPending &&(
         <div className="px-2">

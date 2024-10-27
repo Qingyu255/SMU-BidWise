@@ -5,14 +5,14 @@ import MultitypeChart from '../charts/MultitypeChart';
 import { chartAttributes } from '@/types';
 
 
-export default function VisualiseBidPriceForSpecificInstructorTermSection({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
+export default function VisualiseBidPriceForSpecificInstructorTermSection({courseCode, instructorSelected, width, height} : {courseCode: string, instructorSelected?: string, width: string, height: string}) {
 
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
 
     const [error, setError] = useState<any>(null)
 
     const [courseInstructorsDropdownArr, setCourseInstructorsDropdownArr] = useState<string[]>()
-    const [courseInstructorSelected, setCourseInstructorSelected] = useState<string>("")
+    const [courseInstructorSelected, setCourseInstructorSelected] = useState<string>(instructorSelected ? instructorSelected : "");
 
     const [termDropdownArr, setTermDropdownArr] = useState<string[]>([])
     const [isTermDropdownVisible, setIsTermDropdownVisible] = useState<boolean>(false)
@@ -163,6 +163,16 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
         }
     }, [chartDataAcrossBiddingWindow])
 
+    useEffect(() => {
+        if (!courseInstructorSelected) {
+            return;
+        }
+        if (courseInstructorsDropdownArr && !courseInstructorsDropdownArr.includes(courseInstructorSelected)) {
+            setError({ message: "No " + courseCode + " Bidding Data found for " + courseInstructorSelected});
+        }
+        handleInstructorSelect(courseInstructorSelected);
+    }, [courseInstructorSelected, courseInstructorsDropdownArr])
+
     return (
         <>
             <h1 id="VisualiseBidPriceForSpecificInstructorTermSection" className='text-xl md:text-2xl font-extrabold pb-5'>Bid Price Across Bidding Windows For Specified Term and Section</h1>
@@ -173,12 +183,12 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
                 <div className='flex flex-col gap-y-5 pb-5'>
                     <div className='inline items-center'>
                         <DropDown 
+                            selected={courseInstructorSelected}
                             category='Instructor'
                             onSelect={handleInstructorSelect}
                             options={courseInstructorsDropdownArr}
-                            showFirstOption={false}
+                            // showFirstOption={false}
                         />
-
                     {(isTermDropdownVisible && termDropdownArr.length > 0) && (
                         <DropDown 
                             category='Term'

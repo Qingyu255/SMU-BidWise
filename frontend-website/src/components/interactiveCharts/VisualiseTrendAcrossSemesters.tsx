@@ -5,14 +5,14 @@ import MultitypeChart from '../charts/MultitypeChart'
 import { Spinner } from "@nextui-org/spinner"
 import { chartAttributes } from '@/types';
 
-export default function VisualiseTrendAcrossSemesters({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
-    
+export default function VisualiseTrendAcrossSemesters({courseCode, instructorSelected, width, height} : {courseCode: string, instructorSelected?: string, width: string, height: string}) {
+
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
 
     const [error, setError] = useState<any>(null)
 
     const [courseInstructorsDropdownArr, setCourseInstructorsDropdownArr] = useState<string[]>()
-    const [courseInstructorSelected, setCourseInstructorSelected] = useState<string>("")
+    const [courseInstructorSelected, setCourseInstructorSelected] = useState<string>(instructorSelected ? instructorSelected : "");
 
     const [biddingWindowDropdownArr, setBiddingWindowDropdownArr] = useState<string[]>([])
     const [isBiddingWindowDropdownVisible, setIsBiddingWindowDropdownVisible] = useState<boolean>(false)
@@ -88,13 +88,6 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
         }
     }
 
-    // const scrollToDiv = (id: string) => {
-    //     const element = document.getElementById(id)
-    //     if (element) {
-    //         element.scrollIntoView({ behavior: 'smooth' })
-    //     }
-    // }
-
     // Note that we can only handle winding window after courseInstructorSelected is set
     const handleBiddingWindowSelect = async (biddingWindow: string) => {
         setSelectedBiddingWindow(biddingWindow)
@@ -126,7 +119,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
 
                 // since we want to pre-populate data on first page load
                 // set to first instructor in instructor array
-                await handleInstructorSelect(instructors[0]) 
+                await handleInstructorSelect(courseInstructorSelected? courseInstructorSelected : instructors[0]);
             } catch (error: any) {
                 setError(error)
                 console.error(error)
@@ -142,11 +135,14 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
         }
     }, [windowsUpdated, biddingWindowDropdownArr])
 
-    // useEffect(() => {
-    //     if (chartDataInstructorsBiddingWindow) {
-    //         scrollToDiv("VisualiseTrendAcrossSemesters")
-    //     }
-    // }, [chartDataInstructorsBiddingWindow])
+    useEffect(() => {
+        if (!courseInstructorSelected) {
+            return;
+        }
+        if (courseInstructorsDropdownArr && !courseInstructorsDropdownArr.includes(courseInstructorSelected)) {
+            setError({ message: "No " + courseCode + " Bidding Data found for " + courseInstructorSelected});
+        }
+    }, [courseInstructorSelected, courseInstructorsDropdownArr])
 
     return (
         <>
@@ -159,6 +155,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, width, height
                     <p className='text-gray-500 text-xs sm:text-sm'>select instructor and bidding window:</p>
                     <div className='inline items-center'>
                         <DropDown 
+                            selected={courseInstructorSelected}
                             category='Instructor'
                             onSelect={handleInstructorSelect}
                             options={courseInstructorsDropdownArr}

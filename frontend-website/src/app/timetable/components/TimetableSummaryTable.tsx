@@ -89,10 +89,10 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
               <TableHead>Professor</TableHead>
               <TableHead>Reviews</TableHead>
               <TableHead>Venue</TableHead>
-              <TableHead>Total Seats</TableHead>
+              {/* <TableHead>Total Seats</TableHead>
               <TableHead>Reserved Seats</TableHead>
               <TableHead>Available Seats</TableHead>
-              <TableHead>Current Enrolled</TableHead>
+              <TableHead>Current Enrolled</TableHead> */}
               <TableHead>Planned Bid <br/>
                 <Info className='inline w-3 h-3 my-auto mr-1 text-muted-foreground'/><span className='text-xs'>(for your planning!)</span>
                 </TableHead>
@@ -119,10 +119,12 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
             {sortedGroupedSections.map((section) => (
               <TableRow key={section.id}>
                 <TableCell>
-                  <Link href={"courses/" + section.courseCode} className='font-semibold lg:text-[16px] hover:underline hover:cursor-pointer'>
-                    {section.courseCode}
+                  <Link href={"courses/" + section.courseCode} className='hover:underline hover:cursor-pointer'>
+                    <span className='font-semibold lg:text-[16px]'>
+                      {section.courseCode}
+                    </span>
+                    {section.courseTitle && " - " + section.courseTitle}
                   </Link>
-                  {section.courseTitle && " - " + section.courseTitle}
                 </TableCell>
                 <TableCell>{section.section}</TableCell>
                 <TableCell>
@@ -148,7 +150,7 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                   </Link>
                 </TableCell>
                 <TableCell>{section.venue}</TableCell>
-                <TableCell>
+                {/* <TableCell>
                   {section.availability ? section.availability.total_seats : 'N/A'}
                 </TableCell>
                 <TableCell>
@@ -159,7 +161,7 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                 </TableCell>
                 <TableCell>
                   {section.availability ? section.availability.current_enrolled : 'N/A'}
-                </TableCell>
+                </TableCell> */}
                 <TableCell>
                   <div className='flex flex-row items-center'>
                   <span className='text-gray-600 pe-2'>e$</span>
@@ -176,14 +178,14 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Link href={"/bid-analytics?courseCode=" + section.courseCode}>
+                        <Link href={"/bid-analytics?courseCode=" + section.courseCode + "&instructor=" + encodeURIComponent(section.instructor)}>
                           <Button className='text-xs font-semibold w-fit'>
                             <ChartNoAxesCombined/>
                           </Button>
                         </Link>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Analyse price trends for {section.courseCode}</p>
+                        <p>Analyse price trends for {section.courseCode} - {section.instructor}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -223,7 +225,7 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
         </Table>
         {(sections.length > 0) && (
           <CardDescription className='pt-1 mb-1 text-xs'>
-              Protip: Click
+              Tip: Click
               <Image
                 className='inline'
                 src="/images/afterclassIcon.png"

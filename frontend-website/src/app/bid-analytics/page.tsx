@@ -21,17 +21,29 @@ export default function Page() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const courseCodeParam = searchParams.get('courseCode');
+    const instructorParam = searchParams.get('instructor');
     const defaultCourseCode = "COR-STAT1202";
     const [courseCode, setCourseCode] = useState<string>(courseCodeParam ? courseCodeParam.toUpperCase() : defaultCourseCode); // default
-    const [courseName, setCourseName] = useState<string>("")
+    const [courseName, setCourseName] = useState<string>("");
+    const [instructor, setInstructor] = useState<string>(instructorParam ? instructorParam : "");
     const [chartDataOverview, setChartDataOverview] = useState<chartAttributes>()
     const [chartDataInstructorOverview, setChartDataInstructorOverview] = useState<chartAttributes>()
     const [error, setError] = useState<any>(null)
     const [chartWidthHeightArr, setChartWidthHeightArr] = useState<string[]>(["", ""])
 
     useEffect(() => {
-        setCourseCode(courseCodeParam ? courseCodeParam.toUpperCase() : defaultCourseCode);
+        if (!courseCodeParam) {
+            return;
+        }
+        setCourseCode(courseCodeParam.toUpperCase());
     }, [courseCodeParam]);
+
+    useEffect(() => {
+        if (!instructorParam) {
+            return;
+        }
+        setInstructor(instructorParam.toUpperCase());
+    }, [instructorParam]);
 
     useEffect(() => {
         const fetchCourseName = async () => {
@@ -151,17 +163,20 @@ export default function Page() {
                             <div>
                                 <VisualiseTrendAcrossSemesters 
                                     courseCode={courseCode} 
+                                    instructorSelected={instructor ? instructor : ""}
                                     width={chartWidthHeightArr[0]}  
                                     height={chartWidthHeightArr[1]}
                                 />
                                 <VisualiseTrendAcrossBiddingWindows
                                     courseCode={courseCode} 
+                                    instructorSelected={instructor ? instructor : ""}
                                     width={chartWidthHeightArr[0]}  
                                     height={chartWidthHeightArr[1]}
                                 />
                                 <VisualiseBidPriceForSpecificInstructorTermSection
                                     key={courseCode} // force re-render on courseCode change (temp fix)
                                     courseCode={courseCode} 
+                                    instructorSelected={instructor ? instructor : ""}
                                     width={chartWidthHeightArr[0]}  
                                     height={chartWidthHeightArr[1]}
                                 />

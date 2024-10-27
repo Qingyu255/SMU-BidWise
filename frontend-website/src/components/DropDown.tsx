@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 type DropdownProps = {
-    // Define onSelect as a function that takes a string as a parameter
+    selected?: string,
     onSelect: (option: string) => void,
     category: string,
     options : string[] | undefined
@@ -24,6 +24,7 @@ type DropdownProps = {
 export default function DropDown( props : DropdownProps ) {
     // if props.options is null, options = ["No courses Found"]
     const category = props.category
+    const selected = props.selected;
     const hideCategoryAsPrefix = props.hideCategoryAsPrefix;
     const options = (props.options && props.options.length > 0) ? props.options : [`No ${category} Found`]
 
@@ -36,10 +37,11 @@ export default function DropDown( props : DropdownProps ) {
     useEffect(() => {
         if (options.length > 0 && props.showFirstOption !== false) {
             // if options not empty, set selected to first option in options array
-            setSelectedOption(`${category}: ${options[0]}`);
-            setPosition(options[0]);
+            // if selected passed in, set selected option to selected
+            setSelectedOption(selected ? `${category}: ${selected}` : `${category}: ${options[0]}`);
+            setPosition(selected ? selected : options[0]);
         }
-    }, [options, category])
+    }, [options, category, selected])
 
     useEffect(() => {
         selectedOptionRef.current = selectedOption

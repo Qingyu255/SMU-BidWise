@@ -8,7 +8,7 @@ export default function ErrorPopUp({ errorMessage } : { errorMessage: string }) 
         </svg>
         <span className="sr-only">Info</span>
         <div>
-            <span className="font-medium">Error: {errorMessage}</span>
+            <span className="font-medium">{errorMessage}</span>
         </div>
     </div>
   )

@@ -5,14 +5,14 @@ import MultitypeChart from '../charts/MultitypeChart'
 import { Spinner } from "@nextui-org/spinner"
 import { chartAttributes } from '@/types';
 
-export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, height} : {courseCode: string, width: string, height: string}) {
+export default function VisualiseTrendAcrossBiddingWindows({courseCode, instructorSelected, width, height} : {courseCode: string, instructorSelected?: string, width: string, height: string}) {
     
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
 
     const [error, setError] = useState<any>(null)
 
     const [courseInstructorsDropdownArr, setCourseInstructorsDropdownArr] = useState<string[]>()
-    const [courseInstructorSelected, setCourseInstructorSelected] = useState<string>("")
+    const [courseInstructorSelected, setCourseInstructorSelected] = useState<string>(instructorSelected ? instructorSelected : "");
 
     const [termDropdownArr, setTermDropdownArr] = useState<string[]>([])
     const [isTermDropdownVisible, setIsTermDropdownVisible] = useState<boolean>(false)
@@ -147,7 +147,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
 
                 // since we want to pre-populate data on first page load
                 // set to first instructor in instructor array
-                await handleInstructorSelect(instructors[0]) 
+                await handleInstructorSelect(courseInstructorSelected? courseInstructorSelected : instructors[0]);
             } catch (error: any) {
                 setError(error)
                 console.error(error)
@@ -164,11 +164,14 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
         }
     }, [termsUpdated, termDropdownArr])
 
-    // useEffect(() => {
-    //     if (chartDataAcrossBiddingWindow) {
-    //         scrollToDiv("VisualiseTrendAcrossBiddingWindows")
-    //     }
-    // }, [chartDataAcrossBiddingWindow])
+    useEffect(() => {
+        if (!courseInstructorSelected) {
+            return;
+        }
+        if (courseInstructorsDropdownArr && !courseInstructorsDropdownArr.includes(courseInstructorSelected)) {
+            setError({ message: "No " + courseCode + " Bidding Data found for " + courseInstructorSelected});
+        }
+    }, [courseInstructorSelected, courseInstructorsDropdownArr])
 
     return (
         <>
@@ -181,6 +184,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, width, h
                     <p className='text-gray-500 text-xs sm:text-sm'>select instructor and term:</p>
                     <div className='inline items-center'>
                         <DropDown 
+                            selected={courseInstructorSelected}
                             category='Instructor'
                             onSelect={handleInstructorSelect}
                             options={courseInstructorsDropdownArr}
