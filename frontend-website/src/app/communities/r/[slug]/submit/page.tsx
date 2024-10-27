@@ -54,9 +54,9 @@ const Page: React.FC<PageProps> = ({ params }) => {
                 </div>
             </div>
 
-            {/* Editor component (commented out if needed)
-            <Editor subredditId={subredditId} authorId={user?.id} />
-            */}
+            {/* Editor component (commented out if needed) */}
+            <Editor subredditId={subredditId as string} subredditName={params.slug} />
+
 
             <div className='w-full flex justify-end'>
                 <Button type='submit' className='w-full' form='subreddit-post-form'>
