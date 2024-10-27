@@ -9,60 +9,67 @@ import RoadmapFormCard from './components/RoadmapFormCard';
 import { useTheme } from 'next-themes';
 
 
-export default function Page() {
+export default function Page({ searchParams }: {
+  searchParams?: {
+    page?: string;
+  }
+}) {
 
-  const supabase = createClient()
+  // const supabase = createClient()
 
-  const [seniorNames, setSeniorNames] = useState<SeniorName[]>([]);
-
-  useEffect(() => {
-    const fetchSeniorNames = async () => {
-      const { data, error } = await supabase
-        .from<string, any>('seniors')
-        .select('name');
-
-      if (error) {
-        console.log('Error fetching seniors:', error);
-      } else if (data) {
-        setSeniorNames(data);
-      }
-    };
-
-    fetchSeniorNames();
-  }, [supabase]);
+  const page = Number(searchParams?.page) || 1;
 
 
+  // const [seniorNames, setSeniorNames] = useState<SeniorName[]>([]);
 
-  const [roadmapInfo, setRoadmapInfo] = useState<RoadmapInfo[]>([]);
-  useEffect(() => {
-    const fetchRoadmapInfo = async () => {
-      const { data, error } = await supabase
-        .from('roadmap_info')
-        .select('*');
+  // useEffect(() => {
+  //   const fetchSeniorNames = async () => {
+  //     const { data, error } = await supabase
+  //       .from<string, any>('seniors')
+  //       .select('name');
 
-        if (error) {
-          console.log('Error fetching roadmap info', error);
-        } else if (data) {
-          const formattedData: RoadmapInfo[] = data.map((item: any) => ({
-            name: item.name,
-            major: item.major,
-            graduation_year: item.graduation_year,
-            courses_summary: item.courses_summary,
-            current_job: item.current_job,
-            advice: item.advice,
-            _clerk_user_id: item._clerk_user_id,
-          }));
-          setRoadmapInfo(formattedData);
-          console.log(roadmapInfo);
-        }
-    };
+  //     if (error) {
+  //       console.log('Error fetching seniors:', error);
+  //     } else if (data) {
+  //       setSeniorNames(data);
+  //     }
+  //   };
 
-    fetchRoadmapInfo();
+  //   fetchSeniorNames();
+  // }, [supabase]);
+
+
+
+  // const [roadmapInfo, setRoadmapInfo] = useState<RoadmapInfo[]>([]);
+  // useEffect(() => {
+  //   const fetchRoadmapInfo = async () => {
+  //     const { data, error } = await supabase
+  //       .from('roadmap_info')
+  //       .select('*');
+
+  //       if (error) {
+  //         console.log('Error fetching roadmap info', error);
+  //       } else if (data) {
+  //         const formattedData: RoadmapInfo[] = data.map((item: any) => ({
+  //           name: item.name,
+  //           major: item.major,
+  //           graduation_year: item.graduation_year,
+  //           courses_summary: item.courses_summary,
+  //           current_job: item.current_job,
+  //           advice: item.advice,
+  //           _clerk_user_id: item._clerk_user_id,
+  //         }));
+  //         setRoadmapInfo(formattedData);
+  //         console.log(roadmapInfo);
+  //       }
+  //   };
+
+  //   fetchRoadmapInfo();
     
-  }, [supabase])
+  // }, [supabase])
   
 
-const [timelinePayload, setTimelinePayload] = useState('')
+// const [timelinePayload, setTimelinePayload] = useState('')
 const [headingCardInfo, setHeadingCardInfo] = useState<RoadmapInfo>({
   name: '',
   major: '',
@@ -79,7 +86,7 @@ const [headingCardInfo, setHeadingCardInfo] = useState<RoadmapInfo>({
 
       <>
       <RoadmapFormCard/>
-      <Roadmaps roadmapInfo={roadmapInfo}/>
+      <Roadmaps page={page}/>
       </>
       
     </div>

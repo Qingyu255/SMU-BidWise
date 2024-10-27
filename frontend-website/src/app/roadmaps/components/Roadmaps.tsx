@@ -1,14 +1,60 @@
 "use client"
 import Timeline from '@/app/roadmaps/components/Timeline'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import RoadmapCard from './RoadmapCard'
-import { RoadmapsProps } from '@/types'
+import { RoadmapInfo, RoadmapsProps } from '@/types'
+import createClient from '@/utils/supabase/client'
+import PageToggle from '@/app/courses/components/PageToggle'
 
 
 
-const Roadmaps: React.FC<RoadmapsProps> = ({ roadmapInfo }) => {
+
+const Roadmaps: React.FC<RoadmapsProps> = ({ page }) => {
+
+    const supabase = createClient()
+    const [roadmapInfo, setRoadmapInfo] = useState<RoadmapInfo[]>([]);
+    const currentPage = page || 1;
+    const limit: number = 1;
+    const from = (currentPage - 1) * limit;
+    const to = from + limit - 1
+    console.log('from:', from)
+    console.log('to:', to);
+    const totalPages = useRef(1);
+
+    useEffect(() => {
+      const fetchRoadmapInfo = async () => {
+        const { data, error, count } = await supabase
+        .from('roadmap_info')
+        .select('*',
+            { count: 'exact' })
+        .range(from, to);
+        
+        console.log('data', data)
+        if (count) {
+            totalPages.current = Math.ceil(count / limit);
+        }
+
+        if (error) {
+        console.log('Error fetching roadmap info', error);
+        } else if (data) {
+        const formattedData: RoadmapInfo[] = data.map((item: any) => ({
+            name: item.name,
+            major: item.major,
+            graduation_year: item.graduation_year,
+            courses_summary: item.courses_summary,
+            current_job: item.current_job,
+            advice: item.advice,
+            _clerk_user_id: item._clerk_user_id,
+        }));
+        setRoadmapInfo(formattedData);
+        console.log(roadmapInfo);
+        }
+      };
+  
+      fetchRoadmapInfo();
+      
+    }, [supabase, currentPage])
     
-
 
     
     return (
@@ -23,6 +69,8 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ roadmapInfo }) => {
                         advice={roadmap.advice} 
                         />
                     ))}
+            <PageToggle currentPage={currentPage} totalPages={totalPages.current} />
+
             
         </div>
        

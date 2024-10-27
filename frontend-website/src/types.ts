@@ -188,7 +188,8 @@ export interface SeniorRoadmap {
 }
 
 export interface RoadmapsProps {
-  roadmapInfo: RoadmapInfo[];
+  // roadmapInfo: RoadmapInfo[];
+  page: number;
   // onClick: (name: string, roadmap: RoadmapInfo) => void;
 }
 
