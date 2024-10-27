@@ -17,8 +17,6 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page }) => {
     const limit: number = 1;
     const from = (currentPage - 1) * limit;
     const to = from + limit - 1
-    console.log('from:', from)
-    console.log('to:', to);
     const totalPages = useRef(1);
 
     useEffect(() => {
@@ -39,7 +37,7 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page }) => {
         } else if (data) {
         const formattedData: RoadmapInfo[] = data.map((item: any) => ({
             name: item.name,
-            major: item.major,
+            degree: item.degree,
             graduation_year: item.graduation_year,
             courses_summary: item.courses_summary,
             current_job: item.current_job,
@@ -62,7 +60,7 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page }) => {
             {roadmapInfo.map((roadmap) => (
                         <RoadmapCard key={roadmap.name} 
                         name={roadmap.name}
-                        major={roadmap.major} 
+                        major={roadmap.degree} 
                         graduation_year={roadmap.graduation_year} 
                         courses_summary={roadmap.courses_summary} 
                         current_job={roadmap.current_job} 

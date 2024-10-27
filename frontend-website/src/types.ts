@@ -230,7 +230,7 @@ export type FormStep = 1 | 2;
 
 export type RoadmapInfo = {
   name: string;
-  major: string;
+  degree: string;
   graduation_year: number;
   courses_summary: string;
   current_job: string;

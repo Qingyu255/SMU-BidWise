@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 const overallSchema = z.object({
   roadmap: z.object({
     name: z.string().min(2).max(50),
-    major: z.string().min(2).max(80),
+    degree: z.string().min(2).max(80),
     graduation_year: z.number().min(2003).max(new Date().getFullYear()),
     courses_summary: z.string().min(2).max(300),
     current_job: z.string().min(2).max(80),
@@ -41,7 +41,7 @@ const Page: React.FC = () => {
     defaultValues: {
       roadmap: {
         name: "",
-        major: "",
+        degree: "",
         graduation_year: new Date().getFullYear(),
         courses_summary: "",
         current_job: "",
@@ -78,7 +78,7 @@ const Page: React.FC = () => {
       // Upsert into 'roadmap_info'
       const roadmapPayload = {
         name: data.roadmap.name,
-        major: data.roadmap.major,
+        degree: data.roadmap.degree,
         graduation_year: data.roadmap.graduation_year,
         courses_summary: data.roadmap.courses_summary,
         current_job: data.roadmap.current_job,

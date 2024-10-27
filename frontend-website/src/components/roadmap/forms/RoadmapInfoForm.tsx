@@ -10,6 +10,15 @@ import {
   FormDescription,
   FormMessage,
 } from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button'; // Import the Button component
 
@@ -48,23 +57,46 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
 
         {/* Major Field */}
         <FormField
-          name="roadmap.major"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="roadmap.major">Major</FormLabel>
-              <FormControl>
-                <Input
-                  id="roadmap.major"
-                  placeholder="Computer Science"
-                  {...field}
-                  value={field.value || ''}
-                />
-              </FormControl>
-              <FormDescription>This is the major you graduated with.</FormDescription>
-              <FormMessage>{errors.roadmap?.major?.message}</FormMessage>
-            </FormItem>
-          )}
-        />
+              
+              name="roadmap.degree"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Degree</FormLabel>
+                  <FormControl>
+                    
+                    <Select 
+                        onValueChange={(value) => field.onChange(value)}
+                        value={field.value}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a Degree" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Degree:</SelectLabel>
+                          <SelectItem value="Bachelor of Integrative Studies">Bachelor of Integrative Studies</SelectItem>
+                          <SelectItem value="Bachelor of Accountancy">Bachelor of Accountancy</SelectItem>
+                          <SelectItem value="Bachelor of Business Management">Bachelor of Business Management</SelectItem>
+                          <SelectItem value="Bachelor of Science (Economics)">Bachelor of Science (Economics)</SelectItem>
+                          <SelectItem value="Bachelor of Science (Information Systems)">Bachelor of Science (Information Systems)</SelectItem>
+                          <SelectItem value="Bachelor of Science (Computer Science)">Bachelor of Science (Computer Science)</SelectItem>
+                          <SelectItem value="Bachelor of Science (Computing and Law)">Bachelor of Science (Computing and Law)</SelectItem>
+                          <SelectItem value="Bachelor of Science (Software Engineering)">Bachelor of Science (Software Engineering)</SelectItem>
+                          <SelectItem value="Bachelor of Laws">Bachelor of Laws</SelectItem>
+                          <SelectItem value="Bachelor of Social Science">Bachelor of Social Science</SelectItem>
+
+
+                        </SelectGroup>
+                      </SelectContent>
+                  </Select>
+                  </FormControl>
+                  <FormDescription>
+                    This is the degree you graduated with.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
         {/* Graduation Year Field */}
         <FormField

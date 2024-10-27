@@ -22,7 +22,7 @@ const Page = ({ params }: { params : {name: string}}) => {
             .eq('name', name);
             const formattedData: RoadmapInfo[] = data ? data.map((item: any) => ({
             name: item.name,
-            major: item.major,
+            degree: item.degree,
             graduation_year: item.graduation_year,
             courses_summary: item.courses_summary,
             current_job: item.current_job,
