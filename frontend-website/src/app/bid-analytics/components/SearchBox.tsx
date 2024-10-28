@@ -13,6 +13,7 @@ import {
 import { useDebounce } from 'use-debounce';
 import { useRouter, usePathname } from 'next/navigation';
 import { useTimetable } from '@/components/providers/timetableProvider';
+import Link from 'next/link';
 
 export function SearchBox() {
   const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
@@ -30,7 +31,7 @@ export function SearchBox() {
 
   useEffect(() => {
       const fetchAllCourseCodes = async () => {
-          const response = await fetch(`${apiURL}/uniquecourses`, { next: { revalidate: 86400 } });
+          const response = await fetch(`${apiURL}/uniquecourses`);
           const jsonPayload = await response.json()
           setUniqueCourses(jsonPayload.data)
       }
@@ -63,9 +64,11 @@ export function SearchBox() {
         <CommandList>
           <CommandGroup heading="Courses in your timetable:">
             {selectedClassCodeArr.map((courseCode, index) => (
-              <CommandItem key={index} onSelect={() => {handleCourseSelection(courseCode + ":"); setShowTimetableClasses(false);}}>
-                <span>{courseCode}</span>
-              </CommandItem>
+              <a key={index} href={`${pathname}?courseCode=${courseCode}`}>
+                <CommandItem onSelect={() => {handleCourseSelection(courseCode + ":"); setShowTimetableClasses(false);}}>
+                  <span>{courseCode}</span>
+                </CommandItem>
+              </a>
             ))}
           </CommandGroup>
         </CommandList>
@@ -79,9 +82,11 @@ export function SearchBox() {
         {(uniqueCourses.length > 0) && (
           <CommandGroup heading="Courses">
             {uniqueCourses.map((course, index) => (
-              <CommandItem key={index} onSelect={() => {handleCourseSelection(course)}}>
-                <span>{course}</span>
-              </CommandItem>
+              <a key={index} href={`${pathname}?courseCode=${course.split(":")[0]}`}>
+                <CommandItem key={index} onSelect={() => {handleCourseSelection(course)}}>
+                  <span>{course}</span>
+                </CommandItem>
+              </a>
             ))}
           </CommandGroup>
         )}
