@@ -7,6 +7,9 @@ import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
 import "./Reviews.css";
 import Image from 'next/image';
+import { ChevronDown, ChevronUp, Plus } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Separator } from '../ui/separator';
 
 // Define the Review type based on your 'reviews' table structure
 type Review = {
@@ -19,6 +22,7 @@ type Review = {
 const Reviews = () => {
   const { theme } = useTheme(); // Get the current theme
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [showReviewForm, setShowReviewForm] = useState<boolean>(false);
   const [loading, setLoading] = useState(true); // Loading state
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [name, setName] = useState("");
@@ -123,7 +127,18 @@ const Reviews = () => {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="review-form">
+    <div className='text-right'>
+        <Button onClick={() => setShowReviewForm(!showReviewForm)}>
+            {!showReviewForm ? (
+                <Plus className="w-5 h-5" />
+            ) : (
+                <ChevronUp className="w-5 h-5" />
+            )}
+            {showReviewForm ? '' : ' Write a review!'}
+        </Button>
+    </div>
+    {showReviewForm && (
+        <form onSubmit={handleSubmit} className="review-form">
         <h3>Leave a Review</h3>
         <input
           type="text"
@@ -150,6 +165,7 @@ const Reviews = () => {
         </select>
         <button type="submit">Submit Review</button>
       </form>
+    )}
     </div>
   );
 };

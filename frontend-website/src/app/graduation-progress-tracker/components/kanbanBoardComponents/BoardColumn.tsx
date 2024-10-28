@@ -80,7 +80,9 @@ export function BoardColumn({ column, tasks, isOverlay, onRemoveTask, onToggleTa
       })}
     >
       <CardHeader className="p-4 font-semibold border-b-2 text-left flex flex-row space-between items-center">
-        <Button
+        {/* below code commented out allows for draggable columns but we will not be allowing semester cols to be draggable */}
+        
+        {/* <Button
           variant={"ghost"}
           {...attributes}
           {...listeners}
@@ -88,8 +90,8 @@ export function BoardColumn({ column, tasks, isOverlay, onRemoveTask, onToggleTa
         >
           <span className="sr-only">{`Move column: ${column.title}`}</span>
           <GripVertical />
-        </Button>
-        {/* <span className="ml-auto"> {column.title}</span> */}
+        </Button> */}
+
         <Badge variant={"outline"} className="ml-auto font-semibold text-base">
           {column.title}
         </Badge>

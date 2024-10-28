@@ -80,11 +80,11 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
     return (
         <>
             <Card>
-                <CardHeader>
+                {/* <CardHeader>
                     <ProgressBar totalCourses={tasks.length} completedCourses={completedTasks} />
-                </CardHeader>
+                </CardHeader> */}
                 <CardContent>
-                    <div className='pb-2'>
+                    <div className='py-2'>
                         <AddCourseForm courseOptions={courseOptions} onAddCourse={handleAddCourse} />
                     </div>
                     {tasks.length === 0 && (
