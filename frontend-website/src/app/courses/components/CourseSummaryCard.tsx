@@ -20,7 +20,7 @@ export default function CourseSummaryCard({ course_id, course_code, title, caree
             <Card className="w-full bg-background text-foreground">
                 <div>
                 <CardHeader>
-                    <Link href={"courses/" + course_code}>
+                    <Link href={"/courses/" + course_code}>
                         <CardTitle className="text-xl lg:text-2xl flex flex-row cursor-pointer hover:text-slate-500">
                             <span className="flex items-center">{course_code}</span>
                             <Separator className="mx-2 my-[5px] h-100 w-[2px]" orientation="vertical"/>
