@@ -175,6 +175,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, instruct
                     
                         {(isTermDropdownVisible && termDropdownArr.length > 0) && (
                             <DropDown 
+                                selected={selectedTerm}
                                 category='Term'
                                 onSelect={handleTermSelect}
                                 options={termDropdownArr}

@@ -164,7 +164,8 @@ export default function VisualiseTrendAcrossSemesters({courseCode, instructorSel
                         />
                     
                         {(isBiddingWindowDropdownVisible && biddingWindowDropdownArr.length > 0) && (
-                            <DropDown 
+                            <DropDown
+                                selected={selectedBiddingWindow}
                                 category='Bidding Window'
                                 onSelect={handleBiddingWindowSelect}
                                 options={biddingWindowDropdownArr}
