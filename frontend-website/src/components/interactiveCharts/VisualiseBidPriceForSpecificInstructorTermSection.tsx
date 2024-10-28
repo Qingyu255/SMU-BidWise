@@ -10,12 +10,12 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
 
     const [error, setError] = useState<any>(null)
+    const [noBidDataError, setNoBidDataError] = useState<any>(null)
 
     const [courseInstructorsDropdownArr, setCourseInstructorsDropdownArr] = useState<string[]>()
     const [courseInstructorSelected, setCourseInstructorSelected] = useState<string>(instructorSelected ? instructorSelected : "");
 
     const [termDropdownArr, setTermDropdownArr] = useState<string[]>([])
-    const [isTermDropdownVisible, setIsTermDropdownVisible] = useState<boolean>(false)
     const [selectedTerm, setTerm] = useState<string>("")
     const [selectedSection, setSection] = useState<string>("")
 
@@ -53,7 +53,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
         }
     }
 
-    const handleInstructorSelect = (instructorSelected: string) => {
+    const handleInstructorSelect = async (instructorSelected: string) => {
         setCourseInstructorSelected(instructorSelected)
         // reset dropdown options
         // setTerm("")
@@ -61,10 +61,9 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
         // hide charts until bidding window selected
         setHideDetailedCharts(true)
         // Now we fetch the windows in which this course has been bid for in the past
-        fetchAvailableTermsOfInstructorWhoTeachCourse(courseCode, instructorSelected)
+        await fetchAvailableTermsOfInstructorWhoTeachCourse(courseCode, instructorSelected)
         setIsSectionDropdownVisible(false)
-        // Make bidding window dropdown visible
-        setIsTermDropdownVisible(true)
+        setNoBidDataError(null);
     }
 
     const handleTermSelect = async (term: string) => {
@@ -103,8 +102,8 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
                         datasets: [firstDatasetUpdated, ...chartDataInstructorsBiddingWindow.chartData.datasets.slice(1), ...vacanciesDatasets]
                     }
                 }
-                console.log(updatedVacanciesInChartData)
-                setChartDataAcrossBiddingWindow(updatedVacanciesInChartData)
+                setChartDataAcrossBiddingWindow(updatedVacanciesInChartData);
+                setNoBidDataError(null);
             } else {
                 console.error("chartData or chartDataInstructorsBiddingWindow is undefined")
             }
@@ -154,7 +153,16 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
             }
         }
 
-        fetchInstructorsWhoTeachCourseCode()
+        const fetchTermsIfInstructorSelected = async () => {
+            // for example if instructor selected passed in is not empy string
+            if (!courseInstructorSelected) {
+                return;
+            }
+            await fetchAvailableTermsOfInstructorWhoTeachCourse(courseCode, courseInstructorSelected);
+        }
+
+        fetchInstructorsWhoTeachCourseCode();
+        fetchTermsIfInstructorSelected();
     }, [apiURL, courseCode])
 
     useEffect(() => {
@@ -168,11 +176,9 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
             return;
         }
         if (!courseInstructorsDropdownArr.includes(courseInstructorSelected)) {
-            setError({ message: "No " + courseCode + " Bidding Data found for " + courseInstructorSelected});
+            setNoBidDataError({ message: "No " + courseCode + " Bidding Data found for " + courseInstructorSelected});
             return;
         }
-        console.log("here")
-        handleInstructorSelect(courseInstructorSelected);
     }, [courseInstructorSelected, courseInstructorsDropdownArr])
 
     return (
@@ -191,23 +197,28 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
                             options={courseInstructorsDropdownArr}
                             // showFirstOption={false}
                         />
-                    {(termDropdownArr.length > 0) && (
-                        <DropDown 
-                            category='Term'
-                            onSelect={handleTermSelect}
-                            options={termDropdownArr}
-                            showFirstOption={false}
-                        />
-                    )}
-                    {(isSectionDropdownVisible && sectionDropdownArr.length > 0) && (
-                        <DropDown 
-                            category='Section'
-                            onSelect={handleSectionSelect}
-                            options={sectionDropdownArr}
-                            showFirstOption={false}
-                        />
-                    )}
+                        {(termDropdownArr.length > 0) && (
+                            <DropDown 
+                                category='Term'
+                                onSelect={handleTermSelect}
+                                options={termDropdownArr}
+                                showFirstOption={false}
+                            />
+                        )}
+                        {(isSectionDropdownVisible && sectionDropdownArr.length > 0) && (
+                            <DropDown 
+                                category='Section'
+                                onSelect={handleSectionSelect}
+                                options={sectionDropdownArr}
+                                showFirstOption={false}
+                            />
+                        )}
                     </div>
+                    
+                    {noBidDataError && (
+                        <ErrorPopUp errorMessage={noBidDataError.message}/>
+                    )}
+
                     {(!hideDetailedCharts && selectedTerm && chartDataAcrossBiddingWindow) ? (
                         <div className='px-5 sm:px-8'>
                             <MultitypeChart 

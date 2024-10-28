@@ -10,6 +10,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, instructorSel
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
 
     const [error, setError] = useState<any>(null)
+    const [noBidDataError, setNoBidDataError] = useState<any>(null)
 
     const [courseInstructorsDropdownArr, setCourseInstructorsDropdownArr] = useState<string[]>()
     const [courseInstructorSelected, setCourseInstructorSelected] = useState<string>(instructorSelected ? instructorSelected : "");
@@ -51,7 +52,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, instructorSel
         // Now we fetch the windows in which this course has been bid for in the past
         await fetchAvailableBiddingWindowsOfInstructorWhoTeachCourse(courseCode, instructorSelected)
         // Make bidding window dropdown visible
-        setIsBiddingWindowDropdownVisible(true)
+        setIsBiddingWindowDropdownVisible(true);
     }
     const update_before_after_vacancy_data = async (chartDataInstructorsBiddingWindow: chartAttributes, biddingWindow: string) => {
         try {
@@ -78,7 +79,8 @@ export default function VisualiseTrendAcrossSemesters({courseCode, instructorSel
                         datasets: [firstDatasetUpdated, ...chartDataInstructorsBiddingWindow.chartData.datasets.slice(1), ...vacanciesDatasets]
                     }
                 }
-                setChartDataInstructorsBiddingWindow(updatedVacanciesInChartData)
+                setChartDataInstructorsBiddingWindow(updatedVacanciesInChartData);
+                setNoBidDataError(null);
             } else {
                 console.error("chartData or chartDataInstructorsBiddingWindow is undefined")
             }
@@ -96,7 +98,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, instructorSel
             const jsonPayload = await response.json()
             update_before_after_vacancy_data(jsonPayload, biddingWindow) // state change is made in this update function
             // show charts again
-            setHideDetailedCharts(false)
+            setHideDetailedCharts(false);
             // scrollToDiv("VisualiseTrendAcrossSemesters")
         } catch (error: any) {
             setError(error)
@@ -140,7 +142,7 @@ export default function VisualiseTrendAcrossSemesters({courseCode, instructorSel
             return;
         }
         if (courseInstructorsDropdownArr && !courseInstructorsDropdownArr.includes(courseInstructorSelected)) {
-            setError({ message: "No " + courseCode + " Bidding Data found for " + courseInstructorSelected});
+            setNoBidDataError({ message: "No " + courseCode + " Bidding Data found for " + courseInstructorSelected});
         }
     }, [courseInstructorSelected, courseInstructorsDropdownArr])
 
@@ -161,14 +163,19 @@ export default function VisualiseTrendAcrossSemesters({courseCode, instructorSel
                             options={courseInstructorsDropdownArr}
                         />
                     
-                    {(isBiddingWindowDropdownVisible && biddingWindowDropdownArr.length > 0) && (
-                        <DropDown 
-                            category='Bidding Window'
-                            onSelect={handleBiddingWindowSelect}
-                            options={biddingWindowDropdownArr}
-                        />
-                    )}
+                        {(isBiddingWindowDropdownVisible && biddingWindowDropdownArr.length > 0) && (
+                            <DropDown 
+                                category='Bidding Window'
+                                onSelect={handleBiddingWindowSelect}
+                                options={biddingWindowDropdownArr}
+                            />
+                        )}
                     </div>
+
+                    {noBidDataError && (
+                        <ErrorPopUp errorMessage={noBidDataError.message}/>
+                    )}
+
                     {(!hideDetailedCharts && selectedBiddingWindow && chartDataInstructorsBiddingWindow) ? (
                         <div className='px-5 sm:px-8'>
                             <MultitypeChart 
@@ -183,9 +190,13 @@ export default function VisualiseTrendAcrossSemesters({courseCode, instructorSel
                         </div>
                         
                     ): (
-                        <div className='flex justify-center items-center'>
-                            <Spinner color="default"/>
-                        </div>   
+                        <>
+                            {(!noBidDataError) && (
+                                <div className='flex justify-center items-center'>
+                                    <Spinner color="default"/>
+                                </div>
+                            )}
+                        </>   
                     )}
                 </div>
             )}

@@ -10,6 +10,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, instruct
     const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
 
     const [error, setError] = useState<any>(null)
+    const [noBidDataError, setNoBidDataError] = useState<any>(null)
 
     const [courseInstructorsDropdownArr, setCourseInstructorsDropdownArr] = useState<string[]>()
     const [courseInstructorSelected, setCourseInstructorSelected] = useState<string>(instructorSelected ? instructorSelected : "");
@@ -80,26 +81,8 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, instruct
                         datasets: [firstDatasetUpdated, ...chartDataInstructorsBiddingWindow.chartData.datasets.slice(1), ...vacanciesDatasets]
                     }
                 }
-                // // added in logic to break up bidding window label for incoming freshmen or exchange windows as they are too long (in mobile view port)
-                // let labelsTemp = chartDataInstructorsBiddingWindow.chartData.labels
-                // try {
-                //     for (let i = 0; i < labelsTemp.length; i++) {
-                //         const label = labelsTemp[i].toLowerCase()
-                //         if (label.includes("Incoming Exchange ")) {
-                //             const round_string = label.split("Incoming Exchange ")[0]
-                //             labelsTemp[i] = "Inc Exc " + round_string
-                //         } 
-                //         // else if (label.toLowerCase().includes("Incoming Freshmen ")) {
-                //         //     const round_string = label.split("Incoming Freshmen ")[0]
-                //         //     labelsTemp[i] = "Inc Freshie " + round_string
-                //         // }
-                //     }
-                // } catch (error: any) {
-                //     console.log(error)
-                // }
-                
-                // setChartDataAcrossBiddingWindow(brokeUpLongWindowLabelStrings)
-                setChartDataAcrossBiddingWindow(updatedVacanciesInChartData)
+                setChartDataAcrossBiddingWindow(updatedVacanciesInChartData);
+                setNoBidDataError(null);
             } else {
                 console.error("chartData or chartDataInstructorsBiddingWindow is undefined")
             }
@@ -169,7 +152,7 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, instruct
             return;
         }
         if (courseInstructorsDropdownArr && !courseInstructorsDropdownArr.includes(courseInstructorSelected)) {
-            setError({ message: "No " + courseCode + " Bidding Data found for " + courseInstructorSelected});
+            setNoBidDataError({ message: "No " + courseCode + " Bidding Data found for " + courseInstructorSelected});
         }
     }, [courseInstructorSelected, courseInstructorsDropdownArr])
 
@@ -190,14 +173,19 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, instruct
                             options={courseInstructorsDropdownArr}
                         />
                     
-                    {(isTermDropdownVisible && termDropdownArr.length > 0) && (
-                        <DropDown 
-                            category='Term'
-                            onSelect={handleTermSelect}
-                            options={termDropdownArr}
-                        />
-                    )}
+                        {(isTermDropdownVisible && termDropdownArr.length > 0) && (
+                            <DropDown 
+                                category='Term'
+                                onSelect={handleTermSelect}
+                                options={termDropdownArr}
+                            />
+                        )}
                     </div>
+
+                    {noBidDataError && (
+                        <ErrorPopUp errorMessage={noBidDataError.message}/>
+                    )}
+
                     {(!hideDetailedCharts && selectedTerm && chartDataAcrossBiddingWindow) ? (
                         <div className='px-5 sm:px-8'>
                             <MultitypeChart 
@@ -212,9 +200,13 @@ export default function VisualiseTrendAcrossBiddingWindows({courseCode, instruct
                         </div>
                         
                     ): (
-                        <div className='flex justify-center items-center'>
-                            <Spinner color="default"/>
-                        </div>   
+                        <>
+                            {(!noBidDataError) && (
+                                <div className='flex justify-center items-center'>
+                                    <Spinner color="default"/>
+                                </div>
+                            )}
+                        </>   
                     )}
                 </div>
             )}
