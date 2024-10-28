@@ -43,9 +43,9 @@ export function SearchBox() {
   }
 
   const handleCourseSelection = (fullCourseString: string) => {
-    const courseCode = fullCourseString.split(":")[0];
     setSearchText("");
-    router.push(`${pathname}?courseCode=${courseCode}`);
+    // const courseCode = fullCourseString.split(":")[0];
+    // router.push(`${pathname}?courseCode=${courseCode}`);
   }
 
   return (
@@ -64,11 +64,11 @@ export function SearchBox() {
         <CommandList>
           <CommandGroup heading="Courses in your timetable:">
             {selectedClassCodeArr.map((courseCode, index) => (
-              <a key={index} href={`${pathname}?courseCode=${courseCode}`}>
+              <Link key={index} href={`${pathname}?courseCode=${courseCode}`}>
                 <CommandItem onSelect={() => {handleCourseSelection(courseCode + ":"); setShowTimetableClasses(false);}}>
                   <span>{courseCode}</span>
                 </CommandItem>
-              </a>
+              </Link>
             ))}
           </CommandGroup>
         </CommandList>
@@ -82,11 +82,11 @@ export function SearchBox() {
         {(uniqueCourses.length > 0) && (
           <CommandGroup heading="Courses">
             {uniqueCourses.map((course, index) => (
-              <a key={index} href={`${pathname}?courseCode=${course.split(":")[0]}`}>
+              <Link key={index} href={`${pathname}?courseCode=${course.split(":")[0]}`}>
                 <CommandItem key={index} onSelect={() => {handleCourseSelection(course)}}>
                   <span>{course}</span>
                 </CommandItem>
-              </a>
+              </Link>
             ))}
           </CommandGroup>
         )}

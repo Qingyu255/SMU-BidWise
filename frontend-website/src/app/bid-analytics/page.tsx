@@ -31,19 +31,28 @@ export default function Page() {
     const [error, setError] = useState<any>(null)
     const [chartWidthHeightArr, setChartWidthHeightArr] = useState<string[]>(["", ""])
 
-    useEffect(() => {
-        if (!courseCodeParam) {
-            return;
-        }
-        setCourseCode(courseCodeParam.toUpperCase());
-    }, [courseCodeParam]);
+    // useEffect(() => {
+    //     if (!courseCodeParam) {
+    //         return;
+    //     }
+    //     setCourseCode(courseCodeParam.toUpperCase());
+    // }, [courseCodeParam]);
+
+    // useEffect(() => {
+    //     if (!instructorParam) {
+    //         return;
+    //     }
+    //     setInstructor(instructorParam.toUpperCase());
+    // }, [instructorParam]);
 
     useEffect(() => {
-        if (!instructorParam) {
-            return;
+        if (courseCodeParam && courseCodeParam.toUpperCase() !== courseCode) {
+            setCourseCode(courseCodeParam.toUpperCase());
         }
-        setInstructor(instructorParam.toUpperCase());
-    }, [instructorParam]);
+        if (instructorParam && instructorParam !== instructor) {
+            setInstructor(instructorParam);
+        }
+    }, [searchParams, courseCodeParam, instructorParam]);
 
     useEffect(() => {
         const fetchCourseName = async () => {
@@ -96,7 +105,7 @@ export default function Page() {
         // fetchCourseMinMaxMeanMedianMedianData()
         fetch_all_instructor_median_median_bid_by_course_code();
         
-    }, [courseCode, courseCodeParam, apiURL]);
+    }, [courseCode, apiURL]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -160,7 +169,8 @@ export default function Page() {
                                 <p className='text-gray-500 text-xs sm:text-sm pt-3 sm:pt-5'>*Double click bar to see instructor&apos;s Afterclass reviews (if it exists)</p>
                             </div>
                             <hr></hr>
-                            <div>
+                            {/* // force re-render on courseCode or instructor change (temp fix) */}
+                            <div key={courseCode + instructor}> 
                                 <VisualiseTrendAcrossSemesters 
                                     courseCode={courseCode} 
                                     instructorSelected={instructor ? instructor : ""}
@@ -174,7 +184,6 @@ export default function Page() {
                                     height={chartWidthHeightArr[1]}
                                 />
                                 <VisualiseBidPriceForSpecificInstructorTermSection
-                                    key={courseCode} // force re-render on courseCode change (temp fix)
                                     courseCode={courseCode} 
                                     instructorSelected={instructor ? instructor : ""}
                                     width={chartWidthHeightArr[0]}  

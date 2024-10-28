@@ -164,12 +164,14 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
     }, [chartDataAcrossBiddingWindow])
 
     useEffect(() => {
-        if (!courseInstructorSelected) {
+        if (!courseInstructorSelected || !courseInstructorsDropdownArr) {
             return;
         }
-        if (courseInstructorsDropdownArr && !courseInstructorsDropdownArr.includes(courseInstructorSelected)) {
+        if (!courseInstructorsDropdownArr.includes(courseInstructorSelected)) {
             setError({ message: "No " + courseCode + " Bidding Data found for " + courseInstructorSelected});
+            return;
         }
+        console.log("here")
         handleInstructorSelect(courseInstructorSelected);
     }, [courseInstructorSelected, courseInstructorsDropdownArr])
 
@@ -189,7 +191,7 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
                             options={courseInstructorsDropdownArr}
                             // showFirstOption={false}
                         />
-                    {(isTermDropdownVisible && termDropdownArr.length > 0) && (
+                    {(termDropdownArr.length > 0) && (
                         <DropDown 
                             category='Term'
                             onSelect={handleTermSelect}
