@@ -127,7 +127,7 @@ const Reviews = () => {
         )}
       </div>
 
-    <div className='text-right'>
+    <div className='text-right my-3'>
         <Button onClick={() => setShowReviewForm(!showReviewForm)}>
             {!showReviewForm ? (
                 <Plus className="w-5 h-5" />

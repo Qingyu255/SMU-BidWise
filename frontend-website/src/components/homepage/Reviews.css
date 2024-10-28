@@ -29,7 +29,6 @@ img {
 .slider-container {
     position: relative;
     user-select: none;
-    padding-inline: 1rem;
 }
 
 .slider-container .review-img {
