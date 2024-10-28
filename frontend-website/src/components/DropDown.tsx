@@ -38,7 +38,7 @@ export default function DropDown( props : DropdownProps ) {
         if (options.length > 0 && props.showFirstOption !== false) {
             // if options not empty, set selected to first option in options array
             // if selected passed in, set selected option to selected
-            setSelectedOption(selected ? `${category}: ${selected}` : `${category}: ${options[0]}`);
+            setSelectedOption(selected ? `${category}: ${selected}` : `Select ${category}`);
             setPosition(selected ? selected : options[0]);
         }
     }, [options, category, selected])
