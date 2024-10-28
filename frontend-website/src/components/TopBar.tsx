@@ -82,10 +82,10 @@ export default function TopBar() {
                     </div>
                 </div>
             </SignedIn> */}
-            <span className='font-bold text-lg sm:text-xl md:text-2xl'>{pageName}</span>
+            <span className='font-bold text-base sm:text-xl md:text-2xl'>{pageName}</span>
         </div>
         <div className='flex items-center gap-2'>
-            <Badge id='term' className='font-bold'>{latestTerm}</Badge>
+            <Badge id='term' className='text-xs md:text-sm font-bold'>{latestTerm}</Badge>
             <ModeToggle/>
         </div>
     
