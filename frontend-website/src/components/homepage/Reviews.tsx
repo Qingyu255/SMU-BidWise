@@ -101,9 +101,9 @@ const Reviews = () => {
         ) : (
           <Splide options={{ perPage: 1 }}>
             {reviews.length > 0 ? (
-              reviews.map((review) => (
+              [...reviews].reverse().map((review) => (  // Reverses the reviews array
                 <SplideSlide key={review.id}>
-                  <Image src="/images/user.png" alt="User icon" width={45} height={45}/>
+                  <img src="/images/user.png" className="review-img" alt="User icon" />
                   <div className="content">
                     <p className="text">{review.text}</p>
                     <div className="info">
