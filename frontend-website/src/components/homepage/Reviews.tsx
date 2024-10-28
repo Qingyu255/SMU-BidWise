@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
 import "./Reviews.css";
+import Image from 'next/image';
 
 // Define the Review type based on your 'reviews' table structure
 type Review = {
@@ -98,7 +99,7 @@ const Reviews = () => {
             {reviews.length > 0 ? (
               reviews.map((review) => (
                 <SplideSlide key={review.id}>
-                  <img src="/images/user.png" className="review-img" alt="User icon" />
+                  <Image src="/images/user.png" alt="User icon" width={45} height={45}/>
                   <div className="content">
                     <p className="text">{review.text}</p>
                     <div className="info">

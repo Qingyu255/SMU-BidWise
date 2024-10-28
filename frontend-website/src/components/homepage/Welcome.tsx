@@ -59,7 +59,8 @@ const WelcomeMessage = () => {
           lineHeight: '1.2',
           paddingTop: '1rem',
         }}>
-          Welcome to <span style={{
+          {/* Welcome to  */}
+          <span style={{
             background: 'linear-gradient(135deg, #3C5AA6, #D4A76A)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
@@ -72,12 +73,12 @@ const WelcomeMessage = () => {
           fontSize: isMobile ? '1.25rem' : isTablet ? '1.75rem' : '2rem',
           lineHeight: '1.4',
         }}>
-          Optimizing the module bidding process for SMU students.
+          Welcome to a Smarter Way to Plan and Bid courses on SMU BidWise!
         </p>
         {/* Button Section */}
         <div className={styles.wrapper}>
-          <a href="/courses" className='get-started'><span>Get started</span></a>
-          <a href="#about-section" className='learn-more'><span>Learn more about us</span></a>
+          <a href="/courses" className='get-started font-semibold'><span>Get Started</span></a>
+          <a href="#about-section" className='learn-more font-semibold'><span>About Us</span></a>
         </div>
       </div>
 

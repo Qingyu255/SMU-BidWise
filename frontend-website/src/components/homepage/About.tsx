@@ -104,12 +104,10 @@ const About = () => {
       <div style={{}}>
         <p style={sectionSubTextStyle}>Introduction</p>
         <h2 style={sectionHeadTextStyle}>Overview</h2>
-        <p>
-          Welcome to SMU BidWise! Transform your module bidding experience with
-          real-time analytics, personalized insights, and an intuitive
-          timetable. Access senior roadmaps, bid price trends, and a graduation
-          tracker to make informed decisions. Stay updated on course
-          availability and enjoy seamless data visualizations—all in one place!
+        <p className="text-lg">
+          Say goodbye to juggling countless tabs with BOSS! SMU BidWise streamlines your module bidding experience with an intuitive course search, 
+          insightful bid price analytics, and a flexible timetable. Discover academic roadmaps from seniors, make smarter decisions, 
+          and track course availability—all in one place!
         </p>
       </div>
 
@@ -265,8 +263,7 @@ const About = () => {
                         <CardContent className="card-content">
                           <p className={theme}>
                             {/* Pass the theme for paragraph color */}
-                            Access your schedule anytime, anywhere, with
-                            seamless cloud integration
+                            Access your schedule anytime, anywhere, with cloud saving
                           </p>
                           <img src="/images/cloud.gif" alt="Sync to Cloud" />
                         </CardContent>
@@ -274,7 +271,7 @@ const About = () => {
 
                       <Card className={`card ${theme}`}>
                         <CardHeader className={`card-header ${theme}`}>
-                          <CardTitle>Customize</CardTitle>
+                          <CardTitle>Customise</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
                           <p className={theme}>
@@ -288,13 +285,12 @@ const About = () => {
 
                       <Card className={`card ${theme}`}>
                         <CardHeader className={`card-header ${theme}`}>
-                          <CardTitle>Module Overview</CardTitle>
+                          <CardTitle>Timetable Summary</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
                           <p className={theme}>
                             {/* Pass the theme for paragraph color */}
-                            Instantly see a clear summary of all your modules,
-                            helping you stay organized
+                            Instantly see a clear summary of all your added modules
                           </p>
                           <img src="/images/look.gif" alt="Module Overview" />
                         </CardContent>
@@ -327,8 +323,7 @@ const About = () => {
                                   color: "black", // Paragraph text color
                                 }}
                               >
-                                Access your schedule anytime, anywhere, with
-                                seamless cloud integration
+                                Access your schedule anytime, anywhere, with cloud saving
                               </p>
                               <img
                                 src="/images/cloud.gif"
@@ -349,7 +344,7 @@ const About = () => {
                               <CardTitle
                                 style={{ fontSize: "16px", color: "black" }}
                               >
-                                Customize
+                                Customise
                               </CardTitle>
                             </CardHeader>
                             <CardContent>
@@ -390,8 +385,7 @@ const About = () => {
                                   color: "black", // Paragraph text color
                                 }}
                               >
-                                Instantly see a clear summary of all your
-                                modules, helping you stay organized
+                                Instantly see a clear summary of all your added modules
                               </p>
                               <img
                                 src="/images/look.gif"
