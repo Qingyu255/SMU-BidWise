@@ -9,6 +9,7 @@ import SemestersForm from '@/components/roadmap/forms/SemestersForm';
 import { useUser } from '@clerk/nextjs';
 import { useSupabaseClient } from '@/utils/supabase/authenticated/client';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 // Define your validation schema
 const overallSchema = z.object({
@@ -63,6 +64,7 @@ const Page: React.FC = () => {
 
   const { user } = useUser();
   const supabase = useSupabaseClient();
+  const router = useRouter();
 
   const [formStep, setFormStep] = useState<1 | 2>(1);
 
@@ -164,6 +166,8 @@ const Page: React.FC = () => {
     } catch (error) {
       console.error("Submission Error:", error);
       alert("Failed to submit the form. Please try again.");
+    } finally {
+      router.push('../roadmaps')
     }
   };
 

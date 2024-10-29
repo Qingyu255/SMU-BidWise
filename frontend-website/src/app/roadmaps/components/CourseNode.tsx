@@ -7,7 +7,6 @@ import { Separator } from "@/components/ui/separator"
 import Link from "next/link";
 import Rating from "@/components/Rating";
 import { ScrollArea } from "@/components/ui/scroll-area"
-import CourseSummaryCard from '@/app/courses/components/CourseSummaryCard';
 
 import {
   Sheet,
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/sheet"
 import createClient  from '@/utils/supabase/client';
 import { useTheme } from 'next-themes';
+import NodeCourseSummaryCard from './NodeCourseSummaryCard';
 
 type CourseNodeProps = {
   data: {
@@ -198,7 +198,7 @@ const CourseNode = ({ data }: CourseNodeProps) => {
                 <SheetTitle>{courseData[0]?.title}</SheetTitle>
               </SheetHeader>
               <ScrollArea>
-                <CourseSummaryCard
+                <NodeCourseSummaryCard
                     course_id = {courseData[0]?.id}
                     course_code={courseData[0]?.course_code}
                     title={courseData[0]?.title}
