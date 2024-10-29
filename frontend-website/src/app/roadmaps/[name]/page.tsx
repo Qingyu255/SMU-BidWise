@@ -26,6 +26,7 @@ const Page = ({ params }: { params : {name: string}}) => {
             graduation_year: item.graduation_year,
             courses_summary: item.courses_summary,
             current_job: item.current_job,
+            verified_seniors: item.verified_seniors,
             advice: item.advice,
             _clerk_user_id: item._clerk_user_id,
             })) : [];

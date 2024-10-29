@@ -58,6 +58,7 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors }: {
             courses_summary: item.courses_summary,
             current_job: item.current_job,
             advice: item.advice,
+            verified_seniors: item.verified_seniors,
             _clerk_user_id: item._clerk_user_id,
         }));
         setRoadmapInfo(formattedData);
@@ -80,6 +81,7 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors }: {
                         graduation_year={roadmap.graduation_year} 
                         courses_summary={roadmap.courses_summary} 
                         current_job={roadmap.current_job} 
+                        verified_seniors={roadmap.verified_seniors}
                         advice={roadmap.advice} 
                         />
                     ))}

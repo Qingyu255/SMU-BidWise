@@ -201,6 +201,7 @@ export interface RoadmapCardProps {
   graduation_year: number;
   courses_summary: string;
   current_job: string;
+  verified_seniors: string;
   advice: string;
 }
 
@@ -237,6 +238,7 @@ export type RoadmapInfo = {
   courses_summary: string;
   current_job: string;
   advice: string;
+  verified_seniors: string;
   _clerk_user_id: string;
 };
 

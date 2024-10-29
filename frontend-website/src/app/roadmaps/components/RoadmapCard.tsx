@@ -8,7 +8,7 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-
+  import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { RoadmapCardProps } from '@/types'
 import Link from 'next/link'
@@ -17,11 +17,12 @@ import Link from 'next/link'
 
 
 
-const RoadmapCard: React.FC<RoadmapCardProps> = ({ name, major, graduation_year, courses_summary, current_job, advice }) => {
+const RoadmapCard: React.FC<RoadmapCardProps> = ({ name, major, graduation_year, courses_summary, current_job, verified_seniors, advice }) => {
   return (
     <Card>
         <CardHeader>
-            <CardTitle className='text-xl'>{ name } •	<span className='font-light'>{major}</span></CardTitle>
+            <CardTitle className='text-xl'>{ name } •	<span className='font-light'>{major}</span> {verified_seniors === 'VERIFIED' ? <Badge className='rounded-full' variant="secondary">verified</Badge> : ''}
+            </CardTitle>
             <CardDescription>
               Year of Graduation: {graduation_year}
               <br></br>
