@@ -9,6 +9,7 @@ import TopBar from "@/components/TopBar";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { TimetableProvider } from "../components/providers/timetableProvider"; // Import your context provider
 import { Toaster } from "@/components/ui/toaster";
+import Script from "next/script";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,6 +41,19 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
+        <head>
+          {/* <!-- Google tag (gtag.js) --> */}
+          <Script async src="https://www.googletagmanager.com/gtag/js?id=G-3774WMZS1L"></Script>
+          <Script id="google-analytics">
+            {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-3774WMZS1L');
+            `}
+          </Script>
+        </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100vh]`}>
           <ThemeProvider
             attribute="class"
