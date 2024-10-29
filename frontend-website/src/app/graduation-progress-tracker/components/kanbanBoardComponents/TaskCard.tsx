@@ -38,8 +38,8 @@ export interface Task {
 interface TaskCardProps {
   task: Task;
   isOverlay?: boolean;
-  onRemove: () => void;
-  onToggleCompletion: () => void;
+  onRemove: (taskId: string) => void;
+  onToggleCompletion: (taskId: string) => void;
 }
 
 export type TaskType = "Task";
@@ -128,7 +128,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
             <Button
               variant="ghost"
               size="sm"
-              onClick={onToggleCompletion}
+              onClick={() => {onToggleCompletion(task.id)}}
               className="ml-auto text-[#5A7BB5]"
             >
               {task.completed ? (
@@ -152,7 +152,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
           <Button
             variant="ghost"
             size="sm"
-            onClick={onRemove}
+            onClick={() => {onRemove(task.id)}}
             className="ml-2 text-red-500"
           >
             <Trash2 className="w-4 h-4" />

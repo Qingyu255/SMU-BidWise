@@ -60,6 +60,7 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
   
     // Handler to remove a task (course)
     const handleRemoveCourse = (taskId: string) => {
+      console.log(taskId);
       setTasks(prev => prev.filter(task => task.id !== taskId));
       toast({ title: `Course removed` });
     };
