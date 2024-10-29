@@ -10,6 +10,7 @@ import { useUser } from '@clerk/nextjs';
 import { useSupabaseClient } from '@/utils/supabase/authenticated/client';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { Spinner } from '@nextui-org/react';
 
 // Define your validation schema
 const overallSchema = z.object({
@@ -65,10 +66,11 @@ const Page: React.FC = () => {
   const { user } = useUser();
   const supabase = useSupabaseClient();
   const router = useRouter();
-
+  const [loading, setLoading] = useState(false);
   const [formStep, setFormStep] = useState<1 | 2>(1);
 
   const onSubmit = async (data: OverallFormData) => {
+    setLoading(true);
     console.log("Final Form Data:", data);
 
     if (!user) {
@@ -174,7 +176,13 @@ const Page: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <div className="max-w-3xl mx-auto p-8">
-        {formStep === 1 && <RoadmapInfoForm setFormStep={setFormStep} />}
+        {loading ?
+        <div className='flex justify-center'>
+        <Spinner color="default"/> Submitting Form...
+        </div>
+        : 
+        <>
+         {formStep === 1 && <RoadmapInfoForm setFormStep={setFormStep} />}
         {formStep === 2 && <SemestersForm setFormStep={setFormStep} />}
 
         {/* Navigation Buttons */}
@@ -207,6 +215,9 @@ const Page: React.FC = () => {
             </Button>
           </div>
         )}
+         </>
+         }
+        
       </div>
     </FormProvider>
   );
