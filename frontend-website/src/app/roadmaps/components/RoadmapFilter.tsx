@@ -6,26 +6,19 @@ import { Button } from '@nextui-org/react';
 import { useTransition } from 'react';
 import { Spinner } from '@nextui-org/react';
 
-export interface FilterOptions {
-    careerArr: string[];
-    grading_basisArr: string[];
-    unitsArr: string[];
-    areaArr: string[];
-
-    verifiedSeniorsArr: boolean[];
+export interface RoadmapFilterOptions {
+    verifiedSeniorsArr: string[];
     degreeArr: string[];
 }
  
-export default function RoadmapFilters({ careerArr, grading_basisArr, unitsArr, areaArr }: FilterOptions) {
+export default function RoadmapFilters({ verifiedSeniorsArr, degreeArr }: RoadmapFilterOptions) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const [isPending, startTransition] = useTransition();
 
-    const [selectedCareer, setSelectedCareer] = useState<string>(searchParams.get("career") || "");
-    const [selectedArea, setSelectedArea] = useState<string>(searchParams.get("area") || "");
-    const [selectedGradingBasis, setSelectedGradingBasis] = useState<string>(searchParams.get("grading_basis") || "");
-    const [selectedUnits, setSelectedUnits] = useState<string>(searchParams.get("units") || "");
+    const [selectedDegree, setSelectedDegree] = useState<string>(searchParams.get("degree") || "");
+    const [selectedVerifiedSeniors, setSelectedVerifiedSeniors] = useState<string>(searchParams.get("verified_seniors") || "");
 
     const updateSearchParams = (param: string, value: string) => {
         const params = new URLSearchParams(searchParams);
@@ -44,16 +37,11 @@ export default function RoadmapFilters({ careerArr, grading_basisArr, unitsArr, 
     const clearFilters = () => {
         const params = new URLSearchParams(searchParams);
         // params.delete('query');
-        params.delete('career');
-        params.delete('grading_basis');
-        params.delete('units');
-        params.delete('area');
-        params.delete('page');
+        params.delete('degree');
+        params.delete('verified_seniors');
 
-        setSelectedCareer('');
-        setSelectedArea('');
-        setSelectedGradingBasis('');
-        setSelectedUnits('');
+        setSelectedDegree('');
+        setSelectedVerifiedSeniors('');
 
         startTransition(() => {
             router.push(`${pathname}?${params.toString()}`);
@@ -65,20 +53,16 @@ export default function RoadmapFilters({ careerArr, grading_basisArr, unitsArr, 
             <h2 className='px-1 md:text-lg font-semibold text-gray-500 pb-1'>Filter by:</h2>
             <div>
                 <div className='inline-flex flex-col'>
-                    <span className='text-sm font-bold px-1'>Career:</span>
-                    <Combobox selectedValue={selectedCareer} onSelect={(selectedValue: string) => {setSelectedCareer(selectedValue); updateSearchParams('career', selectedValue)}} category='Career' options={careerArr}/>
+                    <span className='text-sm font-bold px-1'>Degree:</span>
+                    <Combobox selectedValue={selectedDegree} onSelect={(selectedValue: string) => {setSelectedDegree(selectedValue); updateSearchParams('degree', selectedValue)}} category='Degree' options={degreeArr}/>
                 </div>
                 <div className='inline-flex flex-col'>
                     <span className='text-sm font-bold px-1'>Course area:</span>
-                    <Combobox selectedValue={selectedArea} onSelect={(selectedValue: string) => {setSelectedArea(selectedValue); updateSearchParams('area', selectedValue)}} category='Course area:' options={areaArr}/>
-                </div>
-                <div className='inline-flex flex-col'>
-                    <span className='text-sm font-bold px-1'>Grading basis:</span>
-                    <Combobox selectedValue={selectedGradingBasis} onSelect={(selectedValue: string) => {setSelectedGradingBasis(selectedValue); updateSearchParams('grading_basis', selectedValue)}} category='Grading basis' options={grading_basisArr}/>
-                </div>
-                <div className='inline-flex flex-col'>
-                    <span className='text-sm font-bold px-1'>Units:</span>
-                    <Combobox selectedValue={selectedUnits} onSelect={(selectedValue: string) => {setSelectedUnits(selectedValue); updateSearchParams('units', selectedValue)}} category='Units' options={unitsArr}/>
+                    <Combobox selectedValue={selectedVerifiedSeniors} 
+                        onSelect={
+                        (selectedValue: string) => {setSelectedVerifiedSeniors(selectedValue); 
+                        updateSearchParams('verified_seniors', selectedValue)}} 
+                        category='Verified Seniors:' options={verifiedSeniorsArr.map((val) => String(val).toUpperCase())}/>
                 </div>
                 <div className='flex flex-row gap-1 h-full'>
                     <span className='m-1'>

@@ -9,7 +9,11 @@ import PageToggle from '@/app/courses/components/PageToggle'
 
 
 
-const Roadmaps: React.FC<RoadmapsProps> = ({ page }) => {
+const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors }: {
+    page: number,
+    degree: string,
+    verified_seniors: string,
+}) => {
 
     const supabase = createClient()
     const [roadmapInfo, setRoadmapInfo] = useState<RoadmapInfo[]>([]);
@@ -21,11 +25,23 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page }) => {
 
     useEffect(() => {
       const fetchRoadmapInfo = async () => {
-        const { data, error, count } = await supabase
-        .from('roadmap_info')
-        .select('*',
-            { count: 'exact' })
-        .range(from, to);
+            let query = supabase
+                .from('roadmap_info')
+                .select('*', { count: 'exact' })
+                .range(from, to);
+
+            if (degree) {
+                query = query.eq('degree', degree);
+            }
+
+            
+            if(verified_seniors == 'VERIFIED') {
+                query = query.eq('verified_seniors', verified_seniors);
+            }
+                
+            
+
+            const { data, error, count } = await query;
         
         console.log('data', data)
         if (count) {
@@ -51,7 +67,7 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page }) => {
   
       fetchRoadmapInfo();
       
-    }, [supabase, currentPage])
+    }, [supabase, degree, verified_seniors, currentPage])
     
 
     

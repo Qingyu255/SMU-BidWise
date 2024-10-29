@@ -82,7 +82,7 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
                           <SelectItem value="Bachelor of Science (Computer Science)">Bachelor of Science (Computer Science)</SelectItem>
                           <SelectItem value="Bachelor of Science (Computing and Law)">Bachelor of Science (Computing and Law)</SelectItem>
                           <SelectItem value="Bachelor of Science (Software Engineering)">Bachelor of Science (Software Engineering)</SelectItem>
-                          <SelectItem value="Bachelor of Laws">Bachelor of Laws</SelectItem>
+                          <SelectItem value="Bachelor of Law">Bachelor of Law</SelectItem>
                           <SelectItem value="Bachelor of Social Science">Bachelor of Social Science</SelectItem>
 
 

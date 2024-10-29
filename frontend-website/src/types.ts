@@ -190,6 +190,8 @@ export interface SeniorRoadmap {
 export interface RoadmapsProps {
   // roadmapInfo: RoadmapInfo[];
   page: number;
+  degree: string;
+  verified_seniors: string;
   // onClick: (name: string, roadmap: RoadmapInfo) => void;
 }
 
@@ -266,6 +268,9 @@ export type RoadmapFormData = {
   roadmap: RoadmapInfo;
   semesters: Semester[];
 };
+
+export type DegreeData = { degree: string };
+export type verifiedSeniorsData = { verifiedSenior: string };
 
 // Zod Schemas
 export const ModuleSchema = z.object({
