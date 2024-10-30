@@ -42,7 +42,7 @@ const Post: FC<PostProps> = ({
                                 <span className='px-1'>•</span>
                             </>
                         )}
-                        <span>Posted by u/{post.author_name}</span>
+                        <span>Posted by u/{post.author_name} </span>
                         {formatTimeToNow(new Date(post.created_at))}
                     </div>
                     <Link href={`/r/${subredditName}/post/${post.id}`}>
@@ -51,13 +51,14 @@ const Post: FC<PostProps> = ({
                         </h1>
                     </Link>
 
-                    <div
-                        className='relative text-sm max-h-40 w-full overflow-clip'
-                        ref={pRef}>
-                        <EditorOutput content={post.content} />
-                        {isOverflowing && (
-                            <div className='absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-white to-transparent'></div>
-                        )}
+                    <div className='relative flex justify-between text-sm max-h-40 w-full overflow-clip' ref={pRef}>
+                        <div className='flex-1'>
+                            <EditorOutput content={post.content} />
+                            {isOverflowing && (
+                                <div className='absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-white to-transparent'></div>
+                            )}
+                        </div>
+                        <UpDownVote postId={post.id} initialVotes={post.votes} />
                     </div>
                 </div>
             </div>
@@ -70,7 +71,6 @@ const Post: FC<PostProps> = ({
                         <MessageSquare className='h-4 w-4' />
                         {commentAmt} comments
                     </div>
-                    <UpDownVote postId={post.id} initialVotes={post.votes} />
                 </Link>
             </div>
         </div>
