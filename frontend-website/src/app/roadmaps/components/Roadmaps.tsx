@@ -58,6 +58,7 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors }: {
             courses_summary: item.courses_summary,
             current_job: item.current_job,
             advice: item.advice,
+            likes: item.likes,
             verified_seniors: item.verified_seniors,
             _clerk_user_id: item._clerk_user_id,
         }));
@@ -83,6 +84,8 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors }: {
                         current_job={roadmap.current_job} 
                         verified_seniors={roadmap.verified_seniors}
                         advice={roadmap.advice} 
+                        likes={roadmap.likes}
+                        _clerk_user_id={roadmap._clerk_user_id}
                         />
                     ))}
             <PageToggle currentPage={currentPage} totalPages={totalPages.current} />

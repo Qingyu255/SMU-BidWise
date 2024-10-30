@@ -35,6 +35,7 @@ const Page = ({ params }: { params : {name: string}}) => {
             current_job: item.current_job,
             verified_seniors: item.verified_seniors,
             advice: item.advice,
+            likes: item.likes,
             _clerk_user_id: item._clerk_user_id,
             })) : [];
             setHeadingCardInfo(formattedData);

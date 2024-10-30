@@ -203,6 +203,8 @@ export interface RoadmapCardProps {
   current_job: string;
   verified_seniors: string;
   advice: string;
+  likes: number;
+  _clerk_user_id: string;
 }
 
 
@@ -239,6 +241,7 @@ export type RoadmapInfo = {
   current_job: string;
   advice: string;
   verified_seniors: string;
+  likes: number;
   _clerk_user_id: string;
 };
 

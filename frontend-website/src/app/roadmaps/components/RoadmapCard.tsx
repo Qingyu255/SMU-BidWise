@@ -12,12 +12,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { RoadmapCardProps } from '@/types'
 import Link from 'next/link'
+import Likes from './Likes'
 
 
 
 
 
-const RoadmapCard: React.FC<RoadmapCardProps> = ({ name, major, graduation_year, courses_summary, current_job, verified_seniors, advice }) => {
+const RoadmapCard: React.FC<RoadmapCardProps> = ({ name, major, graduation_year, courses_summary, current_job, verified_seniors, advice, _clerk_user_id, likes }) => {
+  
   return (
     <Card>
         <CardHeader>
@@ -38,8 +40,10 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ name, major, graduation_year,
             <Button>
             View Roadmap
             </Button>
-            
             </Link>
+            &nbsp;
+            <Likes likes={likes} id={_clerk_user_id}/>
+            
         </CardFooter>
     </Card>
   )
