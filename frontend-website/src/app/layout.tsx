@@ -9,6 +9,7 @@ import TopBar from "@/components/TopBar";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { TimetableProvider } from "../components/providers/timetableProvider"; // Import your context provider
 import { Toaster } from "@/components/ui/toaster";
+import Script from "next/script";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -23,7 +24,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "SMU BidWise",
-  description: "SMU BidWise, a one-stop platform for SMU students to plan for BOSS bidding.",
+  description: "SMU BidWise, a one-stop platform for SMU students to plan their courses for BOSS bidding. View Bid Price analytics, the latest course information and senior roadmaps now!",
 };
 
 export default function RootLayout({
@@ -40,6 +41,19 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
+        <head>
+          {/* <!-- Google tag (gtag.js) --> */}
+          <Script async src="https://www.googletagmanager.com/gtag/js?id=G-9XMVG71FGW"></Script>
+          <Script id="google-analytics">
+            {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-9XMVG71FGW');
+            `}
+          </Script>
+        </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100vh]`}>
           <ThemeProvider
             attribute="class"

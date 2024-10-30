@@ -193,11 +193,11 @@ export function KanbanBoard({ tasks, onTasksChange, onRemoveTask, onToggleTaskCo
                 tasks={tasks.filter(
                   (task) => task.columnId === activeColumn.id
                 )}
-                onRemoveTask={() => {}}
-                onToggleTaskCompletion={() => {}}
+                onRemoveTask={onRemoveTask}
+                onToggleTaskCompletion={onToggleTaskCompletion}
               />
             )}
-            {activeTask && <TaskCard task={activeTask} onRemove={() => {}} onToggleCompletion={() => {}} isOverlay/>}
+            {activeTask && <TaskCard task={activeTask} onRemove={onRemoveTask} onToggleCompletion={onToggleTaskCompletion} isOverlay/>}
           </DragOverlay>,
           document.body
         )}

@@ -51,7 +51,7 @@ export function SidebarMobile(props: SidebarMobileProps) {
                   width={35}
                   height={35}
                 />
-                <span className={`text-lg font-semibold text-foreground mx-2 ${poppins.className}`}>SMU BidWise</span>
+                <span className={`text-lg font-semibold text-foreground mx-2 ${poppins.className} uppercase`}>SMU BidWise</span>
               </div>
             </SidebarButton>
           </Link>
