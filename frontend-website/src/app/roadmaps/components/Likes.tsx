@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button'
 import createClient from '@/utils/supabase/client';
 import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 interface LikesProps {
@@ -17,6 +18,7 @@ const Likes: React.FC<LikesProps> = ({ likes, id }) => {
     
     const {user} = useUser();
     const supabase = createClient()
+    const router = useRouter()
 
     // Control if users can like posts
     const [likesAllowed, setLikesAllowed] = useState(false)
@@ -37,6 +39,7 @@ const Likes: React.FC<LikesProps> = ({ likes, id }) => {
             setLikesAllowed(true)
         } else {
             setLikesAllowed(false)
+            
         }
     }, [user])
 
@@ -110,6 +113,8 @@ const Likes: React.FC<LikesProps> = ({ likes, id }) => {
 
 
 
+        } else {
+            router.push('/sign-in')
         }
             
 
