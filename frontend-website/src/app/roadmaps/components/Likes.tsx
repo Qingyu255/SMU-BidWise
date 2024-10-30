@@ -14,19 +14,29 @@ interface LikedData {
     senior_clerk_user_id: string;
 }
 const Likes: React.FC<LikesProps> = ({ likes, id }) => {
-    let color = 'none'
+    
     const {user} = useUser();
-    const [likesAllowed, setLikesAllowed] = useState(false)
-    const [liked, setLiked] = useState(false)
     const supabase = createClient()
+
+    // Control if users can like posts
+    const [likesAllowed, setLikesAllowed] = useState(false)
+
+    // control color of the like logo
+    const [liked, setLiked] = useState(false)
+    let color = 'none'
+    
     const user_id = user?.id || ''
+    
     const [likedData, setLikedData] = useState<LikedData[]>([])
     const [likesCounter, setLikesCounter] = useState(likes)
+
+
+    // Allowing users to like if logged in
     useEffect(() => {
-        if(user_id) {
-
-
+        if(user_id != '') {
             setLikesAllowed(true)
+        } else {
+            setLikesAllowed(false)
         }
     }, [user])
 
@@ -36,44 +46,68 @@ const Likes: React.FC<LikesProps> = ({ likes, id }) => {
             const { data: likedData, error: likedError } = await supabase
                 .from('roadmap_likes')
                 .select('*')
-                .eq('user_clerk_user_id', user_id);
+                .eq('user_clerk_user_id', user_id)
+                .eq('senior_clerk_user_id', id)
+                
             if(likedError) { throw likedError }
-            else if(likedData) {
-                const userLikes: LikedData[] = (likedData as unknown as LikedData[]).map((item: LikedData) => ({
-                    user_clerk_user_id: item.user_clerk_user_id,
-                    senior_clerk_user_id: item.senior_clerk_user_id
-                }))
-                console.log('ul', userLikes)
-            }
-        };
+            else if(likedData && likedData.length > 0) {
+                console.log(likedData)
+                console.log('HELLO')
+                setLiked(true)
+            };
+        
+        }
         fetchLiked();
-    })
+    }, [user_id, id])
 
 
     
 
     const handleLikes = async () => {
         if (likesAllowed == true) {
-            const { error: likesError } = await supabase
+            if(liked == false) {
+                const { error: likesError } = await supabase
                 .from('roadmap_info')
                 .update({likes: likes + 1})
                 .eq('_clerk_user_id', id);
 
-            if (likesError) throw likesError;
+                if (likesError) throw likesError;
 
-            console.log('user_id', user_id)
-            console.log('id', id)
-            const { error: likedError } = await supabase
-                .from('roadmap_likes')
-                .insert({
-                    user_clerk_user_id: user_id,
-                    senior_clerk_user_id: id
-                });
+                console.log('user_id', user_id)
+                console.log('id', id)
+                const { error: likedError } = await supabase
+                    .from('roadmap_likes')
+                    .insert({
+                        user_clerk_user_id: user_id,
+                        senior_clerk_user_id: id
+                    });
 
-            if (likedError) throw likedError;
-            console.log('added likes')
-            setLiked(true);
-            setLikesCounter(likesCounter + 1)
+                if (likedError) throw likedError;
+                
+                setLiked(true);
+                setLikesCounter(likesCounter + 1)
+            } else if(liked == true) {
+                const { error: likesError } = await supabase
+                .from('roadmap_info')
+                .update({likes: likes - 1})
+                .eq('_clerk_user_id', id);
+
+                if (likesError) throw likesError;
+
+                const { error: likedError } = await supabase
+                    .from('roadmap_likes')
+                    .delete()
+                    .match({
+                        user_clerk_user_id: user_id,
+                        senior_clerk_user_id: id
+                    });
+
+                if (likedError) throw likedError;
+                
+                setLiked(false);
+                setLikesCounter(likesCounter - 1)
+            }
+
 
 
         }
