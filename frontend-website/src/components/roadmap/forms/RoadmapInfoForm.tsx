@@ -40,7 +40,7 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
           name="roadmap.name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="roadmap.name">Name</FormLabel>
+              <FormLabel htmlFor="roadmap.name">Name:</FormLabel>
               <FormControl>
                 <Input
                   id="roadmap.name"
@@ -49,7 +49,7 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
                   value={field.value || ''}
                 />
               </FormControl>
-              <FormDescription>This is your name.</FormDescription>
+              <FormDescription>Enter your name.</FormDescription>
               <FormMessage>{errors.roadmap?.name?.message}</FormMessage>
             </FormItem>
           )}
@@ -61,7 +61,7 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
               name="roadmap.degree"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Degree</FormLabel>
+                  <FormLabel>Degree:</FormLabel>
                   <FormControl>
                     
                     <Select 
@@ -103,7 +103,7 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
           name="roadmap.graduation_year"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="roadmap.graduation_year">Graduation Year</FormLabel>
+              <FormLabel htmlFor="roadmap.graduation_year">Graduation Year:</FormLabel>
               <FormControl>
                 <Input
                   id="roadmap.graduation_year"
@@ -127,7 +127,7 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
           name="roadmap.courses_summary"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="roadmap.courses_summary">Course Summary</FormLabel>
+              <FormLabel htmlFor="roadmap.courses_summary">Major or Specialisation:</FormLabel>
               <FormControl>
                 <Input
                   id="roadmap.courses_summary"
@@ -137,7 +137,7 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
                 />
               </FormControl>
               <FormDescription>
-                Short description of the type of modules you took in SMU.
+                The Major/Specialisation/Track you took in your degree.
               </FormDescription>
               <FormMessage>{errors.roadmap?.courses_summary?.message}</FormMessage>
             </FormItem>
@@ -149,11 +149,11 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
           name="roadmap.current_job"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="roadmap.current_job">Current Job</FormLabel>
+              <FormLabel htmlFor="roadmap.current_job">Current Job:</FormLabel>
               <FormControl>
                 <Input
                   id="roadmap.current_job"
-                  placeholder="Software Engineer at Thalas"
+                  placeholder="Software Engineer at Google"
                   {...field}
                   value={field.value || ''}
                 />
@@ -169,16 +169,16 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
           name="roadmap.advice"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="roadmap.advice">Advice</FormLabel>
+              <FormLabel htmlFor="roadmap.advice">Short description on the courses you took:</FormLabel>
               <FormControl>
                 <Input
                   id="roadmap.advice"
-                  placeholder="Work hard, Play harder"
+                  placeholder="The modules I took was very relevant in the workforce and it allowed me to secure a software engineering job."
                   {...field}
                   value={field.value || ''}
                 />
               </FormControl>
-              <FormDescription>Word of advice on how to survive SMU.</FormDescription>
+              <FormDescription>Would you recommend your juniors take the modules you took?</FormDescription>
               <FormMessage>{errors.roadmap?.advice?.message}</FormMessage>
             </FormItem>
           )}
