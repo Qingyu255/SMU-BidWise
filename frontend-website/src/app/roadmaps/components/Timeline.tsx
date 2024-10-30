@@ -34,6 +34,8 @@ import { Course, edgeData,SeniorData, NodeData, seniorsAttributes, TimelineProps
 import { useTheme } from 'next-themes';
 import { Skeleton } from "@/components/ui/skeleton"
 
+
+
 type FlowRendererProps = {
   nodes: Node[];               // Array of Node type
   edges: Edge[];               // Array of Edge type
@@ -818,6 +820,9 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           
           
         />
+        
+
+
       </ReactFlowProvider>
     </div>
   );
