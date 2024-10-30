@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft } from 'lucide-react';
 import { HeadingCardProps } from "@/types";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge"
+
 
 const HeadingCard: React.FC<HeadingCardProps> = ({ headingCardInfo}) => {
   return (
@@ -25,7 +27,7 @@ const HeadingCard: React.FC<HeadingCardProps> = ({ headingCardInfo}) => {
                 </Link>
                 
                 <CardTitle className="place-self-center text-xl">
-                    { headingCardInfo.name } •	<span className='font-light'>{headingCardInfo.degree}</span>
+                    { headingCardInfo.name } •	<span className='font-light'>{headingCardInfo.degree}</span> {headingCardInfo.verified_seniors === 'VERIFIED' ? <Badge className='rounded-full' variant="secondary">verified</Badge> : ''}
                 </CardTitle>
             </div>
         </CardHeader>

@@ -177,8 +177,10 @@ const Page: React.FC = () => {
     <FormProvider {...methods}>
       <div className="max-w-3xl mx-auto p-8">
         {loading ?
-        <div className='flex justify-center'>
-        <Spinner color="default"/> Submitting Form...
+        <div className='h-[100vh]'>
+            <div className='h-full flex items-center justify-center'>
+                <Spinner color="default"/> Submitting Form...
+            </div>
         </div>
         : 
         <>
