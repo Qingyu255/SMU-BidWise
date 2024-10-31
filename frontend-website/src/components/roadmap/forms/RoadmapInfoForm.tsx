@@ -131,7 +131,7 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
               <FormControl>
                 <Input
                   id="roadmap.courses_summary"
-                  placeholder="Focused on software engineering"
+                  placeholder="Finance Major"
                   {...field}
                   value={field.value || ''}
                 />

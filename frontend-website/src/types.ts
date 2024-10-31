@@ -52,10 +52,10 @@ export interface semestersAttributes {
 }
 
 export interface enrollments {
-  id:number
-  senior_id : number
-  semester_id : number
-  course_id : number
+  id:UUID
+  senior_id : UUID
+  semester_id : UUID
+  course_id : UUID
 }
 
 export interface courses {
@@ -76,6 +76,18 @@ export interface courseInfo {
   description: string;
   enrolment_requirements: string;
 };
+
+export interface sem {
+  semester_id: string;
+  sem_alias: string;
+}
+
+export interface TaskRoadmap {
+  courseId: string;
+  columnId: string;
+  content: string;
+  _clerk_user_id: string;
+}
 
 
 export interface NodeData {

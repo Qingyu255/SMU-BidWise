@@ -1,6 +1,6 @@
-// SemesterComponent.tsx
+
 import React from 'react';
-import { useFieldArray, Control, UseFormSetValue, FieldErrors } from 'react-hook-form';
+import { useFieldArray, Control, UseFormSetValue, FieldErrors, useWatch } from 'react-hook-form';
 import { RoadmapFormData, ModuleOption } from '@/types';
 import { FormCombobox } from './FormCombobox';
 import { Button } from '@/components/ui/button';
@@ -27,17 +27,39 @@ const SemesterComponent: React.FC<SemesterComponentProps> = ({
   availableModules,
   errors,
 }) => {
-  // Use useFieldArray for modules at the top level of the component
+  // Use useFieldArray for modules within the semester
   const { fields: modules, append: appendModule, remove: removeModule } = useFieldArray({
     control,
     name: `semesters.${semesterIndex}.modules`,
   });
 
+  // Watch all module selections in this semester
+  const selectedModules = useWatch({
+    control,
+    name: `semesters.${semesterIndex}.modules`,
+    defaultValue: [],
+  });
+
+  // Helper function to get available options for a module field by excluding already selected modules
+  const getFilteredOptions = React.useCallback(
+    (currentIndex: number): ModuleOption[] => {
+      const selected = selectedModules
+        .map((m, idx) => (idx !== currentIndex ? m.selectedModule : null))
+        .filter((m) => m !== null && m !== '');
+  
+      const filtered = availableModules.filter((mod) => !selected.includes(mod.value));
+      console.log(`Filtered Options for Module ${currentIndex + 1}:`, filtered); // Debugging
+  
+      return filtered;
+    },
+    [selectedModules, availableModules]
+  );
+  
   return (
     <div className="border p-4 rounded-md">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">
-          {semester.semester_name || 'Semester 1'}
+          {semester.semester_name || `Semester ${semester.sem_count}`}
         </h3>
         {semester.sem_count > 0 && (
           <Button
@@ -50,16 +72,16 @@ const SemesterComponent: React.FC<SemesterComponentProps> = ({
         )}
       </div>
 
-      {/* Semester Name */}
+      {/* Hidden Semester Name Input */}
       <FormField
-        name={semester.semester_name || 'Semester 1'}
+        name={`semesters.${semesterIndex}.semester_name`}
         render={({ field }) => (
           <FormItem>
             <FormControl>
               <Input
                 type="hidden"
                 {...field}
-                value={field.value || 'Semester 1'}
+                value={field.value || `Semester ${semester.sem_count}`}
               />
             </FormControl>
             <FormMessage />
@@ -82,9 +104,21 @@ const SemesterComponent: React.FC<SemesterComponentProps> = ({
                   <FormControl>
                     <FormCombobox
                       category="Module"
-                      options={availableModules}
+                      options={getFilteredOptions(moduleIndex)}
                       selectedValue={field.value || ''}
                       onSelect={(selectedValue: string) => {
+                        // Check for duplicates
+                        const isDuplicate = selectedModules.some(
+                          (m, idx) => m.selectedModule === selectedValue && idx !== moduleIndex
+                        );
+                        if (isDuplicate) {
+                          toast({
+                            title: 'Duplicate Module',
+                            description: 'This module has already been added to the semester.',
+                            variant: 'destructive',
+                          });
+                          return;
+                        }
                         field.onChange(selectedValue);
                       }}
                       clearOptionText="Clear Selection"
@@ -116,7 +150,11 @@ const SemesterComponent: React.FC<SemesterComponentProps> = ({
             if (modules.length < 6) {
               appendModule({ selectedModule: '' });
             } else {
-              toast({ title: 'Maximum 6 modules per semester'})
+              toast({
+                title: 'Maximum Modules Reached',
+                description: 'You cannot add more than 6 modules to this semester.',
+                variant: 'destructive',
+              });
             }
           }}
         >

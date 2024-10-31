@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button"
 import { RoadmapCardProps } from '@/types'
 import Link from 'next/link'
 import Likes from './Likes'
+import PortToPlanner from './PortToPlanner'
 
 
 
@@ -41,9 +42,8 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ name, major, graduation_year,
             View Roadmap
             </Button>
             </Link>
-            &nbsp;
             <Likes likes={likes} id={_clerk_user_id}/>
-            
+            <PortToPlanner id={_clerk_user_id}/>
         </CardFooter>
     </Card>
   )

@@ -1,6 +1,5 @@
-"use client";
 import React, { useEffect } from 'react';
-import { useFormContext, useFieldArray } from "react-hook-form";
+import { useFormContext, useFieldArray } from 'react-hook-form';
 import { RoadmapFormData, ModuleOption, SemestersObj } from '@/types';
 import { Button } from '@/components/ui/button';
 import { useSupabaseClient } from '@/utils/supabase/authenticated/client';
@@ -27,7 +26,7 @@ const SemestersForm: React.FC<SemestersFormProps> = ({ setFormStep }) => {
     const fetchModules = async () => {
       const { data, error } = await supabase
         .from('course_info')
-        .select('course_code, title');
+        .select('id, course_code, title'); // Include 'id'
 
       if (error) {
         console.error('Error fetching modules:', error);
@@ -35,7 +34,7 @@ const SemestersForm: React.FC<SemestersFormProps> = ({ setFormStep }) => {
       } else if (data) {
         const transformedModules: ModuleOption[] = data.map((course: any) => ({
           label: `${course.course_code} - ${course.title}`,
-          value: course.course_code,
+          value: course.id, // Use course_id as value
         }));
         setAvailableModules(transformedModules);
       }
@@ -67,7 +66,6 @@ const SemestersForm: React.FC<SemestersFormProps> = ({ setFormStep }) => {
     fetchSemesters();
   }, [supabase]);
 
-
   // Function to append a new semester
   const handleAddSemester = () => {
     if (semesters.length >= 10) {
@@ -77,10 +75,10 @@ const SemestersForm: React.FC<SemestersFormProps> = ({ setFormStep }) => {
 
     appendSemester({
       sem_count: semesters.length + 1,
-      semester_name: semestersObj[semesters.length + 1],
+      semester_name: semestersObj[semesters.length + 1] || '',
       modules: [
         {
-          selectedModule: "",
+          selectedModule: '',
         },
       ],
     });
@@ -93,7 +91,7 @@ const SemestersForm: React.FC<SemestersFormProps> = ({ setFormStep }) => {
     const updatedSemesters = getValues('semesters').map((sem, idx) => ({
       ...sem,
       sem_count: idx + 1,
-      semester_name: semestersObj[idx + 1],
+      semester_name: semestersObj[idx + 1] || '',
     }));
     setValue('semesters', updatedSemesters);
   };
@@ -107,7 +105,7 @@ const SemestersForm: React.FC<SemestersFormProps> = ({ setFormStep }) => {
           semesterIndex={semesterIndex}
           control={control}
           setValue={setValue}
-          removeSemester={handleRemoveSemester} // Use the updated remove function
+          removeSemester={handleRemoveSemester}
           availableModules={availableModules}
           errors={errors}
         />
