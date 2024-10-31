@@ -45,7 +45,7 @@ type FlowRendererProps = {
 };
 
 const supabase = createClient();
-const { toast } = useToast();
+
 async function fetchRoadmap(sem: string, user_id: string) {
   
   const { data: prData, error: prError } = await supabase
@@ -283,6 +283,7 @@ const onNodeDragStop = useCallback(
 };
 
 const KanbanTimeline = () => {
+  const { toast } = useToast();
   const { user } = useUser();
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
