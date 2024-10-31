@@ -179,7 +179,7 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
       nodes={nodes}
       nodeTypes={nodeTypes}
       edges={edges}
-      panOnScroll
+      panOnScroll={true}
       // panOnScrollMode={PanOnScrollMode.Vertical}
       panOnDrag={false}
       // zoomOnPinch={false}
