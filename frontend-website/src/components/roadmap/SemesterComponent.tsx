@@ -6,6 +6,7 @@ import { FormCombobox } from './FormCombobox';
 import { Button } from '@/components/ui/button';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { toast } from '@/hooks/use-toast';
 
 interface SemesterComponentProps {
   semester: any;
@@ -31,6 +32,7 @@ const SemesterComponent: React.FC<SemesterComponentProps> = ({
     control,
     name: `semesters.${semesterIndex}.modules`,
   });
+
   return (
     <div className="border p-4 rounded-md">
       <div className="flex justify-between items-center mb-4">
@@ -53,7 +55,6 @@ const SemesterComponent: React.FC<SemesterComponentProps> = ({
         name={semester.semester_name || 'Semester 1'}
         render={({ field }) => (
           <FormItem>
-            
             <FormControl>
               <Input
                 type="hidden"
@@ -111,7 +112,13 @@ const SemesterComponent: React.FC<SemesterComponentProps> = ({
         <Button
           type="button"
           variant="secondary"
-          onClick={() => appendModule({ selectedModule: '' })}
+          onClick={() => {
+            if (modules.length < 6) {
+              appendModule({ selectedModule: '' });
+            } else {
+              toast({ title: 'Maximum 6 modules per semester'})
+            }
+          }}
         >
           Add Module
         </Button>
@@ -121,4 +128,3 @@ const SemesterComponent: React.FC<SemesterComponentProps> = ({
 };
 
 export default SemesterComponent;
-

@@ -1,6 +1,3 @@
-// SemestersForm.tsx
-// SemestersForm.tsx
-
 "use client";
 import React, { useEffect } from 'react';
 import { useFormContext, useFieldArray } from "react-hook-form";
