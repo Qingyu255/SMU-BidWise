@@ -24,7 +24,7 @@ const Reviews = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [showReviewForm, setShowReviewForm] = useState<boolean>(false);
   const [loading, setLoading] = useState(true); // Loading state
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(0);
   const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [rating, setRating] = useState(0);

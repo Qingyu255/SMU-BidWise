@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://smubidwise.com/sitemap.xml

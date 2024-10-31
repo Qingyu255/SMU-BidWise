@@ -35,7 +35,7 @@ export default function Page() {
                         className={buttonVariants({
                             className: 'w-11/12 mt-4 mb-6',
                         })}
-                        href={`/communities/r/create`}>
+                        href={`/communities`}>
                         Create A Community
                     </Link>
                 </div>
