@@ -180,8 +180,10 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
       nodeTypes={nodeTypes}
       edges={edges}
       panOnScroll={true}
+      
+      zoomOnPinch={true} 
       // panOnScrollMode={PanOnScrollMode.Vertical}
-      panOnDrag={false}
+      panOnDrag={true}
       // zoomOnPinch={false}
       zoomOnDoubleClick={false}
       fitView
