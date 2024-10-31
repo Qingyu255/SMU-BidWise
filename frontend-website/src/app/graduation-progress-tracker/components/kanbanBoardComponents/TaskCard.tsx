@@ -28,12 +28,25 @@ import createClient  from '@/utils/supabase/client';
 import CourseSummaryCard from "@/app/courses/components/CourseSummaryCard";
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-export interface Task {
-  id: string;
-  columnId: ColumnId;
+// export interface Task {
+//   courseId: string;
+//   columnId: ColumnId;
+//   content: string;
+//   completed?: boolean;
+// }
+export type Task = {
+
+  _clerk_user_id: string;
+
+  columnId: string;
+
   content: string;
-  completed?: boolean;
-}
+
+  completed: boolean;
+
+  courseId: string;
+
+};
 
 interface TaskCardProps {
   task: Task;
@@ -58,7 +71,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
     transition,
     isDragging,
   } = useSortable({
-    id: task.id,
+    id: task.courseId,
     data: {
       type: "Task",
       task,
@@ -85,7 +98,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
   const [courseData, setCourseData] = useState<courseInfo[]>([]);
 
   useEffect(() => {
-    const courseCode = task.id;
+    const courseCode = task.courseId;
     const fetchCourseData = async () => {
       const { data: courseData, error } = await supabase
         .from('course_info')
@@ -128,7 +141,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => {onToggleCompletion(task.id)}}
+              onClick={() => {onToggleCompletion(task.courseId)}}
               className="ml-auto text-[#5A7BB5]"
             >
               {task.completed ? (
@@ -142,7 +155,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Mark {task.id} as {task.completed ? "incomplete" : "complete"}</p>
+            <p>Mark {task.courseId} as {task.completed ? "incomplete" : "complete"}</p>
           </TooltipContent>
         </Tooltip>
 
@@ -152,7 +165,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => {onRemove(task.id)}}
+            onClick={() => {onRemove(task.courseId)}}
             className="ml-2 text-red-500"
           >
             <Trash2 className="w-4 h-4" />
@@ -160,7 +173,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
           </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Remove {task.id} from planner</p>
+            <p>Remove {task.courseId} from planner</p>
           </TooltipContent>
         </Tooltip>
       </CardHeader>
@@ -184,7 +197,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
               </SheetTrigger>
             </TooltipTrigger>
             <TooltipContent>
-              <p>View Course Information for {task.id}</p>
+              <p>View Course Information for {task.courseId}</p>
             </TooltipContent>
           </Tooltip>
           <SheetContent className="flex flex-col">

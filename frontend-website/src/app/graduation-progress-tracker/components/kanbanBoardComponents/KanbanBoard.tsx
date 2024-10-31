@@ -28,22 +28,26 @@ const defaultCols: Column[] = semesters.map((semester) => ({
   title: semester,
 }));
 
-export type ColumnId = (typeof defaultCols)[number]["id"];
+export type ColumnId = UniqueIdentifier;
 
 interface KanbanBoardProps {
+  kanbanKey: number;
   tasks: Task[];
   onTasksChange: (tasks: Task[]) => void;
   onRemoveTask: (taskId: string) => void;
   onToggleTaskCompletion: (taskId: string) => void;
 }
 
-export function KanbanBoard({ tasks, onTasksChange, onRemoveTask, onToggleTaskCompletion }: KanbanBoardProps) {
+export function KanbanBoard({ kanbanKey, tasks, onTasksChange, onRemoveTask, onToggleTaskCompletion }: KanbanBoardProps) {
   // console.log(tasks);
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+ 
+
 
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -55,7 +59,7 @@ export function KanbanBoard({ tasks, onTasksChange, onRemoveTask, onToggleTaskCo
 
   function getDraggingTaskData(taskId: UniqueIdentifier, columnId: ColumnId) {
     const tasksInColumn = tasks.filter((task) => task.columnId === columnId);
-    const taskPosition = tasksInColumn.findIndex((task) => task.id === taskId);
+    const taskPosition = tasksInColumn.findIndex((task) => task.courseId === taskId);
     const column = columns.find((col) => col.id === columnId);
     return {
       tasksInColumn,
@@ -249,19 +253,19 @@ export function KanbanBoard({ tasks, onTasksChange, onRemoveTask, onToggleTaskCo
         return arrayMove(columns, activeColumnIndex, overColumnIndex);
       });
     } else if (isActiveATask) {
-      const activeTask = tasks.find((task) => task.id === activeId);
+      const activeTask = tasks.find((task) => task.courseId === activeId);
       if (!activeTask) return;
   
       let updatedTasks = [...tasks];
   
       if (isOverATask) {
-        const overTask = tasks.find((task) => task.id === overId);
+        const overTask = tasks.find((task) => task.courseId === overId);
         if (!overTask) return;
   
         // If moving to a different column, update the columnId
         if (activeTask.columnId !== overTask.columnId) {
           updatedTasks = updatedTasks.map((task) =>
-            task.id === activeId ? { ...task, columnId: overTask.columnId } : task
+            task.courseId === activeId ? { ...task, columnId: overTask.columnId } : task
           );
         }
   
@@ -271,19 +275,19 @@ export function KanbanBoard({ tasks, onTasksChange, onRemoveTask, onToggleTaskCo
         );
   
         const activeIndex = tasksInOverColumn.findIndex(
-          (task) => task.id === activeId
+          (task) => task.courseId === activeId
         );
         const overIndex = tasksInOverColumn.findIndex(
-          (task) => task.id === overId
+          (task) => task.courseId === overId
         );
   
         if (activeIndex !== -1 && overIndex !== -1) {
           // Map back to the indices in the updatedTasks array
           const globalActiveIndex = updatedTasks.findIndex(
-            (task) => task.id === activeId
+            (task) => task.courseId === activeId
           );
           const globalOverIndex = updatedTasks.findIndex(
-            (task) => task.id === overId
+            (task) => task.courseId === overId
           );
   
           // Move the task in the updatedTasks array
@@ -299,7 +303,7 @@ export function KanbanBoard({ tasks, onTasksChange, onRemoveTask, onToggleTaskCo
         // Moving task to a column directly
         const newColumnId = overId as ColumnId;
         updatedTasks = updatedTasks.map((task) =>
-          task.id === activeId ? { ...task, columnId: newColumnId } : task
+          task.courseId === activeId ? { ...task, columnId: newColumnId.toString() } : task
         );
         onTasksChange(updatedTasks);
       }

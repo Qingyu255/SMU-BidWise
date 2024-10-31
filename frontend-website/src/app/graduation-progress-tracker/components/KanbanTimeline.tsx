@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useCallback, useEffect } from 'react';
 import {
@@ -10,106 +10,62 @@ import {
   applyEdgeChanges,
   Position,
   BackgroundVariant,
+  useReactFlow,
+  useStoreApi,
+  ReactFlowProvider,
   type Node,
   type Edge,
   type FitViewOptions,
   type OnConnect,
   type OnNodesChange,
   type OnEdgesChange,
-  useReactFlow,
-  ReactFlowProvider,
-  DefaultEdgeOptions,
-  NodeTypes,
-  PanOnScrollMode,
+  type NodeTypes,
   type NodeProps,
-  ReactFlowInstance,
+  type ReactFlowInstance,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
 import SemNode from '../../../components/roadmap/SemNode';
-import CourseNode from './CourseNode';
+import CourseNode from '../../roadmaps/components/CourseNode';
 import createClient from '@/utils/supabase/client';
 import '@/components/roadmap/roadmap.css'; 
-import { Course, edgeData,SeniorData, NodeData, seniorsAttributes, TimelineProps } from '@/types';
+import { Course, edgeData, NodeData } from '@/types';
 import { useTheme } from 'next-themes';
-import { Skeleton } from "@/components/ui/skeleton"
-
-
+import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
+import { useUser } from '@clerk/clerk-react';
 
 type FlowRendererProps = {
-  nodes: Node[];               // Array of Node type
-  edges: Edge[];               // Array of Edge type
-  onNodesChange: OnNodesChange; // Function for handling node changes
-  onEdgesChange: OnEdgesChange; // Function for handling edge changes
-  onConnect: OnConnect;         // Function for handling new connections
+  nodes: Node[];
+  edges: Edge[];
+  onNodesChange: OnNodesChange;
+  onEdgesChange: OnEdgesChange;
+  onConnect: OnConnect;
+  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
 };
 
 const supabase = createClient();
-
-
-async function fetchRoadmap(name: string, sem: string) {
-  // Fetch the senior_id
-  const { data: seniorData, error: seniorError } = await supabase
-    .from('seniors')
-    .select('id')
-    .eq('name', name)
-    .single();
-
-  if (seniorError) {
-    console.error('Error fetching senior data:', seniorError);
-    return [];
-  }
-
-  const seniorId = seniorData?.id;
-
-  // Fetch the semester_id
-  const { data: semesterData, error: semesterError } = await supabase
-    .from('semesters')
-    .select('id')
-    .eq('semester_name', sem)
-    .single();
-
-  if (semesterError) {
-    console.log('sem', sem)
-    console.error('Error fetching semester data:', semesterError);
-    return [];
-  }
-
-  const semesterId = semesterData?.id;
-
-  // Fetch the course_ids from enrollments
-  const { data: enrollmentData, error: enrollmentError } = await supabase
-    .from('enrollments')
-    .select('course_id')
-    .eq('senior_id', seniorId ?? '')
-    .eq('semester_id', semesterId ?? '');
-
-  if (enrollmentError) {
-    console.error('Error fetching enrollment data:', enrollmentError);
-    return [];
-  }
-
-  const courseIds = enrollmentData.map((enrollment) => enrollment.course_id);
+const { toast } = useToast();
+async function fetchRoadmap(sem: string, user_id: string) {
   
-  // Fetch the course_info using the course_ids
-  const { data: courseInfoData, error } = await supabase
-    .from('course_info')
-    .select('course_code')
-    .in('id', courseIds);
+  const { data: prData, error: prError } = await supabase
+    .from('tasks_roadmap')
+    .select('courseId')
+    .eq('_clerk_user_id', user_id ?? '') 
+    .eq('columnId', sem);
 
-  if (error) {
-    console.error('Error fetching course info:', error);
-    return [];
-  }
+  const courses = prData?.map((enrollment) => ({
+    course_code: enrollment.courseId,
+  }));
 
-  return courseInfoData;
+  return courses;
 }
 
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
 };
 
-const defaultEdgeOptions: DefaultEdgeOptions = {
+const defaultEdgeOptions = {
   animated: true,
 };
 
@@ -118,60 +74,186 @@ const nodeTypes: NodeTypes = {
   CourseNode: CourseNode,
 };
 
+const FlowRenderer: React.FC<FlowRendererProps> = ({
+  nodes,
+  edges,
+  onNodesChange,
+  onEdgesChange,
+  onConnect,
+  setEdges,
+}) => {
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+
+  // Initialize store and react flow hooks
+  const store = useStoreApi();
+  const { getNode, getNodes } = useReactFlow();
+
+  const MIN_DISTANCE = 400;
+
+// Function to get the closest edge based on node proximity
+const getClosestEdge = useCallback(
+  (node: Node) => {
+    const nodes = getNodes();
+
+    // Only consider semnodes as potential targets
+    const semNodes = nodes.filter((n) => n.type === 'SemNode');
+
+    const currentNode = getNode(node.id);
+    if (!currentNode) return null;
+
+    const closestNode = semNodes.reduce(
+      (res: { distance: number; node: Node | null }, n: Node) => {
+        if (n.id !== currentNode.id) {
+          const dx = n.position.x - currentNode.position.x;
+          const dy = n.position.y - currentNode.position.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < res.distance && distance < MIN_DISTANCE) {
+            res.distance = distance;
+            res.node = n;
+          }
+        }
+        return res;
+      },
+      {
+        distance: Number.MAX_VALUE,
+        node: null,
+      }
+    );
+
+    if (!closestNode.node) {
+      return null;
+    }
+
+    // Determine the side of the semnode closest to the subnode
+    const dx = currentNode.position.x - closestNode.node.position.x;
+    const dy = currentNode.position.y - closestNode.node.position.y;
+
+    let sourceHandle = null;
+    let targetHandle = null;
+
+    // Map relative positions to existing handle IDs
+    if (Math.abs(dx) > Math.abs(dy)) {
+      // Horizontal alignment
+      if (dx > 0) {
+        // Subnode is to the right of semnode
+        sourceHandle = 'l-src';
+        targetHandle = 'r-target';
+      } else {
+        // Subnode is to the left of semnode
+        sourceHandle = 'r-src';
+        targetHandle = 'l-target';
+      }
+    } 
+
+    // Create and return the edge connecting currentNode to closestNode.node
+    const id = `e${currentNode.id}-${closestNode.node.id}`;
+    const newEdge: Edge = {
+      id,
+      source: currentNode.id,
+      target: closestNode.node.id,
+      sourceHandle: sourceHandle,
+      targetHandle: targetHandle,
+      animated: true,
+      type: 'smoothstep',
+      style: { stroke: '#4283bb', strokeWidth: 2 }, // Match existing edge style
+    };
+
+    return newEdge;
+  },
+  [getNode, getNodes]
+);
 
 
 
-const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange, onEdgesChange, onConnect }) => {
-  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance|null>(null); // State to hold the initialized instance
 
-  // When the reactFlowInstance changes, we can perform operations on it.
+const onNodeDrag = useCallback(
+  (_: any, node: Node) => {
+    const closeEdge = getClosestEdge(node);
+
+    setEdges((edges) => {
+      // Remove any existing edges from this subnode
+      const nextEdges = edges.filter(
+        (e) =>
+          e.source !== node.id &&
+          e.target !== node.id &&
+          e.className !== 'temp'
+      );
+
+      if (closeEdge) {
+        closeEdge.className = 'temp';
+        nextEdges.push(closeEdge);
+      }
+
+      return nextEdges;
+    });
+  },
+  [getClosestEdge, setEdges]
+);
+
+const onNodeDragStop = useCallback(
+  (_: any, node: Node) => {
+    const closeEdge = getClosestEdge(node);
+
+    setEdges((edges) => {
+      // Remove any existing edges from this subnode
+      const nextEdges = edges.filter(
+        (e) =>
+          e.source !== node.id &&
+          e.target !== node.id &&
+          e.className !== 'temp'
+      );
+
+      if (closeEdge) {
+        nextEdges.push(closeEdge);
+      }
+
+      return nextEdges;
+    });
+  },
+  [getClosestEdge, setEdges]
+);
+
+  
+
+  // Initialize React Flow instance and adjust viewport
+  const handleInit = (instance: ReactFlowInstance) => {
+    setReactFlowInstance(instance);
+  };
+
   useEffect(() => {
     if (reactFlowInstance) {
-       // Automatically fit the view to the diagram
-       reactFlowInstance.fitView();
-       let vp = reactFlowInstance.getViewport()
-      //  console.log(vp)
-       // Then zoom in by adjusting the zoom level
-       reactFlowInstance.setViewport({x:vp.x, y: vp.y + 120, zoom: 0.7 });
+      reactFlowInstance.fitView();
+      let vp = reactFlowInstance.getViewport();
+      reactFlowInstance.setViewport({ x: vp.x, y: vp.y + 120, zoom: 0.7 });
     }
   }, [reactFlowInstance]);
 
-
   useEffect(() => {
     const handleResize = () => {
-      if(reactFlowInstance) {
-        reactFlowInstance.fitView()
-        let vp = reactFlowInstance.getViewport()
-        if(vp.x >= 210) {
-          reactFlowInstance.setViewport({x:vp.x, y: vp.y + 120, zoom: 0.7 });
-        } else {
-          reactFlowInstance.setViewport({x:vp.x, y: vp.y + 120, zoom: vp.zoom });
-        }
-        // console.log(vp)
+      if (reactFlowInstance) {
+        reactFlowInstance.fitView();
+        let vp = reactFlowInstance.getViewport();
+        reactFlowInstance.setViewport({ x: vp.x, y: vp.y + 120, zoom: vp.zoom });
       }
-    }
+    };
 
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [reactFlowInstance])
-
-  // Callback to get the React Flow instance once it's ready
-  const handleInit = (instance: ReactFlowInstance) => {
-    setReactFlowInstance(instance);  // Save the initialized instance in the state
-  };
+  }, [reactFlowInstance]);
 
   const { resolvedTheme } = useTheme();
   let controlTheme;
   let flowClass;
-  if (resolvedTheme == 'dark') {
+  if (resolvedTheme === 'dark') {
     controlTheme = {
-      backgroundColor: 'black'
-    }
-    flowClass = 'dark'
-  } else if (resolvedTheme == 'light') {
-    flowClass = 'light'
+      backgroundColor: 'black',
+    };
+    flowClass = 'dark';
+  } else if (resolvedTheme === 'light') {
+    flowClass = 'light';
   }
 
   return (
@@ -180,41 +262,43 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({ nodes, edges, onNodesChange
       nodeTypes={nodeTypes}
       edges={edges}
       panOnScroll
-      // panOnScrollMode={PanOnScrollMode.Vertical}
       panOnDrag={false}
-      // zoomOnPinch={false}
       zoomOnDoubleClick={false}
       fitView
-      // fitViewOptions={fitViewOptions}
       defaultEdgeOptions={defaultEdgeOptions}
       onInit={handleInit}
       style={{ ...controlTheme }}
+      nodesDraggable={true}
       className={flowClass}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onNodeDrag={onNodeDrag}
+      onNodeDragStop={onNodeDragStop}
+      onConnect={onConnect}
     >
-      <Controls/>
+      <Controls />
       <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
     </ReactFlow>
   );
 };
 
-
-const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
-
+const KanbanTimeline = () => {
+  const { user } = useUser();
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const y1s1: Course[] = await fetchRoadmap(seniorName, 'Semester 1') as Course[];
-      const y1s2: Course[] = await fetchRoadmap(seniorName, 'Semester 2') as Course[];
-      const y2s1: Course[] = await fetchRoadmap(seniorName, 'Semester 3') as Course[];
-      const y2s2: Course[] = await fetchRoadmap(seniorName, 'Semester 4') as Course[];
-      const y3s1: Course[] = await fetchRoadmap(seniorName, 'Semester 5') as Course[];
-      const y3s2: Course[] = await fetchRoadmap(seniorName, 'Semester 6') as Course[];
-      const y4s1: Course[] = await fetchRoadmap(seniorName, 'Semester 7') as Course[];
-      const y4s2: Course[] = await fetchRoadmap(seniorName, 'Semester 8') as Course[];
-      
+      const y1s1: Course[] = await fetchRoadmap('Y1S1', user?.id ?? '') as Course[];
+      const y1s2: Course[] = await fetchRoadmap('Y1S2', user?.id ?? '') as Course[];
+      const y2s1: Course[] = await fetchRoadmap('Y2S1', user?.id ?? '') as Course[];
+      const y2s2: Course[] = await fetchRoadmap('Y2S2', user?.id ?? '') as Course[];
+      const y3s1: Course[] = await fetchRoadmap('Y3S1', user?.id ?? '') as Course[];
+      const y3s2: Course[] = await fetchRoadmap('Y3S2', user?.id ?? '') as Course[];
+      const y4s1: Course[] = await fetchRoadmap('Y4S1', user?.id ?? '') as Course[];
+      const y4s2: Course[] = await fetchRoadmap('Y4S2', user?.id ?? '') as Course[];
+
       let semArr = [y1s1, y1s2, y2s1, y2s2, y3s1, y3s2, y4s1, y4s2];
 
       const fetchedNodes: Node[] = [
@@ -224,6 +308,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           sourcePosition: Position.Bottom,
           data: { course_code: 'Y1S1' },
           position: { x: 0, y: 0 },
+          draggable: false,
         },
         {
           id: 'n2',
@@ -232,6 +317,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           sourcePosition: Position.Bottom,
           data: { course_code: 'Y1S2' },
           position: { x: 0, y: 250 },
+          draggable: false,
         },
 
         {
@@ -240,6 +326,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           sourcePosition: Position.Left,
           data: { course_code: 'Y2S1' },
           position: { x: 0, y: 500 },
+          draggable: false,
         },
         {
           id: 'n4',
@@ -247,6 +334,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           sourcePosition: Position.Left,
           data: { course_code: 'Y2S2' },
           position: { x: 0, y: 750 },
+          draggable: false,
         },
         {
           id: 'n5',
@@ -254,6 +342,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           sourcePosition: Position.Bottom,
           data: { course_code: 'Y3S1' },
           position: { x: 0, y: 1000 },
+          draggable: false,
         },
         {
           id: 'n6',
@@ -261,6 +350,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           sourcePosition: Position.Bottom,
           data: { course_code: 'Y3S2' },
           position: { x: 0, y: 1250 },
+          draggable: false,
         },
         {
           id: 'n7',
@@ -268,6 +358,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           sourcePosition: Position.Bottom,
           data: { course_code: 'Y4S1' },
           position: { x: 0, y: 1500 },
+          draggable: false,
         },
         {
           id: 'n8',
@@ -275,6 +366,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           sourcePosition: Position.Bottom,
           data: { course_code: 'Y4S2' },
           position: { x: 0, y: 1750 },
+          draggable: false,
         },
     
       ];
@@ -290,16 +382,16 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           animated: false,
           style: { stroke: '#4283bb', strokeWidth: 2, strokeDasharray: 'none' },
         },
-        {
-          id: 'n2-s1n2',
-          source: 'n2',
-          type: 'step',
-          target: 's1n2',
-          sourceHandle: 'b-src',
-          targetHandle: 't-target',
-          animated: true,
-          style: { stroke: '#4283bb', strokeWidth: 2 },
-        },
+        // {
+        //   id: 'n2-s1n2',
+        //   source: 'n2',
+        //   type: 'step',
+        //   target: 's1n2',
+        //   sourceHandle: 'b-src',
+        //   targetHandle: 't-target',
+        //   animated: true,
+        //   style: { stroke: '#4283bb', strokeWidth: 2 },
+        // },
         {
           id: 'n2-n3',
           source: 'n2',
@@ -366,109 +458,121 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
       // Populate y1s1 courses
       let snCounter = 1
       let leftSide = false
-      y1s1.forEach((course) => {
-        let xAxis;
-        let yAxis;
-        let src;
-        let tgt;
+      if(y1s1.length > 0) {
 
-        if(leftSide == false) {
-          xAxis = -345
-          yAxis = -120 + (40 * snCounter)
-          src = 'l-src'
-          tgt = 'r-target'
-          leftSide = true
-        } else {
-          xAxis = 245
-          yAxis = -120 + (40 * (snCounter - 1))
-          src = 'r-src'
-          tgt = 'l-target'
-          leftSide = false
-          
-        }
-        let subnode = {
-          id: 's' + snCounter.toString() + 'n1',
-          type: 'CourseNode',
-          // sourcePosition: Position.Top,
-          targetPosition: Position.Right,
-          data: { course_code: course.course_code },
-          position: { x: xAxis, y: yAxis },
-        }
-        fetchedNodes.push(subnode)
-
-
-
-        let edge = {
-          id: 'n1-s' + snCounter.toString() + 'n1',
-          source: 'n1',
-          type: 'smoothstep',
-          sourceHandle: src,
-          targetHandle: tgt,
-          target: 's' + snCounter.toString() + 'n1',
-          animated: true,
-          style: { stroke: '#4283bb', strokeWidth: 2 },
-        }
-
-        fetchedEdges.push(edge)
-
-        snCounter += 1
-      })
+        y1s1.forEach((course) => {
+        console.log('course', course)
+          let xAxis;
+          let yAxis;
+          let src;
+          let tgt;
+  
+          if(leftSide == false) {
+            xAxis = -345
+            yAxis = -120 + (40 * snCounter)
+            src = 'l-src'
+            tgt = 'r-target'
+            leftSide = true
+          } else {
+            xAxis = 245
+            yAxis = -120 + (40 * (snCounter - 1))
+            src = 'r-src'
+            tgt = 'l-target'
+            leftSide = false
+            
+          }
+          let subnode = {
+            id: 's' + snCounter.toString() + 'n1',
+            type: 'CourseNode',
+            // sourcePosition: Position.Top,
+            targetPosition: Position.Right,
+            data: { course_code: course.course_code },
+            position: { x: xAxis, y: yAxis },
+            draggable: true, 
+            
+          }
+          fetchedNodes.push(subnode)
+  
+  
+  
+          let edge = {
+            id: 'n1-s' + snCounter.toString() + 'n1',
+            source: 'n1',
+            type: 'smoothstep',
+            sourceHandle: src,
+            targetHandle: tgt,
+            target: 's' + snCounter.toString() + 'n1',
+            animated: true,
+            style: { stroke: '#4283bb', strokeWidth: 2 },
+          }
+  
+          fetchedEdges.push(edge)
+  
+          snCounter += 1
+        })
+      }
+     
       
       // Populate y1s2 courses
       snCounter = 1
       leftSide = false
-      y1s2.forEach((course: { course_code: string }) => {
-        // initialise variables
-        let xAxis;
-        let yAxis;
-        let src;
-        let tgt;
+      if(y1s2.length > 0) {
+        y1s2.forEach((course: { course_code: string }) => {
+          console.log('course', course)
+          // initialise variables
+          let xAxis;
+          let yAxis;
+          let src;
+          let tgt;
 
-        // position subnodes
-        if(leftSide == false) {
-          xAxis = -345
-          yAxis = 130 + (40 * snCounter)
-          src = 'l-src'
-          tgt = 'r-target'
-          leftSide = true
-        } else {
-          xAxis = 245
-          yAxis = 130 + (40 * (snCounter - 1))
-          src = 'r-src'
-          tgt = 'l-target'
-          leftSide = false
-          
-        }
+          // position subnodes
+          if(leftSide == false) {
+            xAxis = -345
+            yAxis = 130 + (40 * snCounter)
+            src = 'l-src'
+            tgt = 'r-target'
+            leftSide = true
+          } else {
+            xAxis = 245
+            yAxis = 130 + (40 * (snCounter - 1))
+            src = 'r-src'
+            tgt = 'l-target'
+            leftSide = false
+            
+          }
 
-        let subnode = {
-          id: 's' + snCounter.toString() + 'n2',
-          type: 'CourseNode',
-          sourcePosition: Position.Right,
-          targetPosition: Position.Bottom,
-          data: { course_code: course.course_code },
-          position: { x: xAxis, y: yAxis },
-        }
-        fetchedNodes.push(subnode)
+          let subnode = {
+            id: 's' + snCounter.toString() + 'n2',
+            type: 'CourseNode',
+            sourcePosition: Position.Right,
+            targetPosition: Position.Bottom,
+            data: { course_code: course.course_code },
+            position: { x: xAxis, y: yAxis },
+            draggable: true, 
+          }
+          fetchedNodes.push(subnode)
 
-        let edge = {
-          id: 'n2-s' + snCounter.toString() + 'n2',
-          source: 'n2',
-          type: 'smoothstep',
-          sourceHandle: src,
-          targetHandle: tgt,
-          target: 's' + snCounter.toString() + 'n2',
-          animated: true,
-          style: { stroke: '#4283bb', strokeWidth: 2 },
-        }
+          let edge = {
+            id: 'n2-s' + snCounter.toString() + 'n2',
+            source: 'n2',
+            type: 'smoothstep',
+            sourceHandle: src,
+            targetHandle: tgt,
+            target: 's' + snCounter.toString() + 'n2',
+            animated: true,
+            style: { stroke: '#4283bb', strokeWidth: 2 },
+          }
 
-        fetchedEdges.push(edge)
+          fetchedEdges.push(edge)
 
-        snCounter += 1
-      })
+          snCounter += 1
+        })
+      }
 
       // Populate y2s1 courses
       snCounter = 1
       leftSide = false
+      if(y2s1.length > 0) {
       y2s1.forEach((course) => {
 
         // initialise variables
@@ -500,6 +604,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'CourseNode',
           data: { course_code: course.course_code },
           position: { x: xAxis, y: yAxis },
+          draggable: true, 
         }
         fetchedNodes.push(subnode)
 
@@ -518,11 +623,13 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
         snCounter += 1
       })
+    }
 
 
       // Populate y2s2 courses
       snCounter = 1
       leftSide = false
+      if(y2s2.length > 0) {
       y2s2.forEach((course) => {
         // initialise variables
         let xAxis;
@@ -552,6 +659,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'CourseNode',
           data: { course_code: course.course_code },
           position: { x: xAxis, y: yAxis },
+          draggable: true, 
         }
         fetchedNodes.push(subnode)
 
@@ -570,10 +678,12 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
         snCounter += 1
       })
+    }
     
       // Populate y3s1 courses
       snCounter = 1
       leftSide = false
+      if(y3s1.length > 0) {
       y3s1.forEach((course) => {
         // initialise variables
         let xAxis;
@@ -602,6 +712,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'CourseNode',
           data: { course_code: course.course_code },
           position: { x: xAxis, y: yAxis },
+          draggable: true, 
         }
         fetchedNodes.push(subnode)
 
@@ -620,10 +731,12 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
         snCounter += 1
       })
+      }
 
       // Populate y3s2 courses
       snCounter = 1
       leftSide = false
+      if(y3s2.length > 0) {
       y3s2.forEach((course) => {
 
         // initialise variables
@@ -654,6 +767,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'CourseNode',
           data: { course_code: course.course_code },
           position: { x: xAxis, y: yAxis },
+          draggable: true, 
         }
         fetchedNodes.push(subnode)
 
@@ -672,10 +786,12 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
         snCounter += 1
       })
+      }
 
       // Populate y4s1 courses
       snCounter = 1
       leftSide = false
+      if(y4s1.length > 0) {
       y4s1.forEach((course) => {
         // initialise variables
         let xAxis;
@@ -705,6 +821,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'CourseNode',
           data: { course_code: course.course_code },
           position: { x: xAxis, y: yAxis },
+          draggable: true, 
         }
         fetchedNodes.push(subnode)
 
@@ -723,10 +840,12 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
         snCounter += 1
       })
+    }
 
       // Populate y4s2 courses
       snCounter = 1
       leftSide = false
+      if(y4s2.length > 0) {
       y4s2.forEach((course) => {
         // initialise variables
         let xAxis;
@@ -755,6 +874,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           type: 'CourseNode',
           data: { course_code: course.course_code },
           position: { x: xAxis, y: yAxis },
+          draggable: true, 
         }
         fetchedNodes.push(subnode)
 
@@ -773,6 +893,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
 
         snCounter += 1
       })
+      }
 
 
       setNodes(fetchedNodes);
@@ -781,12 +902,136 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
     };
 
     fetchData();
-  }, [seniorName]);
+  }, [user?.id]);
+
+  const semPositions: { [key: string]: number } = {
+    'Y1S1': 0,
+    'Y1S2': 250,
+    'Y2S1': 500,
+    'Y2S2': 750,
+    'Y3S1': 1000,
+    'Y3S2': 1250,
+    'Y4S1': 1500,
+    'Y4S2': 1750,
+  };
+
+  const getSemesterFromPosition = (yPos: number): string | null => {
+        // Determine which semester the y position corresponds to
+        const thresholds = Object.entries(semPositions).map(([sem, pos]) => ({
+          sem,
+          pos,
+        }));
+      
+        for (let i = 0; i < thresholds.length; i++) {
+          const { sem, pos } = thresholds[i];
+          const nextPos = thresholds[i + 1]?.pos ?? Infinity;
+          if (yPos >= pos - 100 && yPos < nextPos - 100) {
+            return sem;
+          }
+        }
+        return null;
+      };
+    
+      const updateTaskColumnId = async (courseId: string, newColumnId: string) => {
+        if (!user || !user.id) return;
+      
+        try {
+          const { error } = await supabase
+            .from('tasks_roadmap')
+            .update({ columnId: newColumnId })
+            .eq('_clerk_user_id', user.id)
+            .eq('courseId', courseId);
+      
+          if (error) {
+            console.error('Error updating task:', error);
+            toast({
+              title: 'Error updating task in Supabase.'
+            
+            });
+            
+          }
+        } catch (error) {
+          console.error('Update error:', error);
+          toast({ title: 'An unexpected error occurred during update.' });
+        }
+      };
+    
+      const getSemesterFromNodeId = (nodeId: string): string => {
+        // Extract semester from node id, assuming format like 's1n2' where 'n2' indicates semester index
+        const match = nodeId.match(/n(\d+)/);
+        if (match) {
+          const index = parseInt(match[1]) - 1;
+          const semesters = ['Y1S1', 'Y1S2', 'Y2S1', 'Y2S2', 'Y3S1', 'Y3S2', 'Y4S1', 'Y4S2'];
+          return semesters[index];
+        }
+        return '';
+      };
+    
+  
 
   const onNodesChange: OnNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    []
+    (changes) => {
+      setNodes((nds) => applyNodeChanges(changes, nds));
+
+      // Handle side effects after state has been updated
+      changes.forEach((change) => {
+        if (change.type === 'position' && change.dragging === false) {
+          const node = nodes.find((n) => n.id === change.id);
+          if (node) {
+            const newSem = getSemesterFromPosition(node.position.y);
+            if (newSem) {
+              const originalSem = getSemesterFromNodeId(node.id);
+              if (newSem !== originalSem) {
+                // Update the task's columnId in Supabase
+                (async () => {
+                  try {
+                    const { error } = await supabase
+                      .from('tasks_roadmap')
+                      .update({ columnId: newSem })
+                      .eq('_clerk_user_id', user?.id ?? '')
+                      .eq('courseId', node.data.course_code as string);
+
+                    if (error) {
+                      console.error('Error updating task:', error);
+                      toast({
+                        title: 'Error updating task in Supabase.',
+                        description: `Failed to update ${node.data.course_code}. Please try again.`,
+                      });
+                    } else {
+                      toast({
+                        title: 'Task Moved',
+                        description: `Moved ${node.data.course_code} to ${newSem}`,
+                      });
+                    }
+                  } catch (error) {
+                    console.error('Update error:', error);
+                    toast({ title: 'An unexpected error occurred during update.' });
+                  }
+                })();
+
+                // Update the node's data to reflect the new semester
+                setNodes((prevNodes) =>
+                  prevNodes.map((n) =>
+                    n.id === node.id
+                      ? {
+                          ...n,
+                          data: {
+                            ...n.data,
+                            semester: newSem,
+                          },
+                        }
+                      : n
+                  )
+                );
+              }
+            }
+          }
+        }
+      });
+    },
+    [nodes, user?.id]
   );
+
   const onEdgesChange: OnEdgesChange = useCallback(
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
@@ -799,7 +1044,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
   // Show a loading state while fetching data
   if (loading) {
     return (
-      <div className='space-y-3 pt-2'>
+      <div className="space-y-3 pt-2">
         <Skeleton className="h-8 w-100" />
         <Skeleton className="h-8 w-100" />
         <Skeleton className="h-8 w-3/4" />
@@ -809,7 +1054,7 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
   }
 
   return (
-    <div style={{ width: '100%', height: '100%' }} >
+    <div style={{ width: '100%', height: '100%' }}>
       <ReactFlowProvider>
         <FlowRenderer
           nodes={nodes}
@@ -817,15 +1062,11 @@ const Timeline: React.FC<TimelineProps> = ({ seniorName }) => {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
-          
-          
+          setEdges={setEdges} // Pass setEdges to FlowRenderer
         />
-        
-
-
       </ReactFlowProvider>
     </div>
   );
-}
+};
 
-export default Timeline
+export default KanbanTimeline;

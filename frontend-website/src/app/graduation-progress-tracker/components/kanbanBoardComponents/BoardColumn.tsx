@@ -32,7 +32,7 @@ interface BoardColumnProps {
 
 export function BoardColumn({ column, tasks, isOverlay, onRemoveTask, onToggleTaskCompletion }: BoardColumnProps) {
   const tasksIds = useMemo(() => {
-    return tasks.map((task) => task.id);
+    return tasks.map((task) => task.courseId);
   }, [tasks]);
 
   const {
@@ -101,10 +101,10 @@ export function BoardColumn({ column, tasks, isOverlay, onRemoveTask, onToggleTa
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
               <TaskCard 
-                key={task.id} 
+                key={task.courseId} 
                 task={task}
-                onRemove={() => onRemoveTask(task.id)}
-                onToggleCompletion={() => onToggleTaskCompletion(task.id)}
+                onRemove={() => onRemoveTask(task.courseId)}
+                onToggleCompletion={() => onToggleTaskCompletion(task.courseId)}
               />
             ))}
           </SortableContext>

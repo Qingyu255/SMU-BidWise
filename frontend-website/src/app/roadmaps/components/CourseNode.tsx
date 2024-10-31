@@ -221,3 +221,5 @@ const CourseNode = ({ data }: CourseNodeProps) => {
   };
   
   export default CourseNode;
+
+
