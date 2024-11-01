@@ -152,6 +152,7 @@ export interface TimelineProps {
 }
 
 export interface Course {
+  courseCode: string;
   course_code: string;
 }
 

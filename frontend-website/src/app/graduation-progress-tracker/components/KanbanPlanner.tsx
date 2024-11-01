@@ -46,6 +46,7 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
     const [showKanban, setShowKanban] = useState(true);
     const [KanbanKey, setKanbanKey] = useState(0);
 
+
     // Fetch tasks from Supabase on component mount
     useEffect(() => {
         const fetchTasks = async () => {
@@ -55,23 +56,44 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
             }
 
             try {
-                const { data, error } = await supabase
+                const { data: tasksData, error: tasksError } = await supabase
                     .from('tasks_roadmap')
                     .select('*')
                     .eq('_clerk_user_id', user.id);
 
-                if (error) {
-                    throw error;
+                if (tasksError) {
+                    throw tasksError;
                 }
 
                 // Map Supabase data to Task type
-                const fetchedTasks: Task[] = data.map(task => ({
-                    _clerk_user_id: user?.id ?? '' as string,
-                    columnId: task.columnId as string,
-                    completed: task.completed as boolean,
-                    content: task.content as string,
-                    courseId: task.courseId as string,
+                const fetchedTasks: Task[] = await Promise.all(tasksData.map(async task => {
+                    const { data: courseData, error: courseError } = await supabase
+                        .from('course_info')
+                        .select('course_code')
+                        .eq('id', task.courseId as string);
+
+                    if (courseError) {
+                        throw courseError;
+                    }
+
+                    let courseCode = '';
+                    if (courseData && courseData.length > 0) {
+                        courseCode = courseData[0].course_code as string;
+                    }
+
+                    return {
+                        _clerk_user_id: user?.id ?? '',
+                        columnId: task.columnId as string,
+                        completed: task.completed as boolean,
+                        content: `${courseCode} - ${task.content}` as string,
+                        courseId: task.courseId as string,
+                    };
                 }));
+
+                setTasks(fetchedTasks);
+                previousTasksRef.current = fetchedTasks; // Initialize previous tasks
+
+                
 
                 setTasks(fetchedTasks);
                 previousTasksRef.current = fetchedTasks; // Initialize previous tasks
@@ -84,49 +106,160 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
         fetchTasks();
     }, [supabase, user, toast]);
 
+  
+    // const handleAddCourse = async (newCourse: Course) => {
+    //     if (tasks.some(task => task.courseId === newCourse.courseId)) { // Use 'id' for uniqueness
+    //         toast({ title: `${newCourse.courseId} Already Added` });
+    //         return;
+    //     }
+
+    //     if (!user || !user.id) {
+    //         toast({ title: 'User not authenticated.' });
+    //         return;
+    //     }
+
+    //     useEffect(() => {
+    //         const fetchCourseCode = async () => {
+    //             try {
+    //                 const { data, error } = await supabase
+    //                     .from('course_code')
+    //                     .select('course_code')
+    //                     .eq('id', newCourse.courseId);
+
+    //                 if (error) {
+    //                     throw error;
+    //                 }
+
+    //                 if (data && data.length > 0) {
+    //                     setCourseCode(data[0].course_code as string);
+    //                 } else {
+    //                     setCourseCode('');
+    //                 }
+    //             } catch (error) {
+    //                 console.error('Error fetching course code:', error);
+    //                 setCourseCode('');
+    //             }
+    //         };
+
+    //         fetchCourseCode();
+    //     }, [newCourse.courseId, supabase]);
+
+    //     const newTask: Task = {
+    //         _clerk_user_id: user?.id ?? '', // Use a unique identifier
+    //         courseId: newCourse.courseId,
+    //         content: `${courseCode} - ${newCourse.content}`,
+    //         completed: newCourse.completed === 'true',
+    //         columnId: newCourse.columnId, // Initialize columnId based on semester
+    //     };
+
+    //     console.log('newTask', newTask)
+
+
+
+    //     try {
+    //         const { error } = await supabase.from('tasks_roadmap').insert([
+    //             {
+    //                 _clerk_user_id: user.id,
+    //                 courseId: newTask.courseId,
+    //                 content: newTask.content,
+    //                 completed: newTask.completed,
+    //                 columnId: newTask.columnId,
+    //             }
+    //         ]);
+
+    //         if (error) {
+    //             throw error;
+    //         }
+
+    //         setTasks(prev => [...prev, newTask]);
+    //         previousTasksRef.current = [...tasks, newTask];
+    //         toast({ title: `${newCourse.courseId} Added Successfully` }); ////////////////////////////
+    //     } catch (error) {
+    //         console.error('Error adding course:', error);
+    //         toast({ title: 'Error adding course to Supabase.' });
+    //     }
+    // };
+
     // Handler to add a new task (course)
-    const handleAddCourse = async (newCourse: Course) => {
-        if (tasks.some(task => task.courseId === newCourse.courseId)) { // Use 'id' for uniqueness
-            toast({ title: `${newCourse.courseId} Already Added` });
-            return;
+const handleAddCourse = async (newCourse: Course) => {
+    // Fetch the course_code directly
+    const { data, error } = await supabase
+    .from('course_info')
+    .select('course_code')
+    .eq('id', newCourse.courseId);
+
+    if (error) {
+        throw error;
+    }
+
+    let courseCode = '';
+    if (data && data.length > 0) {
+        courseCode = data[0].course_code as string;
+    } else {
+        courseCode = '';
+    }
+
+    if (tasks.some(task => task.courseId === newCourse.courseId)) {
+        toast({ title: `${courseCode} Already Added` });
+        return;
+    }
+
+    if (!user || !user.id) {
+        toast({ title: 'User not authenticated.' });
+        return;
+    }
+
+    try {
+        // Fetch the course_code directly
+        const { data, error } = await supabase
+            .from('course_info')
+            .select('course_code')
+            .eq('id', newCourse.courseId);
+
+        if (error) {
+            throw error;
         }
 
-        if (!user || !user.id) {
-            toast({ title: 'User not authenticated.' });
-            return;
+        let courseCode = '';
+        if (data && data.length > 0) {
+            courseCode = data[0].course_code as string;
+        } else {
+            courseCode = '';
         }
 
         const newTask: Task = {
-            _clerk_user_id: user?.id ?? '', // Use a unique identifier
+            _clerk_user_id: user?.id ?? '',
             courseId: newCourse.courseId,
-            content: `${newCourse.courseId} - ${newCourse.content}`,
+            content: `${courseCode} - ${newCourse.content}`,
             completed: newCourse.completed === 'true',
-            columnId: newCourse.columnId, // Initialize columnId based on semester
+            columnId: newCourse.columnId,
         };
 
-        try {
-            const { error } = await supabase.from('tasks_roadmap').insert([
-                {
-                    _clerk_user_id: user.id,
-                    courseId: newTask.courseId,
-                    content: newTask.content,
-                    completed: newTask.completed,
-                    columnId: newTask.columnId,
-                }
-            ]);
+        console.log('newTask', newTask);
 
-            if (error) {
-                throw error;
-            }
+        // Insert the new task into Supabase
+        const { error: insertError } = await supabase.from('tasks_roadmap').insert([
+            {
+                _clerk_user_id: user.id,
+                courseId: newTask.courseId,
+                content: newTask.content,
+                completed: newTask.completed,
+                columnId: newTask.columnId,
+            },
+        ]);
 
-            setTasks(prev => [...prev, newTask]);
-            previousTasksRef.current = [...tasks, newTask];
-            toast({ title: `${newCourse.courseId} Added Successfully` });
-        } catch (error) {
-            console.error('Error adding course:', error);
-            toast({ title: 'Error adding course to Supabase.' });
+        if (insertError) {
+            throw insertError;
         }
-    };
+
+        setTasks(prev => [...prev, newTask]);
+        previousTasksRef.current = [...tasks, newTask];
+        toast({ title: `${courseCode} Added Successfully` });
+    } catch (error) {
+        console.error('Error adding course:', error);
+        toast({ title: 'Error adding course to Supabase.' });
+    }
+};
 
     // Handler to remove a task (course)
     const handleRemoveCourse = async (taskId: string) => {

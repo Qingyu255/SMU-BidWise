@@ -34,6 +34,7 @@ import { useTheme } from 'next-themes';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from '@clerk/clerk-react';
+import { UUID } from 'crypto';
 
 type FlowRendererProps = {
   nodes: Node[];
@@ -54,9 +55,25 @@ async function fetchRoadmap(sem: string, user_id: string) {
     .eq('_clerk_user_id', user_id ?? '') 
     .eq('columnId', sem);
 
-  const courses = prData?.map((enrollment) => ({
-    course_code: enrollment.courseId,
-  }));
+  const courses = await Promise.all(
+    prData?.map(async (enrollment) => {
+      const { data: courseData, error: courseError } = await supabase
+        .from('course_info')
+        .select('course_code')
+        .eq('id', enrollment.courseId as unknown as UUID)
+        .single();
+
+      if (courseError) {
+        console.error('Error fetching course info:', courseError);
+        return null;
+      }
+
+      return {
+        courseCode: courseData?.course_code,
+        course_code: enrollment.courseId,
+      };
+    }) ?? []
+  );
 
   return courses;
 }
@@ -487,7 +504,7 @@ const KanbanTimeline = () => {
             type: 'CourseNode',
             // sourcePosition: Position.Top,
             targetPosition: Position.Right,
-            data: { course_code: course.course_code },
+            data: { course_code: course.courseCode },
             position: { x: xAxis, y: yAxis },
             draggable: true, 
             
@@ -518,7 +535,7 @@ const KanbanTimeline = () => {
       snCounter = 1
       leftSide = false
       if(y1s2.length > 0) {
-        y1s2.forEach((course: { course_code: string }) => {
+        y1s2.forEach((course: { courseCode: string }) => {
           console.log('course', course)
           // initialise variables
           let xAxis;
@@ -547,7 +564,7 @@ const KanbanTimeline = () => {
             type: 'CourseNode',
             sourcePosition: Position.Right,
             targetPosition: Position.Bottom,
-            data: { course_code: course.course_code },
+            data: { course_code: course.courseCode },
             position: { x: xAxis, y: yAxis },
             draggable: true, 
           }
@@ -603,7 +620,7 @@ const KanbanTimeline = () => {
           id: 's' + snCounter.toString() + 'n3',
           targetPosition: Position.Right,
           type: 'CourseNode',
-          data: { course_code: course.course_code },
+          data: { course_code: course.courseCode },
           position: { x: xAxis, y: yAxis },
           draggable: true, 
         }
@@ -658,7 +675,7 @@ const KanbanTimeline = () => {
           id: 's' + snCounter.toString() + 'n4',
           targetPosition: Position.Left,
           type: 'CourseNode',
-          data: { course_code: course.course_code },
+          data: { course_code: course.courseCode },
           position: { x: xAxis, y: yAxis },
           draggable: true, 
         }
@@ -711,7 +728,7 @@ const KanbanTimeline = () => {
           id: 's' + snCounter.toString() + 'n5',
           targetPosition: Position.Right,
           type: 'CourseNode',
-          data: { course_code: course.course_code },
+          data: { course_code: course.courseCode },
           position: { x: xAxis, y: yAxis },
           draggable: true, 
         }
@@ -766,7 +783,7 @@ const KanbanTimeline = () => {
           id: 's' + snCounter.toString() + 'n6',
           targetPosition: Position.Right,
           type: 'CourseNode',
-          data: { course_code: course.course_code },
+          data: { course_code: course.courseCode },
           position: { x: xAxis, y: yAxis },
           draggable: true, 
         }
@@ -820,7 +837,7 @@ const KanbanTimeline = () => {
           id: 's' + snCounter.toString() + 'n7',
           targetPosition: Position.Left,
           type: 'CourseNode',
-          data: { course_code: course.course_code },
+          data: { course_code: course.courseCode },
           position: { x: xAxis, y: yAxis },
           draggable: true, 
         }
@@ -873,7 +890,7 @@ const KanbanTimeline = () => {
           id: 's' + snCounter.toString() + 'n8',
           targetPosition: Position.Left,
           type: 'CourseNode',
-          data: { course_code: course.course_code },
+          data: { course_code: course.courseCode },
           position: { x: xAxis, y: yAxis },
           draggable: true, 
         }
@@ -933,29 +950,29 @@ const KanbanTimeline = () => {
         return null;
       };
     
-      const updateTaskColumnId = async (courseId: string, newColumnId: string) => {
-        if (!user || !user.id) return;
+      // const updateTaskColumnId = async (courseId: string, newColumnId: string) => {
+      //   if (!user || !user.id) return;
       
-        try {
-          const { error } = await supabase
-            .from('tasks_roadmap')
-            .update({ columnId: newColumnId })
-            .eq('_clerk_user_id', user.id)
-            .eq('courseId', courseId);
+      //   try {
+      //     const { error } = await supabase
+      //       .from('tasks_roadmap')
+      //       .update({ columnId: newColumnId })
+      //       .eq('_clerk_user_id', user.id)
+      //       .eq('courseId', courseId);
       
-          if (error) {
-            console.error('Error updating task:', error);
-            toast({
-              title: 'Error updating task in Supabase.'
+      //     if (error) {
+      //       console.error('Error updating task:', error);
+      //       toast({
+      //         title: 'Error updating task in Supabase.'
             
-            });
+      //       });
             
-          }
-        } catch (error) {
-          console.error('Update error:', error);
-          toast({ title: 'An unexpected error occurred during update.' });
-        }
-      };
+      //     }
+      //   } catch (error) {
+      //     console.error('Update error:', error);
+      //     toast({ title: 'An unexpected error occurred during update.' });
+      //   }
+      // };
     
       const getSemesterFromNodeId = (nodeId: string): string => {
         // Extract semester from node id, assuming format like 's1n2' where 'n2' indicates semester index
@@ -986,19 +1003,40 @@ const KanbanTimeline = () => {
                 // Update the task's columnId in Supabase
                 (async () => {
                   try {
-                    const { error } = await supabase
+                    // Fetch the course_code directly
+                    const { data: courseData, error: courseError } = await supabase
+                        .from('course_info')
+                        .select('id')
+                        .eq('course_code', node.data.course_code as string);
+
+                    if (courseError) {
+                        throw courseError;
+                    }
+
+                    let courseId = '';
+                    if (courseData && courseData.length > 0) {
+                        courseId = courseData[0].id as string;
+                    } else {
+                        courseId = '';
+                    }
+
+
+                    const { error: updateError } = await supabase
                       .from('tasks_roadmap')
                       .update({ columnId: newSem })
                       .eq('_clerk_user_id', user?.id ?? '')
-                      .eq('courseId', node.data.course_code as string);
+                      .eq('courseId', courseId as string);
 
-                    if (error) {
-                      console.error('Error updating task:', error);
+
+
+                    if (updateError) {
+                      console.error('Error updating task:', updateError);
                       toast({
                         title: 'Error updating task in Supabase.',
                         description: `Failed to update ${node.data.course_code}. Please try again.`,
                       });
                     } else {
+                      console.log('node.data', node.data)
                       toast({
                         title: 'Task Moved',
                         description: `Moved ${node.data.course_code} to ${newSem}`,

@@ -103,17 +103,20 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
       const { data: courseData, error } = await supabase
         .from('course_info')
         .select('*')
-        .eq('course_code', courseCode);
+        .eq('id', courseCode);
 
         if (error) {
           console.error(error);
         } else if (courseData) {
           
           setCourseData(courseData as unknown as courseInfo[]);
+          console.log('courseData', courseData);
         }
     };
     fetchCourseData();
   }, [task]);
+
+  console.log('task', task)
 
   return (
     <TooltipProvider>
@@ -141,7 +144,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => {onToggleCompletion(task.courseId)}}
+              onClick={() => {onToggleCompletion(courseData[0]?.course_code)}}
               className="ml-auto text-[#5A7BB5]"
             >
               {task.completed ? (
@@ -155,7 +158,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Mark {task.courseId} as {task.completed ? "incomplete" : "complete"}</p>
+            <p>Mark {courseData[0]?.course_code} as {task.completed ? "incomplete" : "complete"}</p>
           </TooltipContent>
         </Tooltip>
 
@@ -165,7 +168,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => {onRemove(task.courseId)}}
+            onClick={() => {onRemove(courseData[0]?.course_code)}}
             className="ml-2 text-red-500"
           >
             <Trash2 className="w-4 h-4" />
@@ -173,7 +176,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
           </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Remove {task.courseId} from planner</p>
+            <p>Remove {courseData[0]?.course_code} from planner</p>
           </TooltipContent>
         </Tooltip>
       </CardHeader>
@@ -197,7 +200,7 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
               </SheetTrigger>
             </TooltipTrigger>
             <TooltipContent>
-              <p>View Course Information for {task.courseId}</p>
+              <p>View Course Information for {courseData[0]?.course_code}</p>
             </TooltipContent>
           </Tooltip>
           <SheetContent className="flex flex-col">

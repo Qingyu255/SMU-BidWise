@@ -53,7 +53,7 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors, lik
 
             const { data, error, count } = await query;
         
-        console.log('data', data)
+        // console.log('data', data)
         if (count) {
             totalPages.current = Math.ceil(count / limit);
         }
@@ -73,7 +73,7 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors, lik
             _clerk_user_id: item._clerk_user_id,
         }));
         setRoadmapInfo(formattedData);
-        console.log(roadmapInfo);
+        // console.log(roadmapInfo);
         }
       };
   
