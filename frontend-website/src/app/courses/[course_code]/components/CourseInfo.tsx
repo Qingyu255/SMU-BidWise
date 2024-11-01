@@ -30,7 +30,7 @@ export interface CourseInfoProps {
   enrolment_requirements: string;
 }
 
-export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoProps, courseAreas: any}) {
+export function CourseInfo({courseInfo, courseAreas, updated_at} : {courseInfo: CourseInfoProps, courseAreas: any, updated_at?: string}) {
 
   return (
     <Card className=" rounded-lg">
@@ -114,7 +114,11 @@ export function CourseInfo({courseInfo, courseAreas} : {courseInfo: CourseInfoPr
 
       </CardContent>
       <CardFooter className="text-sm text-gray-500">
-        <p>Updated information based on the latest term on SMU BOSS</p>
+        {updated_at ? (
+          <p>Last synced with BOSS: {updated_at}</p>
+        ) : (
+          <p>Updated information based on the latest term on SMU BOSS</p>
+        )}
       </CardFooter>
     </Card>
   );

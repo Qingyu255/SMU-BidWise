@@ -29,7 +29,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { ExamInformationTable } from './components/ExamInformationTable';
-import NoExamsCard from './components/NoExamsCard';
+import { convertUtcToSGT } from '@/utils/dateUtils';
 
 const supabase = createClient();
 
@@ -117,11 +117,13 @@ export default function Page({ params }: { params: { course_code: string }}) {
         end_time,
         instructor,
         venue,
+        updated_at,
         availability (
           total_seats,
           current_enrolled,
           reserved_seats,
-          available_seats
+          available_seats,
+          updated_at
         )
       `)
       .eq('course_id', course_id)
@@ -292,7 +294,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
           </Breadcrumb>
           {courseInfo && (
             <div>
-              <CourseInfo courseInfo={courseInfo} courseAreas={courseAreas}/>
+              <CourseInfo courseInfo={courseInfo} courseAreas={courseAreas} updated_at={sections.length > 0 ? convertUtcToSGT(sections[0]?.availability.updated_at) : ""}/>
               {(professors && professors.length > 0) && (
                 <div className='py-2'>
                   <div className='sm:flex sm:gap-5'>
