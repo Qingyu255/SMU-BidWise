@@ -22,6 +22,7 @@ import type { Column } from "./BoardColumn";
 import { hasDraggableData } from "./utils";
 import { coordinateGetter } from "./multipleContainersKeyboardPreset";
 import { semesters } from "../../constants/semesters";
+import { useToast } from "@/hooks/use-toast";
 
 const defaultCols: Column[] = semesters.map((semester) => ({
   id: semester,
@@ -39,7 +40,7 @@ interface KanbanBoardProps {
 }
 
 export function KanbanBoard({ kanbanKey, tasks, onTasksChange, onRemoveTask, onToggleTaskCompletion }: KanbanBoardProps) {
-  // console.log(tasks);
+  const { toast } = useToast();
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
@@ -249,38 +250,49 @@ export function KanbanBoard({ kanbanKey, tasks, onTasksChange, onRemoveTask, onT
       setColumns((columns) => {
         const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
         const overColumnIndex = columns.findIndex((col) => col.id === overId);
-  
+    
         return arrayMove(columns, activeColumnIndex, overColumnIndex);
       });
     } else if (isActiveATask) {
       const activeTask = tasks.find((task) => task.courseId === activeId);
       if (!activeTask) return;
-  
+    
       let updatedTasks = [...tasks];
-  
+    
       if (isOverATask) {
         const overTask = tasks.find((task) => task.courseId === overId);
         if (!overTask) return;
-  
+    
         // If moving to a different column, update the columnId
         if (activeTask.columnId !== overTask.columnId) {
+          const tasksInNewColumn = updatedTasks.filter(
+            (task) => task.columnId === overTask.columnId
+          );
+          if (tasksInNewColumn.length >= 6) {
+            toast({
+              title: "Warning",
+              description: "You cannot add more than 6 mods to a column.",
+            });
+            return; // Prevent adding to a column with 6 mods
+          }
+
           updatedTasks = updatedTasks.map((task) =>
             task.courseId === activeId ? { ...task, columnId: overTask.columnId } : task
           );
         }
-  
+    
         // Reorder tasks within the column
         const tasksInOverColumn = updatedTasks.filter(
           (task) => task.columnId === overTask.columnId
         );
-  
+    
         const activeIndex = tasksInOverColumn.findIndex(
           (task) => task.courseId === activeId
         );
         const overIndex = tasksInOverColumn.findIndex(
           (task) => task.courseId === overId
         );
-  
+    
         if (activeIndex !== -1 && overIndex !== -1) {
           // Map back to the indices in the updatedTasks array
           const globalActiveIndex = updatedTasks.findIndex(
@@ -289,7 +301,7 @@ export function KanbanBoard({ kanbanKey, tasks, onTasksChange, onRemoveTask, onT
           const globalOverIndex = updatedTasks.findIndex(
             (task) => task.courseId === overId
           );
-  
+    
           // Move the task in the updatedTasks array
           updatedTasks = arrayMove(
             updatedTasks,
@@ -297,18 +309,29 @@ export function KanbanBoard({ kanbanKey, tasks, onTasksChange, onRemoveTask, onT
             globalOverIndex
           );
         }
-  
+    
         onTasksChange(updatedTasks);
       } else if (isOverAColumn) {
         // Moving task to a column directly
         const newColumnId = overId as ColumnId;
+        const tasksInNewColumn = updatedTasks.filter(
+          (task) => task.columnId === newColumnId
+        );
+        if (tasksInNewColumn.length >= 6) {
+          toast({
+            title: "Warning",
+            description: "You cannot add more than 6 mods to a column.",
+          });
+          return; // Prevent adding to a column with 6 mods
+        }
+
         updatedTasks = updatedTasks.map((task) =>
           task.courseId === activeId ? { ...task, columnId: newColumnId.toString() } : task
         );
         onTasksChange(updatedTasks);
       }
     }
-  }  
+  }
 
   function onDragOver(event: DragOverEvent) {
     const { active, over } = event;
@@ -327,7 +350,6 @@ export function KanbanBoard({ kanbanKey, tasks, onTasksChange, onRemoveTask, onT
     const isActiveATask = activeData?.type === "Task";
     const isOverATask = overData?.type === "Task";
 
-    if (!isActiveATask) return;
-
+      if (!isActiveATask) return;
+    }
   }
-}

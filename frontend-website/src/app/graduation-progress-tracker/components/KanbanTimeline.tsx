@@ -44,11 +44,9 @@ type FlowRendererProps = {
   onConnect: OnConnect;
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
 };
-
 const supabase = createClient();
 
 async function fetchRoadmap(sem: string, user_id: string) {
-  
   const { data: prData, error: prError } = await supabase
     .from('tasks_roadmap')
     .select('courseId')
@@ -78,6 +76,24 @@ async function fetchRoadmap(sem: string, user_id: string) {
   return courses;
 }
 
+const subscribeToRoadmapChanges = (user_id: string) => {
+  const roadmapChannel = supabase
+    .channel('custom-all-channel')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'tasks_roadmap', filter: `_clerk_user_id=eq.${user_id}` },
+      (payload) => {
+        console.log('Change received!', payload);
+        fetchRoadmap((payload.new as { sem: string }).sem, user_id); // Re-fetch data when there is a change
+      }
+    )
+    .subscribe();
+
+  return roadmapChannel;
+};
+
+// Move this line inside the KanbanTimeline component where user is defined
+
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
 };
@@ -99,6 +115,7 @@ const FlowRenderer: React.FC<FlowRendererProps> = ({
   onConnect,
   setEdges,
 }) => {
+  const { user } = useUser();
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
   // Initialize store and react flow hooks
@@ -239,6 +256,9 @@ const onNodeDragStop = useCallback(
   };
 
   useEffect(() => {
+    if (user?.id) {
+      subscribeToRoadmapChanges(user.id);
+    }
     if (reactFlowInstance) {
       reactFlowInstance.fitView();
       let vp = reactFlowInstance.getViewport();
@@ -299,7 +319,7 @@ const onNodeDragStop = useCallback(
   );
 };
 
-const KanbanTimeline = () => {
+const KanbanTimeline: React.FC<{ kanbanKey: number }> = ({ kanbanKey }) => {
   const { toast } = useToast();
   const { user } = useUser();
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -920,7 +940,7 @@ const KanbanTimeline = () => {
     };
 
     fetchData();
-  }, [user?.id]);
+  }, [user?.id, kanbanKey]);
 
   const semPositions: { [key: string]: number } = {
     'Y1S1': 0,
@@ -934,58 +954,32 @@ const KanbanTimeline = () => {
   };
 
   const getSemesterFromPosition = (yPos: number): string | null => {
-        // Determine which semester the y position corresponds to
-        const thresholds = Object.entries(semPositions).map(([sem, pos]) => ({
-          sem,
-          pos,
-        }));
-      
-        for (let i = 0; i < thresholds.length; i++) {
-          const { sem, pos } = thresholds[i];
-          const nextPos = thresholds[i + 1]?.pos ?? Infinity;
-          if (yPos >= pos - 100 && yPos < nextPos - 100) {
-            return sem;
-          }
-        }
-        return null;
-      };
-    
-      // const updateTaskColumnId = async (courseId: string, newColumnId: string) => {
-      //   if (!user || !user.id) return;
-      
-      //   try {
-      //     const { error } = await supabase
-      //       .from('tasks_roadmap')
-      //       .update({ columnId: newColumnId })
-      //       .eq('_clerk_user_id', user.id)
-      //       .eq('courseId', courseId);
-      
-      //     if (error) {
-      //       console.error('Error updating task:', error);
-      //       toast({
-      //         title: 'Error updating task in Supabase.'
-            
-      //       });
-            
-      //     }
-      //   } catch (error) {
-      //     console.error('Update error:', error);
-      //     toast({ title: 'An unexpected error occurred during update.' });
-      //   }
-      // };
-    
-      const getSemesterFromNodeId = (nodeId: string): string => {
-        // Extract semester from node id, assuming format like 's1n2' where 'n2' indicates semester index
-        const match = nodeId.match(/n(\d+)/);
-        if (match) {
-          const index = parseInt(match[1]) - 1;
-          const semesters = ['Y1S1', 'Y1S2', 'Y2S1', 'Y2S2', 'Y3S1', 'Y3S2', 'Y4S1', 'Y4S2'];
-          return semesters[index];
-        }
-        return '';
-      };
-    
+    // Determine which semester the y position corresponds to
+    const thresholds = Object.entries(semPositions).map(([sem, pos]) => ({
+      sem,
+      pos,
+    }));
   
+    for (let i = 0; i < thresholds.length; i++) {
+      const { sem, pos } = thresholds[i];
+      const nextPos = thresholds[i + 1]?.pos ?? Infinity;
+      if (yPos >= pos - 100 && yPos < nextPos - 100) {
+        return sem;
+      }
+    }
+    return null;
+  };
+
+  const getSemesterFromNodeId = (nodeId: string): string => {
+    // Extract semester from node id, assuming format like 's1n2' where 'n2' indicates semester index
+    const match = nodeId.match(/n(\d+)/);
+    if (match) {
+      const index = parseInt(match[1]) - 1;
+      const semesters = ['Y1S1', 'Y1S2', 'Y2S1', 'Y2S2', 'Y3S1', 'Y3S2', 'Y4S1', 'Y4S2'];
+      return semesters[index];
+    }
+    return '';
+  };
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => {
@@ -1000,34 +994,55 @@ const KanbanTimeline = () => {
             if (newSem) {
               const originalSem = getSemesterFromNodeId(node.id);
               if (newSem !== originalSem) {
+                // Check if the new semester already has 6 or more courses
+                const coursesInNewSem = nodes.filter(
+                  (n) => getSemesterFromNodeId(n.id) === newSem
+                ).length;
+
+                if (coursesInNewSem >= 6) {
+                  toast({
+                    title: 'Limit Exceeded',
+                    description: `Cannot add more than 6 courses to ${newSem}.`,
+                  });
+                  // Revert the node position
+                  setNodes((prevNodes) =>
+                    prevNodes.map((n) =>
+                      n.id === node.id
+                        ? {
+                            ...n,
+                            position: { ...node.position },
+                          }
+                        : n
+                    )
+                  );
+                  return;
+                }
+
                 // Update the task's columnId in Supabase
                 (async () => {
                   try {
                     // Fetch the course_code directly
                     const { data: courseData, error: courseError } = await supabase
-                        .from('course_info')
-                        .select('id')
-                        .eq('course_code', node.data.course_code as string);
+                      .from('course_info')
+                      .select('id')
+                      .eq('course_code', node.data.course_code as string);
 
                     if (courseError) {
-                        throw courseError;
+                      throw courseError;
                     }
 
                     let courseId = '';
                     if (courseData && courseData.length > 0) {
-                        courseId = courseData[0].id as string;
+                      courseId = courseData[0].id as string;
                     } else {
-                        courseId = '';
+                      courseId = '';
                     }
-
 
                     const { error: updateError } = await supabase
                       .from('tasks_roadmap')
                       .update({ columnId: newSem })
                       .eq('_clerk_user_id', user?.id ?? '')
                       .eq('courseId', courseId as string);
-
-
 
                     if (updateError) {
                       console.error('Error updating task:', updateError);
@@ -1036,7 +1051,7 @@ const KanbanTimeline = () => {
                         description: `Failed to update ${node.data.course_code}. Please try again.`,
                       });
                     } else {
-                      console.log('node.data', node.data)
+                      console.log('node.data', node.data);
                       toast({
                         title: 'Task Moved',
                         description: `Moved ${node.data.course_code} to ${newSem}`,
@@ -1075,9 +1090,54 @@ const KanbanTimeline = () => {
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
   );
+
   const onConnect: OnConnect = useCallback(
-    (connection) => setEdges((eds) => addEdge(connection, eds)),
-    []
+    (connection) => {
+      const sourceNode = nodes.find((n) => n.id === connection.source);
+      const targetNode = nodes.find((n) => n.id === connection.target);
+
+      if (sourceNode && targetNode) {
+        const sourceSem = getSemesterFromNodeId(sourceNode.id);
+        const targetSem = getSemesterFromNodeId(targetNode.id);
+
+        if (sourceSem !== targetSem) {
+          toast({
+            title: 'Invalid Connection',
+            description: 'Cannot connect nodes from different semesters.',
+          });
+          return;
+        }
+
+        // Check if the target semester already has 6 or more courses
+        const coursesInTargetSem = nodes.filter(
+          (n) => getSemesterFromNodeId(n.id) === targetSem
+        ).length;
+
+        if (coursesInTargetSem >= 6) {
+          toast({
+            title: 'Limit Exceeded',
+            description: `Cannot add more than 6 courses to ${targetSem}.`,
+          });
+          return;
+        }
+
+        // Check if the source semester already has 6 or more courses
+        const coursesInSourceSem = nodes.filter(
+          (n) => getSemesterFromNodeId(n.id) === sourceSem
+        ).length;
+
+        if (coursesInSourceSem >= 6) {
+          toast({
+            title: 'Limit Exceeded',
+            description: `Cannot add more than 6 courses to ${sourceSem}.`,
+          });
+          return;
+        }
+      }
+
+      setEdges((eds) => addEdge(connection, eds));
+    },
+    [nodes, toast]
   );
 
   // Show a loading state while fetching data

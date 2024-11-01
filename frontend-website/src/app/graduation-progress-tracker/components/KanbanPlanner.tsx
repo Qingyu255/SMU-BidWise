@@ -107,78 +107,6 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
     }, [supabase, user, toast]);
 
   
-    // const handleAddCourse = async (newCourse: Course) => {
-    //     if (tasks.some(task => task.courseId === newCourse.courseId)) { // Use 'id' for uniqueness
-    //         toast({ title: `${newCourse.courseId} Already Added` });
-    //         return;
-    //     }
-
-    //     if (!user || !user.id) {
-    //         toast({ title: 'User not authenticated.' });
-    //         return;
-    //     }
-
-    //     useEffect(() => {
-    //         const fetchCourseCode = async () => {
-    //             try {
-    //                 const { data, error } = await supabase
-    //                     .from('course_code')
-    //                     .select('course_code')
-    //                     .eq('id', newCourse.courseId);
-
-    //                 if (error) {
-    //                     throw error;
-    //                 }
-
-    //                 if (data && data.length > 0) {
-    //                     setCourseCode(data[0].course_code as string);
-    //                 } else {
-    //                     setCourseCode('');
-    //                 }
-    //             } catch (error) {
-    //                 console.error('Error fetching course code:', error);
-    //                 setCourseCode('');
-    //             }
-    //         };
-
-    //         fetchCourseCode();
-    //     }, [newCourse.courseId, supabase]);
-
-    //     const newTask: Task = {
-    //         _clerk_user_id: user?.id ?? '', // Use a unique identifier
-    //         courseId: newCourse.courseId,
-    //         content: `${courseCode} - ${newCourse.content}`,
-    //         completed: newCourse.completed === 'true',
-    //         columnId: newCourse.columnId, // Initialize columnId based on semester
-    //     };
-
-    //     console.log('newTask', newTask)
-
-
-
-    //     try {
-    //         const { error } = await supabase.from('tasks_roadmap').insert([
-    //             {
-    //                 _clerk_user_id: user.id,
-    //                 courseId: newTask.courseId,
-    //                 content: newTask.content,
-    //                 completed: newTask.completed,
-    //                 columnId: newTask.columnId,
-    //             }
-    //         ]);
-
-    //         if (error) {
-    //             throw error;
-    //         }
-
-    //         setTasks(prev => [...prev, newTask]);
-    //         previousTasksRef.current = [...tasks, newTask];
-    //         toast({ title: `${newCourse.courseId} Added Successfully` }); ////////////////////////////
-    //     } catch (error) {
-    //         console.error('Error adding course:', error);
-    //         toast({ title: 'Error adding course to Supabase.' });
-    //     }
-    // };
 
     // Handler to add a new task (course)
 const handleAddCourse = async (newCourse: Course) => {
@@ -495,7 +423,12 @@ const handleAddCourse = async (newCourse: Course) => {
                 </CardHeader> */}
                 <CardContent>
                     <div className='py-2 flex flex-row justify-between'>
-                        <AddCourseForm courseOptions={courseOptions} onAddCourse={handleAddCourse} />
+                        <AddCourseForm courseOptions={courseOptions} onAddCourse={(newCourse) => {
+                            handleAddCourse(newCourse);
+                            console.log('kanbanKey', KanbanKey)
+                            setKanbanKey((prevKey) => prevKey + 1); // Rerender timeline
+                            console.log('kanbanKey', KanbanKey)
+                        }} />
                         <div className='flex py-4 space-x-1'>
                             <Label htmlFor="toggle-view">Roadmap View</Label>
                             <Switch
@@ -582,7 +515,7 @@ const handleAddCourse = async (newCourse: Course) => {
                                 {headingCardInfo.length > 0 && <HeadingCard headingCardInfo={headingCardInfo[0]} />}
                             </div> */}
                             <div className='relative container self-center flex-grow' style={{ height: 'inherit' }}>
-                                <KanbanTimeline />
+                                <KanbanTimeline kanbanKey={KanbanKey}/>
                                 <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
                                     <TooltipProvider>
                                         <Tooltip>
