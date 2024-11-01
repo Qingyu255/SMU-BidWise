@@ -5,6 +5,7 @@ import { Combobox } from '@/components/Combobox';
 import { Button } from '@nextui-org/react';
 import { useTransition } from 'react';
 import { Spinner } from '@nextui-org/react';
+import { SearchSlash } from 'lucide-react';
 
 export interface RoadmapFilterOptions {
     verifiedSeniorsArr: string[];
@@ -17,8 +18,11 @@ export default function RoadmapFilters({ verifiedSeniorsArr, degreeArr }: Roadma
     const searchParams = useSearchParams();
     const [isPending, startTransition] = useTransition();
 
+    const likesArr = ['Ascending', 'Descending']
+
     const [selectedDegree, setSelectedDegree] = useState<string>(searchParams.get("degree") || "");
     const [selectedVerifiedSeniors, setSelectedVerifiedSeniors] = useState<string>(searchParams.get("verified_seniors") || "");
+    const [selectedLikes, setSelectedLikes] = useState<string>(searchParams.get("likes") || "");
 
     const updateSearchParams = (param: string, value: string) => {
         const params = new URLSearchParams(searchParams);
@@ -39,9 +43,11 @@ export default function RoadmapFilters({ verifiedSeniorsArr, degreeArr }: Roadma
         // params.delete('query');
         params.delete('degree');
         params.delete('verified_seniors');
+        params.delete('likes')
 
         setSelectedDegree('');
         setSelectedVerifiedSeniors('');
+        setSelectedLikes('');
 
         startTransition(() => {
             router.push(`${pathname}?${params.toString()}`);
@@ -57,12 +63,20 @@ export default function RoadmapFilters({ verifiedSeniorsArr, degreeArr }: Roadma
                     <Combobox selectedValue={selectedDegree} onSelect={(selectedValue: string) => {setSelectedDegree(selectedValue); updateSearchParams('degree', selectedValue)}} category='Degree' options={degreeArr}/>
                 </div>
                 <div className='inline-flex flex-col'>
-                    <span className='text-sm font-bold px-1'>Course area:</span>
+                    <span className='text-sm font-bold px-1'>Verified Seniors:</span>
                     <Combobox selectedValue={selectedVerifiedSeniors} 
                         onSelect={
                         (selectedValue: string) => {setSelectedVerifiedSeniors(selectedValue); 
                         updateSearchParams('verified_seniors', selectedValue)}} 
                         category='Verified Seniors:' options={verifiedSeniorsArr.map((val) => String(val).toUpperCase())}/>
+                </div>
+                <div className='inline-flex flex-col'>
+                    <span className='text-sm font-bold px-1'>Order by likes:</span>
+                    <Combobox selectedValue={selectedLikes} 
+                        onSelect={
+                        (selectedValue: string) => {setSelectedLikes(selectedValue); 
+                        updateSearchParams('likes', selectedValue)}} 
+                        category='Likes:' options={likesArr}/>
                 </div>
                 <div className='flex flex-row gap-1 h-full'>
                     <span className='m-1'>

@@ -204,6 +204,7 @@ export interface RoadmapsProps {
   page: number;
   degree: string;
   verified_seniors: string;
+  likes: string;
   // onClick: (name: string, roadmap: RoadmapInfo) => void;
 }
 
