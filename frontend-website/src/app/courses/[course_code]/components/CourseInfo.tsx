@@ -114,7 +114,7 @@ export function CourseInfo({courseInfo, courseAreas, updated_at} : {courseInfo: 
 
       </CardContent>
       <CardFooter className="text-sm text-gray-500">
-        {updated_at ? (
+        {(updated_at || updated_at === "-")? (
           <p>Last synced with BOSS: {updated_at}</p>
         ) : (
           <p>Updated information based on the latest term on SMU BOSS</p>
