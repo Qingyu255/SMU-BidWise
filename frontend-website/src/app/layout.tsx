@@ -24,7 +24,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "SMU BidWise",
-  description: "SMU BidWise, a one-stop platform for SMU students to plan their courses for BOSS bidding. View Bid Price analytics, the latest course information and senior roadmaps now!",
+  description: "SMU BidWise, a one-stop platform loved by SMU students to plan their courses for BOSS bidding. View Bid Price analytics, the latest course information, seat availability and senior roadmaps now!",
 };
 
 export default function RootLayout({

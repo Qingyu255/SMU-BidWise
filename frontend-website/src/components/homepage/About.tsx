@@ -75,7 +75,7 @@ const About = () => {
   const benefitsActiveNavLinkStyle: React.CSSProperties = {
     ...benefitsNavLinkStyle,
     borderBottom: `3px solid ${theme === "dark" ? "white" : "black"}`,
-    borderRadius: "8px",
+    borderRadius: "5px",
   };
 
   const handleNavClick = (index: number) => {
@@ -97,9 +97,9 @@ const About = () => {
   const autoplay = Autoplay({ delay: 3000 }); // Set your desired autoplay delay
 
   return (
-    <div style={{ padding: "4rem 2rem", textAlign: "center", height: "100%" }}>
+    <div style={{ padding: "2rem", textAlign: "center", height: "100%" }}>
       {/* About Section */}
-      <div style={{}}>
+      {/* <div>
         <p style={sectionSubTextStyle} className="dark:text-white">Introduction</p>
         <h2 style={sectionHeadTextStyle} className="dark:text-white">Overview</h2>
         <p className="text-lg">
@@ -107,52 +107,54 @@ const About = () => {
           insightful bid price analytics, and a flexible timetable. Discover academic roadmaps from seniors, make smarter decisions, 
           and track course availability—all in one place!
         </p>
-      </div>
+      </div> */}
 
       {/* Benefits Section */}
-      <div style={{ marginTop: "4rem" }}>
-        <p style={sectionSubTextStyle}>Why Choose SMU BidWise?</p>
-        <h2 style={sectionHeadTextStyle}>Introduction to Our Features</h2>
-
+      <div>
+        {/* <p style={sectionSubTextStyle}>Why SMU BidWise?</p> */}
+        <h2 style={sectionHeadTextStyle} className="py-2">Our Best Features</h2>
+        <div className="text-gray-500 text-xl xl:w-[50%] m-auto pb-4">Thousands of SMU students leverage SMU BidWise to view the latest course information, plan their timetables and view bid price trends with SMU BidWise</div>
         {/* Navigation for carousel */}
-        <nav
-          className="hidden md:flex w-full h-[60px] min-[1190px]:h-[60px] justify-between"
-          style={{
-            borderRadius: "8px",
-            alignItems: "center",
-            boxShadow: "0px 2px 3px 1px rgba(0,0,0,.5)",
-            padding: "20px",
-          }}
-        >
-          {[
-            "Timetable",
-            "Courses",
-            "Bid Price Analytics",
-            "Senior Roadmaps",
-            "Community Threads",
-          ].map((label, index) => (
-            <button
-              key={index}
-              style={{
-                ...(activeIndex === index
-                  ? benefitsActiveNavLinkStyle
-                  : benefitsNavLinkStyle),
-                ...(hoverIndex === index
-                  ? {
-                      color: theme === "dark" ? "#f3f4f6" : "#000",
-                      transform: "scale(1.05)",
-                    }
-                  : {}),
-              }}
-              onMouseEnter={() => setHoverIndex(index)} // Set hover index
-              onMouseLeave={() => setHoverIndex(null)} // Reset hover index
-              onClick={() => handleNavClick(index)}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
-
+        <Card>
+          <nav
+            className="hidden md:flex w-full h-[60px] min-[1190px]:h-[60px] justify-between"
+            style={{
+              borderRadius: "8px",
+              alignItems: "center",
+              // boxShadow: "0px 2px 3px 1px rgba(0,0,0,.5)",
+              padding: "20px",
+            }}
+          >
+            {[
+              "Timetable",
+              "Courses",
+              "Bid Price Analytics",
+              "Senior Roadmaps",
+              "Community Threads",
+            ].map((label, index) => (
+              <button
+                key={index}
+                className="font-semibold"
+                style={{
+                  ...(activeIndex === index
+                    ? benefitsActiveNavLinkStyle
+                    : benefitsNavLinkStyle),
+                  ...(hoverIndex === index
+                    ? {
+                        color: theme === "dark" ? "#f3f4f6" : "#000",
+                        transform: "scale(1.05)",
+                      }
+                    : {}),
+                }}
+                onMouseEnter={() => setHoverIndex(index)} // Set hover index
+                onMouseLeave={() => setHoverIndex(null)} // Reset hover index
+                onClick={() => handleNavClick(index)}
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+        </Card>
         {/* Custom carousel implementation */}
         <div id="carousel-content" style={{ marginTop: "1rem" }}>
           <div
@@ -498,7 +500,7 @@ const About = () => {
                         <CardContent className="card-content">
                           <p className={theme}>
                             {/* Pass the theme for paragraph color */}
-                            View practicality, workload, and interest ratings
+                            View practicality, workload and interest ratings
                             for each course
                           </p>
                           <img src="/images/review.gif" alt="Ratings" />
@@ -512,7 +514,7 @@ const About = () => {
                         <CardContent className="card-content">
                           <p className={theme}>
                             {/* Pass the theme for paragraph color */}
-                            Access course descriptions and enrollment
+                            Access course descriptions, the latest seating availability and enrollment
                             requirements in one view
                           </p>
                           <img src="/images/info.gif" alt="CourseInfo" />
@@ -605,7 +607,7 @@ const About = () => {
                                   color: "black", // Paragraph text color
                                 }}
                               >
-                                Access course descriptions and enrollment
+                                Access course descriptions, the latest seating availability and enrollment
                                 requirements in one view
                               </p>
                               <img src="/images/info.gif" alt="Courses" />

@@ -64,7 +64,7 @@ const WelcomeMessage = () => {
         </p>
         {/* Button Section */}
         <div className={styles.wrapper}>
-          <a href="/courses" className='get-started font-semibold'><span>Get Started</span></a>
+          <a href="/courses" className='get-started font-semibold'><span>View Courses</span></a>
           <a href="#about-section" className='learn-more font-semibold'><span>About Us</span></a>
         </div>
       </div>

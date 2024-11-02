@@ -90,7 +90,7 @@ const Reviews = () => {
   return (
     <div className="testimonial-container">
       <div className="title">
-        <p style={sectionSubTextStyle}>Reviews</p>
+        {/* <p style={sectionSubTextStyle}>Reviews</p> */}
         <h2 style={sectionHeadTextStyle} className='dark:text-white'>What Our Users Say</h2>
       </div>
 
@@ -126,16 +126,6 @@ const Reviews = () => {
         )}
       </div>
 
-    <div className='text-right my-3'>
-        <Button onClick={() => setShowReviewForm(!showReviewForm)}>
-            {!showReviewForm ? (
-                <Plus className="w-5 h-5" />
-            ) : (
-                <ChevronUp className="w-5 h-5" />
-            )}
-            {showReviewForm ? '' : ' Write a review!'}
-        </Button>
-    </div>
     {showReviewForm && (
         <form onSubmit={handleSubmit} className="review-form">
         <h3>Leave a Review</h3>
@@ -162,9 +152,19 @@ const Reviews = () => {
             <option key={star} value={star}>{star} Star{star > 1 ? 's' : ''}</option>
           ))}
         </select>
-        <button type="submit">Submit Review</button>
+        <Button type="submit">Submit Review</Button>
       </form>
     )}
+    <div className='text-right my-3'>
+      <Button variant={showReviewForm ? 'outline' : 'default'} onClick={() => setShowReviewForm(!showReviewForm)}>
+          {!showReviewForm ? (
+              <Plus className="w-5 h-5" />
+          ) : (
+              <ChevronUp className="w-5 h-5" />
+          )}
+          {showReviewForm ? '' : ' Write a review!'}
+      </Button>
+    </div>
     </div>
   );
 };
