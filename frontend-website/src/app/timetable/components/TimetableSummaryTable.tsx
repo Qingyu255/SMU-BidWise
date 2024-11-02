@@ -179,7 +179,7 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Link href={"/bid-analytics?courseCode=" + section.courseCode + "&instructor=" + encodeURIComponent(section.instructor)}>
-                          <Button className='text-xs font-semibold w-fit'>
+                          <Button variant="secondary" className='text-xs font-semibold w-fit'>
                             <ChartNoAxesCombined/>
                           </Button>
                         </Link>
@@ -193,7 +193,7 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
                 <TableCell>
                 <Popover key={section.id}>
                     <PopoverTrigger>
-                      <Button>
+                      <Button variant={selectedClasses.has(section.id) ? "outline" : "default"}>
                         <CalendarMinus/>
                       </Button>
                     </PopoverTrigger>
