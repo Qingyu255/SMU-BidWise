@@ -75,7 +75,6 @@ const Reviews = () => {
 
   // Styles based on window width and current theme
   const sectionHeadTextStyle: React.CSSProperties = {
-    color: theme === "dark" ? "white" : "black",
     fontWeight: "bold",
     fontSize:
       windowWidth >= 640 ? "60px" : windowWidth >= 480 ? "50px" : "30px",
@@ -92,7 +91,7 @@ const Reviews = () => {
     <div className="testimonial-container">
       <div className="title">
         <p style={sectionSubTextStyle}>Reviews</p>
-        <h2 style={sectionHeadTextStyle}>What Our Users Say</h2>
+        <h2 style={sectionHeadTextStyle} className='dark:text-white'>What Our Users Say</h2>
       </div>
 
       <div className="slider-container">
@@ -115,7 +114,7 @@ const Reviews = () => {
                           <span key={index} className="star">&#9734;</span>
                         ))}
                       </div>
-                      <p className="user">{review.name}</p>
+                      <p className="user text-black">{review.name}</p>
                     </div>
                   </div>
                 </SplideSlide>

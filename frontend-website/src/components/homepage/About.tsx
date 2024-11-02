@@ -42,7 +42,6 @@ const About = () => {
 
   // Styles based on window width and current theme
   const sectionHeadTextStyle: React.CSSProperties = {
-    color: theme === "dark" ? "white" : "black",
     fontWeight: "bold",
     fontSize:
       windowWidth >= 640 ? "60px" : windowWidth >= 480 ? "50px" : "30px",
@@ -50,7 +49,6 @@ const About = () => {
 
   const sectionSubTextStyle: React.CSSProperties = {
     fontSize: windowWidth >= 640 ? "18px" : "14px",
-    color: theme === "dark" ? "#6b7280" : "#333333",
     textTransform: "uppercase",
     letterSpacing: "0.1em",
   };
@@ -102,8 +100,8 @@ const About = () => {
     <div style={{ padding: "4rem 2rem", textAlign: "center", height: "100%" }}>
       {/* About Section */}
       <div style={{}}>
-        <p style={sectionSubTextStyle}>Introduction</p>
-        <h2 style={sectionHeadTextStyle}>Overview</h2>
+        <p style={sectionSubTextStyle} className="dark:text-white">Introduction</p>
+        <h2 style={sectionHeadTextStyle} className="dark:text-white">Overview</h2>
         <p className="text-lg">
           Say goodbye to juggling countless tabs with BOSS! SMU BidWise streamlines your module bidding experience with an intuitive course search, 
           insightful bid price analytics, and a flexible timetable. Discover academic roadmaps from seniors, make smarter decisions, 
