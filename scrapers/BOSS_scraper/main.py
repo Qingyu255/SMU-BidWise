@@ -36,7 +36,7 @@ def convertDateRange(date):
 
 # login
 def loginToBOSS(wait):
-    load_dotenv('.env.local')
+    load_dotenv('../.env.local')
     USERNAME = os.getenv('USERNAME')
     PASSWORD = os.getenv('PASSWORD')
     try:

@@ -31,27 +31,18 @@ export default function Page() {
     const [error, setError] = useState<any>(null)
     const [chartWidthHeightArr, setChartWidthHeightArr] = useState<string[]>(["", ""])
 
-    // useEffect(() => {
-    //     if (!courseCodeParam) {
-    //         return;
-    //     }
-    //     setCourseCode(courseCodeParam.toUpperCase());
-    // }, [courseCodeParam]);
-
-    // useEffect(() => {
-    //     if (!instructorParam) {
-    //         return;
-    //     }
-    //     setInstructor(instructorParam.toUpperCase());
-    // }, [instructorParam]);
-
     useEffect(() => {
         if (courseCodeParam && courseCodeParam.toUpperCase() !== courseCode) {
             setCourseCode(courseCodeParam.toUpperCase());
         }
-        if (instructorParam && instructorParam !== instructor) {
+        if (!instructorParam) {
+            // if no instructor param passed in query params
+            setInstructor("");
+        }
+        else if (instructorParam !== instructor) {
             setInstructor(instructorParam);
         }
+        
     }, [searchParams, courseCodeParam, instructorParam]);
 
     useEffect(() => {
@@ -149,7 +140,6 @@ export default function Page() {
                 {error ? (
                     <ErrorPopUp errorMessage={error.message}/>
                 ) 
-                // : (chartDataOverview && chartDataInstructorOverview ? (
                 : (chartDataInstructorOverview ? (
 
                     <>

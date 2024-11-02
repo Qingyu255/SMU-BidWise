@@ -5,7 +5,7 @@ import logging
 from dotenv import load_dotenv
 from datetime import datetime
 
-load_dotenv('.env.local')
+load_dotenv('../.env.local')
 
 SUPABASE_URL = os.getenv('SUPABASE_URL')
 

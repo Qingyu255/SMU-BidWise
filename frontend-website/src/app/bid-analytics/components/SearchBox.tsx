@@ -6,26 +6,20 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
+  CommandList
 } from "@/components/ui/command";
-import { useDebounce } from 'use-debounce';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useTimetable } from '@/components/providers/timetableProvider';
 import Link from 'next/link';
 
 export function SearchBox() {
   const apiURL = process.env.NEXT_PUBLIC_ANALYTICS_API_URL
-  const router = useRouter();
   const pathname = usePathname();
   const [searchText, setSearchText] = useState<string>("");
-  // const [debouncedSearchText] = useDebounce(searchText, 500);
   const [uniqueCourses, setUniqueCourses] = useState<string[]>([]);
   const [showTimetableClasses, setShowTimetableClasses] = useState(false);
 
   const { selectedClasses } = useTimetable();
-
   const selectedClassObjArr = Array.from(selectedClasses.values());
   const selectedClassCodeArr = [...new Set(selectedClassObjArr.map(obj => obj.courseCode))];
 
@@ -64,8 +58,8 @@ export function SearchBox() {
         <CommandList>
           <CommandGroup heading="Courses in your timetable:">
             {selectedClassCodeArr.map((courseCode, index) => (
-              <Link key={index} href={`${pathname}?courseCode=${courseCode}`}>
-                <CommandItem onSelect={() => {handleCourseSelection(courseCode + ":"); setShowTimetableClasses(false);}}>
+              <Link key={index} href={`${pathname}?courseCode=${courseCode}`} onClick={() => {setSearchText(""); setShowTimetableClasses(false);}}>
+                <CommandItem>
                   <span>{courseCode}</span>
                 </CommandItem>
               </Link>

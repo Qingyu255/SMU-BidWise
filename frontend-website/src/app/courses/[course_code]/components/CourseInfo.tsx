@@ -3,7 +3,6 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   CardFooter,
 } from '@/components/ui/card';
@@ -59,7 +58,6 @@ export function CourseInfo({courseInfo, courseAreas, updated_at} : {courseInfo: 
           </TooltipProvider>
         )}
         </div>
-        
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
@@ -86,7 +84,6 @@ export function CourseInfo({courseInfo, courseAreas, updated_at} : {courseInfo: 
         </div>
         <p className="text-base font-semibold  mb-2">Description</p>
         <p className="text-base mb-4">{courseInfo.description}</p>
-
         <p className="text-base font-semibold  mb-2">Course Areas</p>
         <div>
           {courseAreas.map((area: string, index: number) => (
@@ -111,7 +108,6 @@ export function CourseInfo({courseInfo, courseAreas, updated_at} : {courseInfo: 
           isRatingAllowed={true}
         />
         
-
       </CardContent>
       <CardFooter className="text-sm text-gray-500">
         {(updated_at || updated_at === "-")? (
