@@ -43,7 +43,7 @@ const Reviews = () => {
     if (error) {
       console.error('Error fetching reviews:', error);
     } else if (data) {
-      console.log('Fetched reviews:', data);
+      // console.log('Fetched reviews:', data);
       setReviews(data as Review[]);
     } else {
       console.log('No data returned.');
