@@ -110,13 +110,13 @@ export function TaskCard({ task, isOverlay, onRemove, onToggleCompletion, }: Tas
         } else if (courseData) {
           
           setCourseData(courseData as unknown as courseInfo[]);
-          console.log('courseData', courseData);
+          // console.log('courseData', courseData);
         }
     };
     fetchCourseData();
   }, [task]);
 
-  console.log('task', task)
+  // console.log('task', task)
 
   return (
     <TooltipProvider>

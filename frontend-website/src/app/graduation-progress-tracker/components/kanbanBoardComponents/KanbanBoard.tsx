@@ -188,7 +188,7 @@ export function KanbanBoard({ kanbanKey, tasks, onTasksChange, onRemoveTask, onT
         </SortableContext>
       </BoardContainer>
 
-      {"document" in window &&
+      {("undefined" !== typeof window && "document" in window) &&
         createPortal(
           <DragOverlay>
             {activeColumn && (
