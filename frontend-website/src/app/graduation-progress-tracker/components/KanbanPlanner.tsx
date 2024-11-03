@@ -46,6 +46,8 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
     const [showKanban, setShowKanban] = useState(true);
     const [KanbanKey, setKanbanKey] = useState(0);
 
+    
+
 
     // Fetch tasks from Supabase on component mount
     useEffect(() => {
@@ -369,6 +371,13 @@ const handleAddCourse = async (newCourse: Course) => {
     };
 
     const completedTasks = tasks.filter(t => t.completed).length;
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -511,17 +520,20 @@ const handleAddCourse = async (newCourse: Course) => {
                         </>
                         :
                         <div className='flex flex-col overflow-hidden' style={{ width: '100%', height: '90vh' }}>
-                            {/* <div className='mb-2'>
-                                {headingCardInfo.length > 0 && <HeadingCard headingCardInfo={headingCardInfo[0]} />}
-                            </div> */}
+                           
                             <div className='relative container self-center flex-grow' style={{ height: 'inherit' }}>
                                 <KanbanTimeline kanbanKey={KanbanKey}/>
-                                <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
+                                <div
+                                    className='fixed bottom-4 transform -translate-x-1/2 w-full max-w-md px-4 z-50'
+                                    style={{
+                                        left: window.innerWidth < 1024 ? '50%' : 'calc(50% + 135px)', // Adjust for the 270px sidebar if viewport is wider than 1024px
+                                    }}
+                                >
                                     <TooltipProvider>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <div className='rounded-full bg-[#252A34] text-[#EAEAEA] px-3 py-1.5 text-sm'>
-                                                    <span className='text-[#F3C623]'>TIP</span> Click on course node to find out more!
+                                                    <span className='text-[#F3C623]'>TIP</span> Drag and Drop your nodes to rearrange your modules!
                                                 </div>
                                             </TooltipTrigger>
                                         </Tooltip>
