@@ -5,6 +5,8 @@ import { format } from 'date-fns'
 import SubscriptionCount from "@/components/SubscriptionCount"; // New import
 // import { buttonVariants } from "@/components/ui/button";
 import CreatePostButton from "@/components/CreatePostButton";
+import Link from "next/link"; // Import Link from next/link
+import { ArrowLeft } from "lucide-react"; // Import an arrow icon
 
 const Layout = async (
     { children,
@@ -46,7 +48,7 @@ const Layout = async (
     //created by: 
     const creatorName = creatorData.name;
 
-   
+
 
     // // Function to handle the button click and redirect
     // const handleCreatePost = async () => {
@@ -57,6 +59,12 @@ const Layout = async (
     return (<div className="sm:container max-w-7x1 mx-auto h-full pt-12">
         <div>
 
+            <div className='flex items-center mb-4'>
+                <Link href="/communities" className="flex items-center text-blue-600 hover:underline">
+                    <ArrowLeft className="mr-2 w-5 h-5" />
+                    <span>Return to Main Feed</span>
+                </Link>
+            </div>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 py-6'>
                 <ul className='flex flex-col col-span-2 space-y-6'>{children}</ul>
 
@@ -94,9 +102,9 @@ const Layout = async (
                             slug={slug.toString()}
                         />
 
-                            {/* Button for creating a post */}
-                            {/* Use the CreatePostButton component */}
-                            <CreatePostButton slug={subredditName as string}/>
+                        {/* Button for creating a post */}
+                        {/* Use the CreatePostButton component */}
+                        <CreatePostButton slug={subredditName as string} />
                     </dl>
                 </div>
             </div>

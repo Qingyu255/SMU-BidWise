@@ -35,7 +35,7 @@ const Post: FC<PostProps> = ({
                             <>
                                 <a
                                     className='underline text-zinc-900 text-sm underline-offset-2'
-                                    href={`/r/${subredditName}`}
+                                    href={`/communities/r/${subredditName}`}
                                     aria-label={`Visit subreddit ${subredditName}`}>
                                     r/{subredditName}
                                 </a>

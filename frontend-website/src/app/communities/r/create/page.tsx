@@ -126,6 +126,7 @@ const Page = () => {
             <div className='relative bg-white w-full h-fit p-4 rounded-lg space-y-6'>
                 <div className='flex justify-between items-center'>
                     <h1 className='text-xl font-semibold'>Create a Community</h1>
+                    <Button variant="ghost" onClick={() => router.push('/communities')}>Back</Button> {/* Back button */}
                 </div>
 
                 <hr className='bg-red-500 h-px' />
@@ -146,7 +147,7 @@ const Page = () => {
                     {error && <p className='text-red-500 text-sm'>{error}</p>}
                 </div>
                 <div className='flex justify-end gap-4'>
-                    <Button variant='ghost' onClick={() => setInput('')}>Cancel</Button>
+                    <Button variant='ghost' onClick={() => router.push('/communities')}>Cancel</Button>
                     <Button
                         disabled={input.length === 0}
                         onClick={handleSubmit}>
@@ -154,8 +155,8 @@ const Page = () => {
                     </Button>
                 </div>
             </div>
-        </div>);
+        </div>
+    );
 }
 
-
-export default Page
+export default Page;

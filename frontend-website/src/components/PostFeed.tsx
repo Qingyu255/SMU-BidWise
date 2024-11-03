@@ -13,7 +13,7 @@ interface PostFeedProps {
     subredditName: string;
     subredditId: string;
     loadMorePosts: () => void;
-    isFetchingNextPage: boolean;
+    isFetchingNextPage?: boolean; 
 }
 
 const PostFeed: FC<PostFeedProps> = ({ loadMorePosts, isFetchingNextPage, subredditId, subredditName }) => {
