@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { motion } from 'framer-motion';
 import styles from './Welcome.module.css'
+import Link from 'next/link';
 
 const WelcomeMessage = () => {
   const [screenSize, setScreenSize] = useState(0); // State to manage screen size
@@ -64,8 +65,8 @@ const WelcomeMessage = () => {
         </p>
         {/* Button Section */}
         <div className={styles.wrapper}>
-          <a href="/courses" className='get-started font-semibold'><span>View Courses</span></a>
-          <a href="#about-section" className='learn-more font-semibold'><span>About Us</span></a>
+          <Link href="/courses" className='get-started font-semibold'><span>View Courses</span></Link>
+          <Link href="#about-section" className='learn-more font-semibold'><span>About Us</span></Link>
         </div>
       </div>
 

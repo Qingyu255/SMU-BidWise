@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/card";
 
 import Autoplay from "embla-carousel-autoplay";
+import Link from "next/link";
 
 const About = () => {
   const { theme } = useTheme(); // Get the current theme
@@ -399,7 +400,7 @@ const About = () => {
                   )}
 
                   <Button style={{ marginTop: "15px" }}>
-                    <a href="/courses">Search Courses</a>
+                    <Link href="/courses">Search Courses</Link>
                   </Button>
                 </>
               )}
@@ -619,7 +620,7 @@ const About = () => {
                   )}
 
                   <Button style={{ marginTop: "15px" }}>
-                    <a href="/courses">Search Courses</a>
+                    <Link href="/courses">Search Courses</Link>
                   </Button>
                 </>
               )}
@@ -791,7 +792,7 @@ const About = () => {
                   )}
 
                   <Button style={{ marginTop: "15px" }}>
-                    <a href="/bid-analytics">View Analytics</a>
+                    <Link href="/bid-analytics">View Analytics</Link>
                   </Button>
                 </>
               )}
@@ -919,7 +920,7 @@ const About = () => {
                   )}
 
                   <Button style={{ marginTop: "15px" }}>
-                    <a href="/roadmaps">Discover Senior Roadmaps</a>
+                    <Link href="/roadmaps">Discover Senior Roadmaps</Link>
                   </Button>
                 </>
               )}
@@ -1083,7 +1084,7 @@ const About = () => {
                   )}
 
                   <Button style={{ marginTop: "15px" }}>
-                    <a href="/communities">View Threads</a>
+                    <Link href="/communities">View Threads</Link>
                   </Button>
                 </>
               )}
