@@ -36,11 +36,11 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ name, major, graduation_year,
         <CardContent>
           { advice.length > 250 ? `${advice.substring(0,250)}...` : advice } 
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
             <Link href={"roadmaps/" + name}>
-            <Button>
-            View Roadmap
-            </Button>
+          <Button>
+              View Roadmap
+          </Button>
             </Link>
             <Likes likes={likes} id={_clerk_user_id}/>
             <PortToPlanner id={_clerk_user_id}/>

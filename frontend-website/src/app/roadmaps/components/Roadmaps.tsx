@@ -80,14 +80,14 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors, lik
       fetchRoadmapInfo();
       
     // }, [supabase, degree, verified_seniors, currentPage])
-    }, [supabase, degree, verified_seniors, currentPage, from, to, roadmapInfo])
+    }, [supabase, degree, verified_seniors, likes, currentPage, from, to, roadmapInfo])
     
 
     
     return (
         <div className='flex flex-col gap-3'>
             {roadmapInfo.map((roadmap) => (
-                        <RoadmapCard key={roadmap.name} 
+                        <RoadmapCard key={roadmap._clerk_user_id} 
                         name={roadmap.name}
                         major={roadmap.degree} 
                         graduation_year={roadmap.graduation_year} 
