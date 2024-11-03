@@ -2,10 +2,9 @@
 import { useState, useEffect } from 'react'; 
 import createClient  from '@/utils/supabase/client';
 import ProfessorSelection from './components/ProfessorSelection'; 
-import { getTerms, getLatestTerm, TermObjType } from '@/utils/supabase/supabaseRpcFunctions';
+import { getLatestTerm, TermObjType } from '@/utils/supabase/supabaseRpcFunctions';
 import NoResultCard from '@/components/NoResultCard';
 import { CourseInfo, CourseInfoProps } from './components/CourseInfo';
-import { Card, CardDescription, CardFooter } from '@/components/ui/card';
 import { CourseInfoSkeleton } from './components/CourseInfoSkeleton';
 import { SectionInformationTable } from './components/SectionInformationTable';
 import {
@@ -39,7 +38,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const [sections, setSections] = useState<any[]>([]);
   const [exams, setExams] = useState<any[]>([]);
   const [professors, setProfessors] = useState<string[]>([]);
-  const [selectedProfessor, setSelectedProfessor] = useState<string | null>(null);
+  const [selectedProfessor, setSelectedProfessor] = useState<string>("");
   const [allTerms, setAllTerms] = useState<TermObjType[]>([]);
   const [latestTerm, setLatestTerm] = useState<string>(""); // this is normal name eg, 2024-25 Term 1
   const [selectedTermName, setSelectedTermName] = useState<string>(""); // will remain as empty string until user selects term different term besides the default selected latest term
@@ -52,6 +51,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
 
   const router = useRouter();
   const { selectedClasses, addClass, removeClass } = useTimetable();
+  const selectedClassItems = Array.from(selectedClasses.values());
+
   const { toast } = useToast();
 
   async function getTerms() {
@@ -299,14 +300,15 @@ export default function Page({ params }: { params: { course_code: string }}) {
                 <div className='py-2'>
                   <div className='sm:flex sm:gap-5'>
                     {/* key forces rerender of component */}
-                    <ProfessorSelection key={selectedProfessor} professors={professors} onProfessorClick={updateTimetable} />
+                    <ProfessorSelection key={selectedProfessor} professorSelected={selectedProfessor} professors={professors} onProfessorClick={updateTimetable} />
                     <TermSelection termObjects={allTerms} termSelected={(selectedTermName ? selectedTermName : latestTerm)} onTermSelect={handleTermSelectionChange}/>
                   </div>
                   <div>
                     {selectedProfessor && (
                       <p className='text-gray-400 text-sm py-2'>Showing all sections:</p>
                     )}
-                    <TimetableGeneric classes={sections} onClassSelect={handleClassSelect} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>                  </div>
+                    <TimetableGeneric classes={[...sections, ...selectedClassItems]} onClassSelect={handleClassSelect} courseCode={course_code} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>                  
+                  </div>
                 </div>
               )}
             </div>

@@ -169,7 +169,7 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
             return updated;
           });
         }
-      } else if (selectedClassObj.section === classItem.section) {
+      } else if (selectedClassObj.section === classItem.section && selectedClassObj.instructor === classItem.instructor) {
         // not in timetable page => in course page
         setSelectedClasses((prev) => {
           const updated = new Map(prev);
