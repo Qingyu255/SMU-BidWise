@@ -30,6 +30,7 @@ import {
 import { ExamInformationTable } from './components/ExamInformationTable';
 import { convertUtcToSGT } from '@/utils/dateUtils';
 import { SeatAvailabilityChart } from './components/SeatAvailabilityChart';
+import { sortBySection } from './components/utils';
 
 const supabase = createClient();
 
@@ -216,12 +217,12 @@ export default function Page({ params }: { params: { course_code: string }}) {
   }
 
   const generateSeatAvailabilityChartData = (sections: Array<any>) => {
-    return sections.map(sectionObj => ({
+    return sortBySection(sections.map(sectionObj => ({
       section: `${sectionObj.section} - ${sectionObj.instructor}`,
       availableSeats: sectionObj.availability.available_seats,
       currentEnrolled: sectionObj.availability.current_enrolled,
       reserved: sectionObj.availability.reserved_seats
-    }))
+    })))
   }
   
   useEffect(() => {
