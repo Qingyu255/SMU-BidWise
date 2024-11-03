@@ -1,6 +1,6 @@
 'use client'
 import { FC, useEffect, useState } from "react";
-import { ExtendedPost } from "../../types";
+import { ExtendedPost } from "../../../types";
 import createClient from "@/utils/supabase/client";
 import { INFINITE_SCROLL_PAGINATION_RESULTS } from "@/config";
 import { useUser } from "@clerk/clerk-react";

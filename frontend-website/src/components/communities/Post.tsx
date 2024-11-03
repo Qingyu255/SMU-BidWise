@@ -3,9 +3,9 @@ import { formatTimeToNow } from '@/utils/utils'
 import { MessageSquare } from 'lucide-react'
 import Link from 'next/link'
 import { FC, useRef } from 'react'
-import EditorOutput from './communities/EditorOutput'
+import EditorOutput from './EditorOutput'
 import UpDownVote from './UpDownVote' // Import UpDownVote component
-import { ExtendedPost } from '../../types'
+import { ExtendedPost } from '../../../types'
 
 interface PostProps {
     post: ExtendedPost

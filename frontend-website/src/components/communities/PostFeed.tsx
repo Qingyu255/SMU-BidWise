@@ -3,11 +3,8 @@ import { FC, useRef, useState, useEffect } from "react";
 import { ExtendedPost } from "../../../types";
 import createClient from "@/utils/supabase/client";
 import { INFINITE_SCROLL_PAGINATION_RESULTS } from "@/config";
-import { useUser } from "@clerk/clerk-react";
-import { QueryFunction } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Post from "./Post";
-import UpDownVote from "./UpDownVote";
 
 interface PostFeedProps {
     subredditName: string;

@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { buttonVariants } from '@/components/ui/button'; // Adjust this path as needed based on your file structure
 import createClient from '@/utils/supabase/client';
 import { useUser } from "@clerk/clerk-react";
-import MyFeed from "@/components/MyFeed";
-import SuggestSubreddits from "@/components/SuggestSubreddits";
+import MyFeed from "@/components/communities/MyFeed";
+import SuggestSubreddits from "@/components/communities/SuggestSubreddits";
 
 export default function Page() {
     const { user, isLoaded, isSignedIn } = useUser(); // Extract user data and loading states
