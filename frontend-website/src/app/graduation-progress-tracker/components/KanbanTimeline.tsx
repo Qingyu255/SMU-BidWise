@@ -298,8 +298,8 @@ const onNodeDragStop = useCallback(
       nodes={nodes}
       nodeTypes={nodeTypes}
       edges={edges}
-      panOnScroll
-      panOnDrag={false}
+      panOnScroll={true}
+      panOnDrag={true}
       zoomOnDoubleClick={false}
       fitView
       defaultEdgeOptions={defaultEdgeOptions}
