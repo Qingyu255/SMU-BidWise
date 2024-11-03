@@ -44,7 +44,7 @@ const RoadmapInfoForm: React.FC<RoadmapInfoFormProps> = ({ setFormStep }) => {
               <FormControl>
                 <Input
                   id="roadmap.name"
-                  placeholder="Alex Tan"
+                  placeholder="Justin Lee"
                   {...field}
                   value={field.value || ''}
                 />

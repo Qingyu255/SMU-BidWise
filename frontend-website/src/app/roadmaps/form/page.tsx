@@ -71,7 +71,7 @@ const Page: React.FC = () => {
 
   const onSubmit = async (data: OverallFormData) => {
     setLoading(true);
-    console.log("Final Form Data:", data);
+    // console.log("Final Form Data:", data);
 
     if (!user) {
       alert("You must be logged in to submit the form.");
@@ -118,11 +118,7 @@ const Page: React.FC = () => {
 
       // Insert semesters and modules
       for (const semester of data.semesters) {
-      //   const semesterPayload = {
-      //     sem_count: semester.sem_count,
-      //     semester_name: semester.semester_name,
-      //     _clerk_user_id: user.id,
-      //   };
+
 
         const { data: semesterData, error: semesterError } = await supabase
           .from('semesters')
@@ -136,15 +132,6 @@ const Page: React.FC = () => {
         console.log('SM', semester.modules)
         for (const moduleSelection of semester.modules) {
           if (moduleSelection.selectedModule) {
-
-            // const { data: courseData, error: courseError } = await supabase
-            // .from('course_info')
-            // .select('id') // To get the inserted row with 'id'
-            // .eq('course_code', moduleSelection.selectedModule)
-            // .single();
-            
-
-
 
             const modulePayload = {
               course_id: moduleSelection.selectedModule,
@@ -191,14 +178,19 @@ const Page: React.FC = () => {
         {/* Navigation Buttons */}
         {formStep === 1 && (
           <div className="flex justify-end mt-4">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setFormStep(2)}
-            >
-              Next
-            </Button>
-          </div>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={async () => {
+              const isValid = await methods.trigger('roadmap'); // Validate only 'roadmap' fields
+              if (isValid) {
+                setFormStep(2);
+              }
+            }}
+          >
+            Next
+          </Button>
+        </div>
         )}
         {formStep === 2 && (
           <div className="flex justify-between mt-4">
