@@ -240,7 +240,7 @@ export default function TimetableGeneric({ classes, onClassSelect, courseCode, i
       </div>
       {(!isTimetablePage) && (
         <div className="flex align-center">
-          <span className='my-auto text-sm text-muted-foreground pr-1 py-1 md:py-0'>View sections in Timetable</span>
+          <span className='my-auto text-sm text-muted-foreground pr-1 py-1 md:py-0'>Show my Timetable Sections</span>
           <Switch
             className='my-auto'
             checked={viewTimetableSections}
