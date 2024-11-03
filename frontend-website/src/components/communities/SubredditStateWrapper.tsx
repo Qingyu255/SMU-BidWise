@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import CheckSubscription from "@/components/CheckSubscription";
-import SubredditOwner from "@/components/SubredditOwner";
-import SubscribeLeaveToggle from "@/components/SubscribeLeaveToggle";
+import CheckSubscription from "@/components/communities/CheckSubscription";
+import SubredditOwner from "@/components/communities/SubredditOwner";
+import SubscribeLeaveToggle from "@/components/communities/SubscribeLeaveToggle";
 
 interface SubredditStateWrapperProps {
     subredditId: string;

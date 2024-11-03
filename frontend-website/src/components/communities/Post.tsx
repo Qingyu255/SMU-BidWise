@@ -3,7 +3,7 @@ import { formatTimeToNow } from '@/utils/utils'
 import { MessageSquare } from 'lucide-react'
 import Link from 'next/link'
 import { FC, useRef } from 'react'
-import EditorOutput from './EditorOutput'
+import EditorOutput from './communities/EditorOutput'
 import UpDownVote from './UpDownVote' // Import UpDownVote component
 import { ExtendedPost } from '../../types'
 
@@ -45,7 +45,7 @@ const Post: FC<PostProps> = ({
                         <span>Posted by u/{post.author_name} </span>
                         {formatTimeToNow(new Date(post.created_at))}
                     </div>
-                    <Link href={`/r/${subredditName}/post/${post.id}`}>
+                    <Link href={`/communities/r/${subredditName}/post/${post.id}`}>
                         <h1 className='text-lg font-semibold py-2 leading-6 text-gray-900'>
                             {post.title}
                         </h1>

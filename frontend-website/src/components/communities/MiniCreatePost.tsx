@@ -1,9 +1,9 @@
 "use client"
-import { Button } from './ui/button'
-import { Input } from './ui/input'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 import { Image as ImageIcon, Link2 } from 'lucide-react'
 import { FC, useState, useEffect } from 'react'
-import { UserAvatar } from './UserAvatar'
+import { UserAvatar } from '../UserAvatar'
 import { useUser } from '@clerk/clerk-react'
 import { usePathname, useRouter } from 'next/navigation'
 import createClient from '@/utils/supabase/client'

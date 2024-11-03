@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from "react";
-import MiniCreatePost from "@/components/MiniCreatePost";
+import MiniCreatePost from "@/components/communities/MiniCreatePost";
 import { Button } from "@/components/ui/button";
 import createClient from '@/utils/supabase/client';
 import { useUser } from '@clerk/clerk-react';

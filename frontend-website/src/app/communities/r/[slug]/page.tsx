@@ -3,8 +3,8 @@ import createClient from '@/utils/supabase/client';
 import { useUser } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
 import { INFINITE_SCROLL_PAGINATION_RESULTS } from '@/config';
-import MiniCreatePost from '@/components/MiniCreatePost';
-import PostFeed from '@/components/PostFeed';
+import MiniCreatePost from '@/components/communities/MiniCreatePost';
+import PostFeed from '@/components/communities/PostFeed';
 
 interface pageProps {
   params: {

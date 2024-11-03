@@ -1,7 +1,7 @@
 'use client'
 
-import CustomCodeRenderer from './renderer/CustomCodeRenderer'
-import CustomImageRenderer from './renderer/CustomImageRenderer'
+import CustomCodeRenderer from '../renderer/CustomCodeRenderer'
+import CustomImageRenderer from '../renderer/CustomImageRenderer'
 import { FC } from 'react'
 import dynamic from 'next/dynamic'
 

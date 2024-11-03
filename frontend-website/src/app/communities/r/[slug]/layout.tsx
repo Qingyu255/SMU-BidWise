@@ -1,10 +1,10 @@
 import React from "react"
 import createClient from "@/utils/supabase/server"
-import SubredditStateWrapper from "@/components/SubredditStateWrapper";
+import SubredditStateWrapper from "@/components/communities/SubredditStateWrapper";
 import { format } from 'date-fns'
-import SubscriptionCount from "@/components/SubscriptionCount"; // New import
+import SubscriptionCount from "@/components/communities/SubscriptionCount"; // New import
 // import { buttonVariants } from "@/components/ui/button";
-import CreatePostButton from "@/components/CreatePostButton";
+import CreatePostButton from "@/components/communities/CreatePostButton";
 import Link from "next/link"; // Import Link from next/link
 import { ArrowLeft } from "lucide-react"; // Import an arrow icon
 
