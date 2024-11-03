@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/tabs";
 import { ExamInformationTable } from './components/ExamInformationTable';
 import { convertUtcToSGT } from '@/utils/dateUtils';
+import { SeatAvailabilityChart } from './components/SeatAvailabilityChart';
 
 const supabase = createClient();
 
@@ -213,6 +214,15 @@ export default function Page({ params }: { params: { course_code: string }}) {
     setSelectedTermId(selectedTermId); // this will trigger below use effect to query new sections for term
     setSelectedTermName(selectedTermName);
   }
+
+  const generateSeatAvailabilityChartData = (sections: Array<any>) => {
+    return sections.map(sectionObj => ({
+      section: `${sectionObj.section} - ${sectionObj.instructor}`,
+      availableSeats: sectionObj.availability.available_seats,
+      currentEnrolled: sectionObj.availability.current_enrolled,
+      reserved: sectionObj.availability.reserved_seats
+    }))
+  }
   
   useEffect(() => {
     // for initial load
@@ -235,7 +245,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
         setCourseInfo(courseInfo);
 
         // if user toggle selected term, we will query sections for that term instead of latest (latest of queried on first load)
-        const { sections, professors }: any = await getSectionDetails(courseInfo.id, (selectedTermId ? selectedTermId : latestTermIdStr)); 
+        const { sections, professors }: any = await getSectionDetails(courseInfo.id, (selectedTermId ? selectedTermId : latestTermIdStr));
         setSections(sections);
         setProfessors(professors);
         const { exams }: any = await getExamDetails(courseInfo.id, (selectedTermId ? selectedTermId : latestTermIdStr)); 
@@ -276,6 +286,8 @@ export default function Page({ params }: { params: { course_code: string }}) {
     fetchSectionsDataForSelctedTerm();
   }, [selectedTermId]);
 
+  const lastUpdated = sections.length > 0 ? convertUtcToSGT(sections[0]?.availability?.updated_at) : "";
+
   return (
     <>
       {loading ? (
@@ -295,7 +307,7 @@ export default function Page({ params }: { params: { course_code: string }}) {
           </Breadcrumb>
           {courseInfo && (
             <div>
-              <CourseInfo courseInfo={courseInfo} courseAreas={courseAreas} updated_at={sections.length > 0 ? convertUtcToSGT(sections[0]?.availability?.updated_at) : ""}/>
+              <CourseInfo courseInfo={courseInfo} courseAreas={courseAreas} updated_at={lastUpdated}/>
               {(professors && professors.length > 0) && (
                 <div className='py-2'>
                   <div className='sm:flex sm:gap-5'>
@@ -330,17 +342,28 @@ export default function Page({ params }: { params: { course_code: string }}) {
           ) : (
             <div className='py-2'>
               <Tabs defaultValue="sectionInformation">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="sectionInformation">Section Information</TabsTrigger>
+                  <TabsTrigger value="seatAvailabilityChart">Seat Availability Chart</TabsTrigger>
                   <TabsTrigger value="examInformation">Exam Information</TabsTrigger>
                 </TabsList>
                 <TabsContent value="sectionInformation">
                   <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} onClassSelect={handleClassSelect} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>
                 </TabsContent>
+                <TabsContent value="seatAvailabilityChart">
+                  <SeatAvailabilityChart chartData={generateSeatAvailabilityChartData(sections)}/>
+                </TabsContent>
                 <TabsContent value="examInformation">
                   <ExamInformationTable courseCode={course_code} exams={exams} termName={(selectedTermName ? selectedTermName : latestTerm)}/>
                 </TabsContent>
-                </Tabs>
+              </Tabs>
+              <p className="text-sm text-gray-500 py-2">
+                {(lastUpdated || lastUpdated === "-")? (
+                  <p>Last synced with BOSS: {lastUpdated}</p>
+                ) : (
+                  <p>Updated information based on the latest term on SMU BOSS</p>
+                )}
+              </p>
             </div>
           )}
         </div>

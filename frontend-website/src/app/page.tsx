@@ -10,11 +10,9 @@ export default function Home() {
     <div style={{ margin: '0', padding: '0', position: 'relative' }}>
       {/* Welcome Message Component */}
       <div>
-        {/* Welcome Message */}
         <WelcomeMessage />
       </div>
 
-      {/* About + Benefits Section */}
       <div id='about-section'>
         <About />
       </div>

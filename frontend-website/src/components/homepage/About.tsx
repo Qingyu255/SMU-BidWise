@@ -113,7 +113,7 @@ const About = () => {
       <div>
         {/* <p style={sectionSubTextStyle}>Why SMU BidWise?</p> */}
         <h2 style={sectionHeadTextStyle} className="py-2">Our Best Features</h2>
-        <div className="text-gray-500 text-xl xl:w-[50%] m-auto pb-4">Thousands of SMU students leverage SMU BidWise to view the latest course information, plan their timetables and view bid price trends with SMU BidWise</div>
+        <div className="text-gray-500 text-xl xl:w-[50%] m-auto pb-4">Thousands of SMU students leverage SMU BidWise to view the latest course information, seat availability, plan their timetables and view bid price trends</div>
         {/* Navigation for carousel */}
         <Card>
           <nav

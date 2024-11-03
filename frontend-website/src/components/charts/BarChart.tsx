@@ -31,8 +31,8 @@ export default function BarChart({ title, chartData, width, height }: chartAttri
   const [clickCount, setClickCount] = useState<number>(0)
 
   // adjust bar colour accordingly
-  chartData.datasets[0].backgroundColor = "#2463EB";
-  chartData.datasets[1].backgroundColor = "#60A8FB";
+  chartData.datasets[0].backgroundColor = "#2563eb";
+  chartData.datasets[1].backgroundColor = "#60a5fa";
 
   const handleClick = (event: any, elements: any) => {
     if (elements.length === 0) {
