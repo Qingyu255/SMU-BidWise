@@ -343,9 +343,9 @@ export default function Page({ params }: { params: { course_code: string }}) {
             <div className='py-2'>
               <Tabs defaultValue="sectionInformation">
                 <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="sectionInformation">Section Information</TabsTrigger>
-                  <TabsTrigger value="seatAvailabilityChart">Seat Availability Chart</TabsTrigger>
-                  <TabsTrigger value="examInformation">Exam Information</TabsTrigger>
+                  <TabsTrigger value="sectionInformation">{(typeof window !== "undefined" && window.innerWidth > 510) ? "Section Information" : "Section Info"}</TabsTrigger>
+                  <TabsTrigger value="seatAvailabilityChart">{(typeof window !== "undefined" && window.innerWidth > 510) ? "Seat Availability Chart" : "Seating"}</TabsTrigger>
+                  <TabsTrigger value="examInformation">{(typeof window !== "undefined" && window.innerWidth > 510) ? "Exam Information" : "Exam info"}</TabsTrigger>
                 </TabsList>
                 <TabsContent value="sectionInformation">
                   <SectionInformationTable courseCode={course_code} sections={sections} termName={(selectedTermName ? selectedTermName : latestTerm)} onClassSelect={handleClassSelect} singleProfOnly={selectedProfessor !== null && selectedProfessor !== ""} allowAddRemoveSections={selectedTermName === "" || (selectedTermName == latestTerm)}/>
