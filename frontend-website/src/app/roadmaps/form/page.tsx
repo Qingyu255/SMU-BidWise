@@ -137,17 +137,17 @@ const Page: React.FC = () => {
         for (const moduleSelection of semester.modules) {
           if (moduleSelection.selectedModule) {
 
-            const { data: courseData, error: courseError } = await supabase
-            .from('course_info')
-            .select('id') // To get the inserted row with 'id'
-            .eq('course_code', moduleSelection.selectedModule)
-            .single();
+            // const { data: courseData, error: courseError } = await supabase
+            // .from('course_info')
+            // .select('id') // To get the inserted row with 'id'
+            // .eq('course_code', moduleSelection.selectedModule)
+            // .single();
+            
 
-          if (courseError) throw courseError;
 
 
             const modulePayload = {
-              course_id: courseData.id,
+              course_id: moduleSelection.selectedModule,
               _clerk_user_id: user.id,
               senior_id: seniorData.id,
               semester_id: semesterData.id, // Assuming 'semesters' table has an 'id' primary key
@@ -168,7 +168,8 @@ const Page: React.FC = () => {
     } catch (error) {
       console.error("Submission Error:", error);
       alert("Failed to submit the form. Please try again.");
-    } finally {
+    } 
+    finally {
       router.push('../roadmaps')
     }
   };
