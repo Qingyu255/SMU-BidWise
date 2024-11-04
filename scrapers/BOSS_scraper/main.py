@@ -9,14 +9,14 @@ import time
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-import pickle
+import sys
 
 # setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def setup_driver():
     options = webdriver.ChromeOptions()
-    # options.add_argument('--headless')
+    options.add_argument('--headless')
     driver = webdriver.Chrome(options=options)
     return driver
 
@@ -39,6 +39,7 @@ def loginToBOSS(wait):
     load_dotenv('../.env.local')
     USERNAME = os.getenv('USERNAME')
     PASSWORD = os.getenv('PASSWORD')
+    VERIFICATION_CODE = sys.argv[1]
     try:
         username_input = wait.until(EC.presence_of_element_located((By.ID, 'userNameInput')))
         username_input.send_keys(USERNAME)
@@ -48,8 +49,14 @@ def loginToBOSS(wait):
 
         sign_in_button = wait.until(EC.element_to_be_clickable((By.ID, 'submitButton')))
         sign_in_button.click()
-        logging.info("Waiting 10 seconds for user to key in 2FA auth code")
-        time.sleep(8)
+
+        verification_input = wait.until(EC.element_to_be_clickable((By.ID, 'verificationCodeInput')))
+        verification_input.send_keys(VERIFICATION_CODE)
+
+        sign_in_button2 = wait.until(EC.element_to_be_clickable((By.ID, 'signInButton')))
+        sign_in_button2.click()
+
+        time.sleep(2)
 
         logging.info("Login Form submitted successfully")
 

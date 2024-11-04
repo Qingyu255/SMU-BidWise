@@ -135,7 +135,7 @@ export default function Page() {
                         </Button>
                     </Link>       
                 </div>
-                <p className='text-gray-500 text-xs pb-1'>Last synced with BOSS: November 1, 2024 at 00:10</p>
+                <p className='text-gray-500 text-xs pb-1'>Last synced with BOSS: November 5, 2024 at 03:25</p>
 
                 {error ? (
                     <ErrorPopUp errorMessage={error.message}/>
