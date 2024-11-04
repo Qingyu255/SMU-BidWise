@@ -4,30 +4,18 @@ import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { motion } from 'framer-motion';
 import styles from './Welcome.module.css'
+import Link from 'next/link';
 
 const WelcomeMessage = () => {
-  const { theme } = useTheme(); // Get the current theme
-  const [textColor, setTextColor] = useState('white'); // State to manage text color
   const [screenSize, setScreenSize] = useState(0); // State to manage screen size
-
-  // Use useEffect to change text color based on the theme
-  useEffect(() => {
-    if (theme === 'light') {
-      setTextColor('black');
-    } else {
-      setTextColor('white');
-    }
-  }, [theme]); // Runs whenever theme changes
 
   // Use useEffect to detect screen size changes
   useEffect(() => {
     const handleResize = () => {
       setScreenSize(window.innerWidth); // Update screen size state
     };
-
     window.addEventListener('resize', handleResize);
     handleResize(); // Check the initial size
-
     return () => window.removeEventListener('resize', handleResize); // Cleanup listener
   }, []);
 
@@ -42,7 +30,7 @@ const WelcomeMessage = () => {
         alignItems: isMobile ? 'center' : 'center',
         justifyContent: isMobile ? 'center' : 'space-between',
         padding: '2rem',
-        color: textColor,
+        // color: textColor,
         flexDirection: isMobile ? 'column' : 'row',
         maxWidth: '1280px', // Add a max-width to the container
         overflowX: 'hidden', // Prevent horizontal overflow
@@ -72,17 +60,15 @@ const WelcomeMessage = () => {
         <p style={{
           fontSize: isMobile ? '1.25rem' : isTablet ? '1.75rem' : '2rem',
           lineHeight: '1.4',
-        }}>
+        }} className='dark:text-whitw'>
           Welcome to a Smarter Way to Plan and Bid courses on SMU BidWise!
         </p>
         {/* Button Section */}
         <div className={styles.wrapper}>
-          <a href="/courses" className='get-started font-semibold'><span>Get Started</span></a>
-          <a href="#about-section" className='learn-more font-semibold'><span>About Us</span></a>
+          <Link href="/courses" className='get-started font-semibold'><span>View Courses</span></Link>
+          <Link href="#about-section" className='learn-more font-semibold'><span>About Us</span></Link>
         </div>
       </div>
-
-
 
       {/* Image Section */}
       <div style={{ 
@@ -115,10 +101,7 @@ const WelcomeMessage = () => {
               }} 
           />
       </div>
-
     </div>
-    
-
   );
 };
 

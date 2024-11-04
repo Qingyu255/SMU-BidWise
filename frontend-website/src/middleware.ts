@@ -1,4 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from 'next/server';
+import type { NextRequest, NextFetchEvent } from 'next/server';
 
 // export default clerkMiddleware();
 
@@ -7,9 +9,20 @@ const isProtectedRoute = createRouteMatcher([
     "/roadmaps/form(.*)"
 ]);
 
-export default clerkMiddleware((auth, req) => {
-    if (isProtectedRoute(req)) auth().protect();
+const clerkHandler = clerkMiddleware((auth, req) => {
+  if (isProtectedRoute(req)) auth().protect();
 });
+
+export default function middleware(req: NextRequest, ev: NextFetchEvent) {
+  const res = clerkHandler(req, ev);
+
+  if (res instanceof NextResponse) {
+      res.headers.delete('X-Robots-Tag');
+      res.headers.set('X-Robots-Tag', 'index, follow');
+  }
+
+  return res;
+}
 
 export const config = {
   matcher: [

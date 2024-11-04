@@ -152,6 +152,7 @@ export interface TimelineProps {
 }
 
 export interface Course {
+  courseCode: string;
   course_code: string;
 }
 
@@ -204,6 +205,7 @@ export interface RoadmapsProps {
   page: number;
   degree: string;
   verified_seniors: string;
+  likes: string;
   // onClick: (name: string, roadmap: RoadmapInfo) => void;
 }
 

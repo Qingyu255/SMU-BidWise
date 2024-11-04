@@ -72,6 +72,7 @@
     "react-tilt": "^1.0.2",
     "react-toastify": "^10.0.6",
     "react-vertical-timeline-component": "^3.6.0",
+    "recharts": "^2.13.3",
     "sass": "^1.78.0",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.5.2",
@@ -93,5 +94,8 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "overrides": {
+    "react-is": "^19.0.0-rc-69d4b800-20241021"
   }
 }

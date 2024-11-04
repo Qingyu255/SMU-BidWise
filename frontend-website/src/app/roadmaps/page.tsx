@@ -8,6 +8,7 @@ import HeadingCard from '@/components/roadmap/HeadingCard';
 import RoadmapFormCard from './components/RoadmapFormCard';
 import { useTheme } from 'next-themes';
 import RoadmapFilters, { RoadmapFilterOptions } from './components/RoadmapFilter';
+import { filter } from 'd3';
 
 
 const fetchRoadmapFilterOptions = async (): Promise<RoadmapFilterOptions> => {
@@ -50,12 +51,14 @@ export default function Page({ searchParams }: {
     page?: string;
     degree?: string;
     verified_seniors?: string;
+    likes?: string;
   };
 }) {
   const [filterOptions, setFilterOptions] = useState<RoadmapFilterOptions>({ degreeArr: [], verifiedSeniorsArr: [] });
   const page = Number(searchParams?.page) || 1;
   const degree = searchParams?.degree || '';
   const verified_seniors = searchParams?.verified_seniors?.toUpperCase() || 'FALSE';
+  const likes = searchParams?.likes || '';
   
   useEffect(() => {
     const fetchData = async () => {
@@ -69,9 +72,9 @@ export default function Page({ searchParams }: {
   return (
     <div>
       <>
-      <RoadmapFilters degreeArr={filterOptions.degreeArr} verifiedSeniorsArr={filterOptions.verifiedSeniorsArr}/>
+      <RoadmapFilters degreeArr={filterOptions.degreeArr} verifiedSeniorsArr={filterOptions.verifiedSeniorsArr} />
         <RoadmapFormCard />
-        <Roadmaps page={page} degree={degree} verified_seniors={verified_seniors}/>
+        <Roadmaps page={page} degree={degree} verified_seniors={verified_seniors} likes={likes}/>
       </>
     </div>
   );

@@ -9,10 +9,11 @@ import PageToggle from '@/app/courses/components/PageToggle'
 
 
 
-const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors }: {
+const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors, likes }: {
     page: number,
     degree: string,
     verified_seniors: string,
+    likes: string,
 }) => {
 
     const supabase = createClient()
@@ -22,18 +23,27 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors }: {
     const from = (currentPage - 1) * limit;
     const to = from + limit - 1
     const totalPages = useRef(1);
+    
+ 
 
     useEffect(() => {
       const fetchRoadmapInfo = async () => {
             let query = supabase
                 .from('roadmap_info')
                 .select('*', { count: 'exact' })
-                .range(from, to);
+                .range(from, to)
 
             if (degree) {
                 query = query.eq('degree', degree);
             }
 
+            if(likes == 'Ascending') {
+                query = query.order('likes', {ascending: true})
+            } else if (likes == 'Descending') {
+                query = query.order('likes', {ascending: false})
+            } else {
+                query = query.order('time_created', {ascending: false})
+            }
             
             if(verified_seniors == 'VERIFIED') {
                 query = query.eq('verified_seniors', verified_seniors);
@@ -43,7 +53,7 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors }: {
 
             const { data, error, count } = await query;
         
-        console.log('data', data)
+        // console.log('data', data)
         if (count) {
             totalPages.current = Math.ceil(count / limit);
         }
@@ -63,20 +73,21 @@ const Roadmaps: React.FC<RoadmapsProps> = ({ page, degree, verified_seniors }: {
             _clerk_user_id: item._clerk_user_id,
         }));
         setRoadmapInfo(formattedData);
-        console.log(roadmapInfo);
+        // console.log(roadmapInfo);
         }
       };
   
       fetchRoadmapInfo();
       
-    }, [supabase, degree, verified_seniors, currentPage])
+    // }, [supabase, degree, verified_seniors, currentPage])
+    }, [supabase, degree, verified_seniors, likes, currentPage, from, to, roadmapInfo])
     
 
     
     return (
         <div className='flex flex-col gap-3'>
             {roadmapInfo.map((roadmap) => (
-                        <RoadmapCard key={roadmap.name} 
+                        <RoadmapCard key={roadmap._clerk_user_id} 
                         name={roadmap.name}
                         major={roadmap.degree} 
                         graduation_year={roadmap.graduation_year} 

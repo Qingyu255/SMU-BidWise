@@ -46,6 +46,9 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
     const [showKanban, setShowKanban] = useState(true);
     const [KanbanKey, setKanbanKey] = useState(0);
 
+    
+
+
     // Fetch tasks from Supabase on component mount
     useEffect(() => {
         const fetchTasks = async () => {
@@ -55,23 +58,44 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
             }
 
             try {
-                const { data, error } = await supabase
+                const { data: tasksData, error: tasksError } = await supabase
                     .from('tasks_roadmap')
                     .select('*')
                     .eq('_clerk_user_id', user.id);
 
-                if (error) {
-                    throw error;
+                if (tasksError) {
+                    throw tasksError;
                 }
 
                 // Map Supabase data to Task type
-                const fetchedTasks: Task[] = data.map(task => ({
-                    _clerk_user_id: user?.id ?? '' as string,
-                    columnId: task.columnId as string,
-                    completed: task.completed as boolean,
-                    content: task.content as string,
-                    courseId: task.courseId as string,
+                const fetchedTasks: Task[] = await Promise.all(tasksData.map(async task => {
+                    const { data: courseData, error: courseError } = await supabase
+                        .from('course_info')
+                        .select('course_code')
+                        .eq('id', task.courseId as string);
+
+                    if (courseError) {
+                        throw courseError;
+                    }
+
+                    let courseCode = '';
+                    if (courseData && courseData.length > 0) {
+                        courseCode = courseData[0].course_code as string;
+                    }
+
+                    return {
+                        _clerk_user_id: user?.id ?? '',
+                        columnId: task.columnId as string,
+                        completed: task.completed as boolean,
+                        content: `${courseCode} - ${task.content}` as string,
+                        courseId: task.courseId as string,
+                    };
                 }));
+
+                setTasks(fetchedTasks);
+                previousTasksRef.current = fetchedTasks; // Initialize previous tasks
+
+                
 
                 setTasks(fetchedTasks);
                 previousTasksRef.current = fetchedTasks; // Initialize previous tasks
@@ -84,49 +108,88 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
         fetchTasks();
     }, [supabase, user, toast]);
 
+  
+
     // Handler to add a new task (course)
-    const handleAddCourse = async (newCourse: Course) => {
-        if (tasks.some(task => task.courseId === newCourse.courseId)) { // Use 'id' for uniqueness
-            toast({ title: `${newCourse.courseId} Already Added` });
-            return;
+const handleAddCourse = async (newCourse: Course) => {
+    // Fetch the course_code directly
+    const { data, error } = await supabase
+    .from('course_info')
+    .select('course_code')
+    .eq('id', newCourse.courseId);
+
+    if (error) {
+        throw error;
+    }
+
+    let courseCode = '';
+    if (data && data.length > 0) {
+        courseCode = data[0].course_code as string;
+    } else {
+        courseCode = '';
+    }
+
+    if (tasks.some(task => task.courseId === newCourse.courseId)) {
+        toast({ title: `${courseCode} Already Added` });
+        return;
+    }
+
+    if (!user || !user.id) {
+        toast({ title: 'User not authenticated.' });
+        return;
+    }
+
+    try {
+        // Fetch the course_code directly
+        const { data, error } = await supabase
+            .from('course_info')
+            .select('course_code')
+            .eq('id', newCourse.courseId);
+
+        if (error) {
+            throw error;
         }
 
-        if (!user || !user.id) {
-            toast({ title: 'User not authenticated.' });
-            return;
+        let courseCode = '';
+        if (data && data.length > 0) {
+            courseCode = data[0].course_code as string;
+        } else {
+            courseCode = '';
         }
 
         const newTask: Task = {
-            _clerk_user_id: user?.id ?? '', // Use a unique identifier
+            _clerk_user_id: user?.id ?? '',
             courseId: newCourse.courseId,
-            content: `${newCourse.courseId} - ${newCourse.content}`,
+            content: `${courseCode} - ${newCourse.content}`,
             completed: newCourse.completed === 'true',
-            columnId: newCourse.columnId, // Initialize columnId based on semester
+            columnId: newCourse.columnId,
         };
 
-        try {
-            const { error } = await supabase.from('tasks_roadmap').insert([
-                {
-                    _clerk_user_id: user.id,
-                    courseId: newTask.courseId,
-                    content: newTask.content,
-                    completed: newTask.completed,
-                    columnId: newTask.columnId,
-                }
-            ]);
+        console.log('newTask', newTask);
 
-            if (error) {
-                throw error;
-            }
+        // Insert the new task into Supabase
+        const { error: insertError } = await supabase.from('tasks_roadmap').insert([
+            {
+                _clerk_user_id: user.id,
+                courseId: newTask.courseId,
+                content: newTask.content,
+                completed: newTask.completed,
+                columnId: newTask.columnId,
+            },
+        ]);
 
-            setTasks(prev => [...prev, newTask]);
-            previousTasksRef.current = [...tasks, newTask];
-            toast({ title: `${newCourse.courseId} Added Successfully` });
-        } catch (error) {
-            console.error('Error adding course:', error);
-            toast({ title: 'Error adding course to Supabase.' });
+        if (insertError) {
+            throw insertError;
         }
-    };
+
+        setTasks(prev => [...prev, newTask]);
+        previousTasksRef.current = [...tasks, newTask];
+        toast({ title: `${courseCode} Added Successfully` });
+    } catch (error) {
+        console.error('Error adding course:', error);
+        toast({ title: 'Error adding course to Supabase.' });
+    }
+};
 
     // Handler to remove a task (course)
     const handleRemoveCourse = async (taskId: string) => {
@@ -308,6 +371,13 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
     };
 
     const completedTasks = tasks.filter(t => t.completed).length;
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -362,7 +432,12 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
                 </CardHeader> */}
                 <CardContent>
                     <div className='py-2 flex flex-row justify-between'>
-                        <AddCourseForm courseOptions={courseOptions} onAddCourse={handleAddCourse} />
+                        <AddCourseForm courseOptions={courseOptions} onAddCourse={(newCourse) => {
+                            handleAddCourse(newCourse);
+                            console.log('kanbanKey', KanbanKey)
+                            setKanbanKey((prevKey) => prevKey + 1); // Rerender timeline
+                            console.log('kanbanKey', KanbanKey)
+                        }} />
                         <div className='flex py-4 space-x-1'>
                             <Label htmlFor="toggle-view">Roadmap View</Label>
                             <Switch
@@ -445,17 +520,20 @@ export default function KanbanPlanner({ courseOptions }: CheckListProps) {
                         </>
                         :
                         <div className='flex flex-col overflow-hidden' style={{ width: '100%', height: '90vh' }}>
-                            {/* <div className='mb-2'>
-                                {headingCardInfo.length > 0 && <HeadingCard headingCardInfo={headingCardInfo[0]} />}
-                            </div> */}
+                           
                             <div className='relative container self-center flex-grow' style={{ height: 'inherit' }}>
-                                <KanbanTimeline />
-                                <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
+                                <KanbanTimeline kanbanKey={KanbanKey}/>
+                                <div
+                                    className='fixed bottom-4 transform -translate-x-1/2 w-full max-w-md px-4 z-50'
+                                    style={{
+                                        left: window.innerWidth < 1024 ? '50%' : 'calc(50% + 135px)', // Adjust for the 270px sidebar if viewport is wider than 1024px
+                                    }}
+                                >
                                     <TooltipProvider>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <div className='rounded-full bg-[#252A34] text-[#EAEAEA] px-3 py-1.5 text-sm'>
-                                                    <span className='text-[#F3C623]'>TIP</span> Click on course node to find out more!
+                                                    <span className='text-[#F3C623]'>TIP</span> Drag and Drop your nodes to rearrange your modules!
                                                 </div>
                                             </TooltipTrigger>
                                         </Tooltip>

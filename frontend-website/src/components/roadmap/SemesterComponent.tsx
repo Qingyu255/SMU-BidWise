@@ -48,7 +48,7 @@ const SemesterComponent: React.FC<SemesterComponentProps> = ({
         .filter((m) => m !== null && m !== '');
   
       const filtered = availableModules.filter((mod) => !selected.includes(mod.value));
-      console.log(`Filtered Options for Module ${currentIndex + 1}:`, filtered); // Debugging
+      // console.log(`Filtered Options for Module ${currentIndex + 1}:`, filtered); // Debugging
   
       return filtered;
     },

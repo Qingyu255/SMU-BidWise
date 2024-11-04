@@ -58,9 +58,10 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
 
     if (error) {
       console.error("Error upserting timetable data:", error.message);
-    } else {
-      console.log("Timetable data upserted successfully");
-    }
+    } 
+    // else {
+    //   console.log("Timetable data upserted successfully");
+    // }
   };
 
   // Load data on initial mount
@@ -168,7 +169,7 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
             return updated;
           });
         }
-      } else if (selectedClassObj.section === classItem.section) {
+      } else if (selectedClassObj.section === classItem.section && selectedClassObj.instructor === classItem.instructor) {
         // not in timetable page => in course page
         setSelectedClasses((prev) => {
           const updated = new Map(prev);

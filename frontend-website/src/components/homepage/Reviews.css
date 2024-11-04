@@ -163,15 +163,15 @@ opacity: 1;
   border-radius: 5px;
 }
 
-.review-form button {
+/* .review-form button {
   padding: 0.5rem;
   background-color: #ff6f59;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
+} */
 
-.review-form button:hover {
-  background-color: #e65c47; /* Darker shade on hover */
-}
+/* .review-form button:hover {
+  background-color: #e65c47;
+} */

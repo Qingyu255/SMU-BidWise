@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://smubidwise.com/sitemap.xml
+Sitemap: https://www.smubidwise.com/sitemap.xml

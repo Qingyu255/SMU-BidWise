@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTimetable } from '../providers/timetableProvider';
 import { ClassItem } from '@/types';
 import {
@@ -12,16 +12,19 @@ import { Button } from '../ui/button';
 import { CalendarPlus, CalendarMinus, Info } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
+import { Switch } from '../ui/switch';
 
 export type TimetableProps = {
   classes: ClassItem[],
   onClassSelect: (e: any) => void,
+  courseCode?: string, // for course info page only
   isTimetablePage?: boolean,
   allowAddRemoveSections? : boolean
 };
 
-export default function TimetableGeneric({ classes, onClassSelect, isTimetablePage, allowAddRemoveSections = true }: TimetableProps) {
+export default function TimetableGeneric({ classes, onClassSelect, courseCode, isTimetablePage = false, allowAddRemoveSections = true }: TimetableProps) {
   const { selectedClasses } = useTimetable();
+  const [viewTimetableSections, setViewTimetableSections] = useState<boolean>(false);
 
   // Map short form day names to full names used in timetable
   const dayMapping: { [key: string]: string } = {
@@ -54,6 +57,7 @@ export default function TimetableGeneric({ classes, onClassSelect, isTimetablePa
 
   const selectedClassColour = "#bae6fd";
   const unselectedClassColour = "#34d399";
+  const otherClassInTimetableColour = "#c776e8";
 
   // Convert time to minutes
   const parseTime = (time: string) => {
@@ -74,16 +78,17 @@ export default function TimetableGeneric({ classes, onClassSelect, isTimetablePa
     return ((timeMinutes - startMinutes) / 60) * rowHeight;
   };
 
-  // Prepare classes for rendering
-  const preparedClasses = classes.map((classItem) => {
-    const dayName = dayMapping[classItem.day];
-    return {
-      ...classItem,
-      dayName,
-      topOffset: timeToPosition(classItem.start_time),
-      height: ((parseTime(classItem.end_time) - parseTime(classItem.start_time)) / 60) * rowHeight,
-    };
-  });
+  const addTimetableSpecificProperties: any = (classes: Array<any>) => {
+    return classes.map((classItem) => {
+      const dayName = dayMapping[classItem.day];
+      return {
+        ...classItem,
+        dayName,
+        topOffset: timeToPosition(classItem.start_time),
+        height: ((parseTime(classItem.end_time) - parseTime(classItem.start_time)) / 60) * rowHeight,
+      };
+    })
+  }
 
   // Helper function to group overlapping classes
   function groupOverlappingClasses(classesForDay: any) {
@@ -172,19 +177,78 @@ export default function TimetableGeneric({ classes, onClassSelect, isTimetablePa
 
   const daysArr: string[]= Object.values(dayMapping)
 
+  const isInTimetable = (classItemId: string) => {
+    return (selectedClasses.has(classItemId));
+  }
+
+  const isTimetableSectionSameCourseCodeAsPage = (courseCode: string | undefined, classItemId: string) => {
+    if (!isInTimetable(classItemId)) {
+      return false; // safety
+    }
+    // assumes in timetable alr
+    return (selectedClasses.get(classItemId)?.courseCode && courseCode == selectedClasses.get(classItemId)?.courseCode);
+
+  }
+  const cleanClassesDataToPreventEdgeCases = (preparedClasses: Array<any>) => {
+    // edge case handled: where classes in timetable is also in sections displayed (in course page) -> prevent duplicate using unique key iukwim
+    const selectedClassItems: Array<any> = [];
+    const uniqueKeys = new Set();
+
+    preparedClasses.forEach(obj => {
+      const uniqueKey = obj.section + obj.instructor + obj.day + obj.start_time;
+
+      if (!uniqueKeys.has(uniqueKey)) {
+        uniqueKeys.add(uniqueKey);
+        selectedClassItems.push(obj);
+      }
+    });
+
+    return selectedClassItems;
+  }
+  //useMemo: recomputs preparedClasses whenever classes, selectedClasses, or viewTimetableSections change -> updating timetable
+  const preparedClasses: Array<any> = useMemo(() => {
+    if (isTimetablePage) {
+      return addTimetableSpecificProperties(classes);
+    }
+
+    // else if in indiv course page, we filter classes based on the viewTimetableSections state
+    let filteredClasses = classes.filter((classItem) => {
+      if (!viewTimetableSections && isInTimetable(classItem.id) && !isTimetableSectionSameCourseCodeAsPage(courseCode, classItem.id)) {
+        // Exclude classes that are in the timetable
+        return false;
+      }
+      return true;
+    });
+    // data preping using helper functions
+    return cleanClassesDataToPreventEdgeCases(addTimetableSpecificProperties(filteredClasses));
+  }, [classes, selectedClasses, viewTimetableSections]);
+
   return (
     <div>
-    <div className='flex flex-row pt-1'>
-      <Info className='w-3 h-3 my-auto mr-2 text-sm text-muted-foreground'/>
-      {(isTimetablePage) ? (
-        <span className='text-xs text-muted-foreground'>
-          Click <CalendarMinus className='inline w-3 h-3'/> to remove section from timetable
-        </span>
-      ) : (
-        <span className='text-xs text-muted-foreground'>
-          Click <CalendarPlus className='inline w-3 h-3'/> / <CalendarMinus className='inline w-3 h-3'/> to add or remove section from timetable
-        </span>
+    <div className='flex flex-col md:flex-row justify-between'>
+      <div className='flex flex-row pt-1'>
+        <Info className='w-3 h-3 my-auto mr-2 text-sm text-muted-foreground'/>
+        {(isTimetablePage) ? (
+          <span className='text-xs text-muted-foreground'>
+            Click <CalendarMinus className='inline w-3 h-3'/> to remove section from timetable
+          </span>
+        ) : (
+          <span className='text-xs text-muted-foreground'>
+            Click <CalendarPlus className='inline w-3 h-3'/> / <CalendarMinus className='inline w-3 h-3'/> to add or remove section from timetable
+          </span>
+        )}
+      </div>
+      {(!isTimetablePage) && (
+        <div className="flex align-center">
+          <span className='my-auto text-sm text-muted-foreground pr-1 py-1 md:py-0'>Show my Timetable Sections</span>
+          <Switch
+            className='my-auto'
+            checked={viewTimetableSections}
+            onCheckedChange={(checked) => setViewTimetableSections(checked)}
+          />
+        </div>
       )}
+      
     </div>
     <div style={{ overflowX: 'auto' }}> {/* Allow horizontal scrolling */}
       <div style={timetableStyle}>
@@ -248,12 +312,23 @@ export default function TimetableGeneric({ classes, onClassSelect, isTimetablePa
               <div
                 style={{
                   ...classStyle,
-                  backgroundColor: selectedClasses.has(classItem.id)
-                    ? selectedClassColour
+                  backgroundColor: isInTimetable(classItem.id)
+                    ? (
+                      (isTimetablePage || isTimetableSectionSameCourseCodeAsPage(courseCode, classItem.id)) ? 
+                      selectedClassColour :
+                      otherClassInTimetableColour
+                      
+                    )
                     : classStyle.backgroundColor,
-                  borderLeft: selectedClasses.has(classItem.id)
-                  ? '6px solid #5A7BB5'
-                  : '6px solid #059669',
+                  borderLeft: isInTimetable(classItem.id)
+                  ? (
+                    (isTimetablePage || isTimetableSectionSameCourseCodeAsPage(courseCode, classItem.id))? 
+                    "6px solid #5A7BB5" :
+                    "6px solid #8A4DBF"
+                    
+                  )
+                  : "6px solid #059669"
+                  ,
                   gridColumn: `${dayIndex + 2} / ${dayIndex + 3}`,
                   gridRow: `2 / span ${totalRows}`,
                   top: `${classItem.topOffset}px`,
@@ -320,17 +395,21 @@ export default function TimetableGeneric({ classes, onClassSelect, isTimetablePa
                   }}
                 >
                   {classItem.courseCode && (
-                    <div className='font-bold'>{classItem.courseCode}</div>
+                    <>
+                      {!isTimetableSectionSameCourseCodeAsPage(courseCode, classItem.id) && (
+                        <div className='font-bold'>{classItem.courseCode}</div>
+                      )}
+                    </>
                     // <Link href={"courses/" + classItem.courseCode} className='font-bold hover:underline hover:cursor-pointer hover:opacity-70'>
                     //   {classItem.courseCode}
                     // </Link>
                   )}
                   <div>
-                    <div className='font-bold'>
-                      {classItem.section} 
+                    <p className='font-bold'>{classItem.section}</p>
+                    <div>
                       <p className='font-semibold text-xs leading-none'>{classItem.instructor}</p>
+                      <div className='text-xs lg:text-sm leading-none '>{classItem.venue}</div>
                     </div>
-                    <div className='text-xs lg:text-sm leading-none '>{classItem.venue}</div>
                   </div>
                 </div>
               </div>
@@ -348,8 +427,14 @@ export default function TimetableGeneric({ classes, onClassSelect, isTimetablePa
           )}
           <Badge variant="outline" className="flex items-center">
             <div style={{backgroundColor: selectedClassColour}} className={`w-4 h-4 rounded-sm mr-2`}></div>
-            Selected
+            Added
           </Badge>
+          {(viewTimetableSections) && (
+            <Badge variant="outline" className="flex items-center">
+              <div style={{backgroundColor: otherClassInTimetableColour}} className={`w-4 h-4 rounded-sm mr-2`}></div>
+              Other sections in Timetable
+            </Badge>
+          )}
         </div>
       </div>
     </div>

@@ -1,6 +1,3 @@
-// src/components/Combobox.tsx
-
-"use client";
 import React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -76,7 +73,7 @@ export function FormCombobox({
                 {options?.map((option) => (
                   <CommandItem
                     key={option.value}
-                    value={option.value}
+                    value={option.label} // Updated line
                     onSelect={() => {
                       onSelect(option.value);
                       setOpen(false);
