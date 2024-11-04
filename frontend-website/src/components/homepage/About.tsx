@@ -62,13 +62,13 @@ const About = () => {
   const [fadeIn, setFadeIn] = useState(true); // State for fade-in effect
 
   const benefitsNavLinkStyle: React.CSSProperties = {
-    fontSize: "15px",
+    fontSize: "14px",
     textTransform: "uppercase",
     color: "#828282",
     textDecoration: "none",
     position: "relative",
     zIndex: "1",
-    margin: "0 10px",
+    margin: "0 15px",
     paddingBottom: "1px",
     transition: "color 0.3s ease, transform 0.3s ease", // Added transition for hover effect
   };
@@ -88,11 +88,11 @@ const About = () => {
   };
 
   const handleNext = () => {
-    handleNavClick((activeIndex + 1) % 5);
+    handleNavClick((activeIndex + 1) % 6);
   };
 
   const handlePrevious = () => {
-    handleNavClick((activeIndex + 4) % 5);
+    handleNavClick((activeIndex -1 + 6) % 6);
   };
 
   const autoplay = Autoplay({ delay: 3000 }); // Set your desired autoplay delay
@@ -113,24 +113,33 @@ const About = () => {
       {/* Benefits Section */}
       <div>
         {/* <p style={sectionSubTextStyle}>Why SMU BidWise?</p> */}
-        <h2 style={sectionHeadTextStyle} className="py-2">Our Best Features</h2>
-        <div className="text-gray-500 text-xl xl:w-[50%] m-auto pb-4">Thousands of SMU students leverage SMU BidWise to view the latest course information, seat availability, plan their timetables and view bid price trends</div>
+        <h2 style={sectionHeadTextStyle} className="py-2">
+          Our Best Features
+        </h2>
+        <div className="text-gray-500 text-xl xl:w-[50%] m-auto pb-4">
+          Thousands of SMU students leverage SMU BidWise to view the latest
+          course information, seat availability, plan their timetables and view
+          bid price trends
+        </div>
         {/* Navigation for carousel */}
         <Card>
           <nav
-            className="hidden md:flex w-full h-[60px] min-[1190px]:h-[60px] justify-between"
+            className="hidden md:flex w-full h-[80px] min-[1190px]:h-[80px]"
             style={{
               borderRadius: "8px",
               alignItems: "center",
               // boxShadow: "0px 2px 3px 1px rgba(0,0,0,.5)",
-              padding: "20px",
+              paddingLeft: "auto",
+              paddingRight: "auto",
+              justifyContent: "space-between",
             }}
           >
             {[
               "Timetable",
               "Courses",
-              "Bid Price Analytics",
+              "Bidding Analytics",
               "Senior Roadmaps",
+              "Progress Tracker",
               "Community Threads",
             ].map((label, index) => (
               <button
@@ -162,11 +171,11 @@ const About = () => {
             style={{
               display: "flex",
               flexDirection: "column",
-              border: `2px solid ${theme === "dark" ? "white" : "black"}`,
               borderRadius: "1rem",
               padding: "1rem",
               alignItems: "center",
-              backgroundColor: theme === "dark" ? "#ddd8d5" : "#f9f9f9",
+              border: theme === "light" ? "2px solid black" : "2px solid transparent",
+              backgroundColor: theme === "dark" ? "#E8E8E8" : "#f9f9f9",
               height: "auto",
               minHeight: "300px", // Set your minimum height here
               maxHeight: "900px", // Set your maximum height here
@@ -264,7 +273,8 @@ const About = () => {
                         <CardContent className="card-content">
                           <p className={theme}>
                             {/* Pass the theme for paragraph color */}
-                            Access your schedule anytime, anywhere, with cloud saving
+                            Access your schedule anytime, anywhere, with cloud
+                            saving
                           </p>
                           <img src="/images/cloud.gif" alt="Sync to Cloud" />
                         </CardContent>
@@ -291,7 +301,8 @@ const About = () => {
                         <CardContent className="card-content">
                           <p className={theme}>
                             {/* Pass the theme for paragraph color */}
-                            Instantly see a clear summary of all your added modules
+                            Instantly see a clear summary of all your added
+                            modules
                           </p>
                           <img src="/images/look.gif" alt="Module Overview" />
                         </CardContent>
@@ -324,7 +335,8 @@ const About = () => {
                                   color: "black", // Paragraph text color
                                 }}
                               >
-                                Access your schedule anytime, anywhere, with cloud saving
+                                Access your schedule anytime, anywhere, with
+                                cloud saving
                               </p>
                               <img
                                 src="/images/cloud.gif"
@@ -386,7 +398,8 @@ const About = () => {
                                   color: "black", // Paragraph text color
                                 }}
                               >
-                                Instantly see a clear summary of all your added modules
+                                Instantly see a clear summary of all your added
+                                modules
                               </p>
                               <img
                                 src="/images/look.gif"
@@ -501,8 +514,8 @@ const About = () => {
                         <CardContent className="card-content">
                           <p className={theme}>
                             {/* Pass the theme for paragraph color */}
-                            View practicality, workload and interest ratings
-                            for each course
+                            View practicality, workload and interest ratings for
+                            each course
                           </p>
                           <img src="/images/review.gif" alt="Ratings" />
                         </CardContent>
@@ -515,8 +528,8 @@ const About = () => {
                         <CardContent className="card-content">
                           <p className={theme}>
                             {/* Pass the theme for paragraph color */}
-                            Access course descriptions, the latest seating availability and enrollment
-                            requirements in one view
+                            Access course descriptions, the latest seating
+                            availability and enrollment requirements in one view
                           </p>
                           <img src="/images/info.gif" alt="CourseInfo" />
                         </CardContent>
@@ -608,8 +621,9 @@ const About = () => {
                                   color: "black", // Paragraph text color
                                 }}
                               >
-                                Access course descriptions, the latest seating availability and enrollment
-                                requirements in one view
+                                Access course descriptions, the latest seating
+                                availability and enrollment requirements in one
+                                view
                               </p>
                               <img src="/images/info.gif" alt="Courses" />
                             </CardContent>
@@ -696,7 +710,7 @@ const About = () => {
                             determine your optimal bid amounts
                           </p>
                           <img
-                            src="/images/analytics.png"
+                            src="/images/analytics.gif"
                             alt="Historical Bidding Trends"
                           />
                         </CardContent>
@@ -712,7 +726,7 @@ const About = () => {
                             Avoid the pitfalls of overbidding and underbidding
                             with our smart insights into bidding trends
                           </p>
-                          <img src="/images/happiness.png" alt="Filter" />
+                          <img src="/images/quick-idea.gif" alt="Filter" />
                         </CardContent>
                       </Card>
                     </div>
@@ -747,7 +761,7 @@ const About = () => {
                                 determine your optimal bid amounts
                               </p>
                               <img
-                                src="/images/analytics.png"
+                                src="/images/analytics.gif"
                                 alt="Historical Bidding trends"
                               />
                             </CardContent>
@@ -781,7 +795,7 @@ const About = () => {
                                 bidding trends
                               </p>
                               <img
-                                src="/images/happiness.png"
+                                src="/images/quick-idea.gif"
                                 alt="Bid Smarter"
                               />
                             </CardContent>
@@ -934,6 +948,173 @@ const About = () => {
                       color: carouselHeaderColor,
                     }}
                   >
+                    Graduation Progress Tracker
+                  </p>
+                  <span
+                    style={{
+                      backgroundColor: "#4158D0",
+                      backgroundImage:
+                        "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      fontSize: windowWidth >= 768 ? "30px" : "20px",
+                      fontWeight: "600",
+                      margin: "0 10px",
+                    }}
+                  >
+                    Strategize.{" "}
+                  </span>
+                  <span
+                    style={{
+                      backgroundColor: "#4158D0",
+                      backgroundImage:
+                        "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      fontSize: windowWidth >= 768 ? "30px" : "20px",
+                      fontWeight: "600",
+                      margin: "0 10px",
+                    }}
+                  >
+                    Easy Recollection.{" "}
+                  </span>
+
+                  {windowWidth >= 768 ? (
+                    // Display cards in a row for larger screens
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "stretch", // Ensures cards stretch to equal height
+                      }}
+                    >
+                      <Card className={`card ${theme}`}>
+                        <CardHeader className={`card-header ${theme}`}>
+                          <CardTitle>Module Tracker</CardTitle>
+                        </CardHeader>
+                        <CardContent className="card-content">
+                          <p className={theme}>
+                            {/* Pass the theme for paragraph color */}
+                            Record the modules you have already completed and
+                            those you plan to take.
+                          </p>
+                          <img
+                            src="/images/tasks.gif"
+                            alt="Unlock Your Path to Sucess"
+                          />
+                        </CardContent>
+                      </Card>
+
+                      <Card className={`card ${theme}`}>
+                        <CardHeader className={`card-header ${theme}`}>
+                          <CardTitle>Visual Progress Overview</CardTitle>
+                        </CardHeader>
+                        <CardContent className="card-content">
+                          <p className={theme}>
+                            {/* Pass the theme for paragraph color */}
+                            By incorporating the roadmap view, it emphasizes the
+                            capacity to visually track progress clearly
+                            alongside the roadmap
+                          </p>
+                          <img
+                            src="/images/way.gif"
+                            alt="Unlock Your Path to Sucess"
+                          />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ) : (
+                    // Display cards in a carousel for small screens
+                    <Carousel plugins={[autoplay]} style={{ width: "100%" }}>
+                      <CarouselContent>
+                        {/* Ratings Card in Carousel */}
+                        <CarouselItem
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <Card
+                            className="card"
+                            style={{ backgroundColor: "#f0f0f0" }}
+                          >
+                            <CardHeader>
+                              <CardTitle
+                                style={{ fontSize: "16px", color: "black" }}
+                              >
+                                Module Tracker
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="card-content">
+                              <p
+                                style={{
+                                  marginBottom: "auto",
+                                  fontSize: "12px",
+                                  color: "black",
+                                }}
+                              >
+                                Record the modules you have already completed
+                                and those you plan to take.
+                              </p>
+                              <img
+                                src="/images/tasks.gif"
+                                alt="Unlock Your Path to Sucess"
+                              />
+                            </CardContent>
+                          </Card>
+                        </CarouselItem>
+
+                        <CarouselItem
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <Card
+                            className="card"
+                            style={{ backgroundColor: "#f0f0f0" }}
+                          >
+                            <CardHeader>
+                              <CardTitle
+                                style={{ fontSize: "16px", color: "black" }}
+                              >
+                                Visual Progress Overview
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="card-content">
+                              <p
+                                style={{
+                                  marginBottom: "auto",
+                                  fontSize: "12px",
+                                  color: "black",
+                                }}
+                              >
+                                By incorporating the roadmap view, it emphasizes
+                                the capacity to visually track progress clearly
+                                alongside the roadmap
+                              </p>
+                              <img
+                                src="/images/way.gif"
+                                alt="Unlock Your Path to Sucess"
+                              />
+                            </CardContent>
+                          </Card>
+                        </CarouselItem>
+                      </CarouselContent>
+                    </Carousel>
+                  )}
+
+                  <Button style={{ marginTop: "15px" }}>
+                    <Link href="/graduation-progress-tracker">
+                      Track Your Progress
+                    </Link>
+                  </Button>
+                </>
+              )}
+
+              {activeIndex === 5 && (
+                <>
+                  <p
+                    style={{
+                      fontSize: windowWidth >= 768 ? "40px" : "20px",
+                      fontWeight: "600",
+                      color: carouselHeaderColor,
+                    }}
+                  >
                     Community Threads
                   </p>
                   <div className="header-text">
@@ -995,7 +1176,8 @@ const About = () => {
                         <CardContent className="card-content">
                           <p className={theme}>
                             {/* Pass the theme for paragraph color */}
-                            Gain valuable advice and tips from peers, helping you make informed decisions
+                            Gain valuable advice and tips from peers, helping
+                            you make informed decisions
                           </p>
                           <img src="/images/share.gif" alt="Share Insights" />
                         </CardContent>
@@ -1008,7 +1190,8 @@ const About = () => {
                         <CardContent className="card-content">
                           <p className={theme}>
                             {/* Pass the theme for paragraph color */}
-                            Discuss challenges & exchange resources, boosting your success
+                            Discuss challenges & exchange resources, boosting
+                            your success
                           </p>
                           <img src="/images/teamwork.gif" alt="Collaborate" />
                         </CardContent>
@@ -1041,7 +1224,8 @@ const About = () => {
                                   color: "black", // Paragraph text color
                                 }}
                               >
-                                Gain valuable advice and tips from peers, helping you make informed decisions
+                                Gain valuable advice and tips from peers,
+                                helping you make informed decisions
                               </p>
                               <img
                                 src="/images/share.gif"
@@ -1073,9 +1257,13 @@ const About = () => {
                                   color: "black", // Paragraph text color
                                 }}
                               >
-                                Discuss challenges & exchange resources, boosting your success
+                                Discuss challenges & exchange resources,
+                                boosting your success
                               </p>
-                              <img src="/images/teamwork.gif" alt="Collaborate" />
+                              <img
+                                src="/images/teamwork.gif"
+                                alt="Collaborate"
+                              />
                             </CardContent>
                           </Card>
                         </CarouselItem>
@@ -1118,7 +1306,7 @@ const About = () => {
                 </button>
                 <button
                   onClick={handleNext}
-                  disabled={activeIndex === 4}
+                  disabled={activeIndex === 5}
                   style={{
                     padding: "10px 15px",
                     backgroundColor: theme === "dark" ? "#4B5563" : "#E5E7EB",
@@ -1126,7 +1314,7 @@ const About = () => {
                     border: "none",
                     borderRadius: "5px",
                     cursor: "pointer",
-                    opacity: activeIndex === 4 ? 0.5 : 1,
+                    opacity: activeIndex === 5 ? 0.5 : 1,
                     transition: "opacity 0.3s",
                   }}
                 >

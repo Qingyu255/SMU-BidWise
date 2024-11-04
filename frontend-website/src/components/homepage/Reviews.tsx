@@ -78,7 +78,7 @@ const Reviews = () => {
   const sectionHeadTextStyle: React.CSSProperties = {
     fontWeight: "bold",
     fontSize:
-      windowWidth >= 640 ? "60px" : windowWidth >= 480 ? "50px" : "30px",
+    windowWidth >= 640 ? "60px" : windowWidth >= 480 ? "50px" : "30px",
   };
 
   const sectionSubTextStyle: React.CSSProperties = {
@@ -92,7 +92,7 @@ const Reviews = () => {
     <div className="testimonial-container">
       <div className="title">
         {/* <p style={sectionSubTextStyle}>Reviews</p> */}
-        <h2 style={sectionHeadTextStyle} className='dark:text-white'>What Our Users Say</h2>
+        <h1 style={sectionHeadTextStyle} className='dark:text-white'>What Our Users Say</h1>
       </div>
 
       <div className="slider-container">
