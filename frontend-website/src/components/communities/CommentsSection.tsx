@@ -89,13 +89,16 @@ const CommentSection: FC<CommentSectionProps> = ({ postId }) => {
     if (error) return <p>Error loading comments: {error}</p>;
 
     return (
-        <div className='flex flex-col gap-y-4 mt-4 px-4'>
-            <div className='flex flex-col gap-y-6'>
-                <hr className='w-full h-px my-4' />
-
+        <div className="flex flex-col gap-y-4 mt-4 px-4">
+            {/* Create Comment Section */}
+            <CreateComment postId={postId} />
+            <hr className="w-full h-px my-4" />
+    
+            {/* Comments Section */}
+            <div className="flex flex-col gap-y-6">
                 {comments.length > 0 ? (
                     comments.map((comment) => (
-                        <div key={comment.id} className='mb-2'>
+                        <div key={comment.id} className="mb-2">
                             <PostComment
                                 comment={comment}
                                 votesAmt={comment.votes.length}
@@ -107,15 +110,13 @@ const CommentSection: FC<CommentSectionProps> = ({ postId }) => {
                 ) : (
                     <p className="text-center text-gray-500 italic mt-4">
                         *cricket noises* <br />
-                        No comments yet... 
+                        No comments yet...
                     </p>
                 )}
             </div>
-
-            <hr className='w-full h-px my-6' />
-            <CreateComment postId={postId} />
         </div>
     );
+    
 };
 
 export default CommentSection;
