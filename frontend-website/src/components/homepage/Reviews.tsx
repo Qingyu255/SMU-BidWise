@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { ChevronDown, ChevronUp, Plus } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
+import { pagination } from '@nextui-org/react';
 
 // Define the Review type based on your 'reviews' table structure
 type Review = {
@@ -99,7 +100,7 @@ const Reviews = () => {
         {loading ? (
           <p>Loading reviews...</p>
         ) : (
-          <Splide options={{ perPage: 1 }}>
+          <Splide options={{ perPage: 1, type: 'slide', pagination: false}}>
             {reviews.length > 0 ? (
               [...reviews].reverse().map((review) => (  // Reverses the reviews array
                 <SplideSlide key={review.id}>

@@ -13,13 +13,14 @@ img {
 
 /* Testimonial Container */
 .testimonial-container {
-    max-width: 800px;
+    max-width: 900px;
     margin-inline: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding-bottom: 30px;
 }
+
 
 .title {
     text-align: center;
@@ -68,9 +69,10 @@ img {
 display: flex;
 align-items: center;
 background-color: #fff;
-padding: 3rem 1.875rem;
+padding: 3rem 4rem;
 border-radius: 1rem;
 gap: 1rem;
+margin: 30px;
 }
 
 .slider-container .content .text {
