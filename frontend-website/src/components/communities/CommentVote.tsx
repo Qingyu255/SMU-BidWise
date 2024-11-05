@@ -109,7 +109,7 @@ const CommentVote = ({ commentId, initialVotes = [] }: CommentVoteProps) => {
                 aria-label="Downvote"
             >
                 <ArrowBigDown
-                    className={cn('h-5 w-5 hover:bg-gray-100 dark:hover:bg-gray-400 rounded-md', {
+                    className={cn('h-5 w-5 text-zinc-700 hover:bg-gray-100 dark:hover:bg-gray-400 rounded-md', {
                         'text-red-500 fill-red-500': userVote === -1,
                     })}
                 />
