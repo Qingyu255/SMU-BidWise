@@ -219,9 +219,9 @@ export default function Page({ params }: { params: { course_code: string }}) {
   const generateSeatAvailabilityChartData = (sections: Array<any>) => {
     return sortBySection(sections.map(sectionObj => ({
       section: `${sectionObj.section} - ${sectionObj.instructor}`,
-      availableSeats: sectionObj.availability.available_seats,
-      currentEnrolled: sectionObj.availability.current_enrolled,
-      reserved: sectionObj.availability.reserved_seats
+      availableSeats: sectionObj.availability ? sectionObj.availability.available_seats : 0,
+      currentEnrolled: sectionObj.availability ? sectionObj.availability.current_enrolled : 0,
+      reserved: sectionObj.availability ? sectionObj.availability.reserved_seats : 0
     })))
   }
   
