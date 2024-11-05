@@ -2,115 +2,102 @@ import React from "react"
 import createClient from "@/utils/supabase/server"
 import SubredditStateWrapper from "@/components/communities/SubredditStateWrapper";
 import { format } from 'date-fns'
-import SubscriptionCount from "@/components/communities/SubscriptionCount"; // New import
-// import { buttonVariants } from "@/components/ui/button";
+import SubscriptionCount from "@/components/communities/SubscriptionCount";
 import CreatePostButton from "@/components/communities/CreatePostButton";
-import Link from "next/link"; // Import Link from next/link
-import { ArrowLeft } from "lucide-react"; // Import an arrow icon
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { unslugify } from "@/utils/slugify";
 
 const Layout = async (
-    { children,
-        params: { slug }, }:
-        {
-            children: React.ReactNode
-            params: { slug: String }
-        }) => {
+    { children, params: { slug } }:
+    {
+        children: React.ReactNode,
+        params: { slug: string }
+    }
+) => {
+    const subredditName = unslugify(slug);
+    const supabase = createClient();
 
-    const subredditName = slug
-    const supabase = createClient(); // Initialize Supabase client
-    // Get subreddit data
+    // Query the database with the original, unslugified name
     const { data: subredditData, error: subredditError } = await supabase
         .from("subreddit")
-        .select("id, name, creator_clerk, created_at") // Fetch both id and name
-        .eq('name', subredditName) // Query by name instead of ID
-        .single(); // Expect a single result
+        .select("id, name, creator_clerk, created_at")
+        .eq('name', subredditName) // Using unslugified name for database lookup
+        .single();
 
-    // Check for errors when fetching subreddit details
     if (subredditError) {
-        throw new Error(subredditError.message); // Handle error
+        throw new Error(subredditError.message);
     }
 
     const subredditId = subredditData.id;
-    const subredditCreatedDateTime = subredditData.created_at
+    const subredditCreatedDateTime = subredditData.created_at;
     const creatorId = subredditData.creator_clerk;
 
-    // get creator name
+    // Fetch creator name
     const { data: creatorData, error: cError } = await supabase
         .from("user")
-        .select("name") // Fetch both id and name
-        .eq('clerk_user_id', creatorId) // Query by name instead of ID
-        .single(); // Expect a single result
+        .select("name")
+        .eq('clerk_user_id', creatorId)
+        .single();
 
-    // Check for errors when fetching subreddit details
     if (cError) {
-        throw new Error(cError.message); // Handle error
+        throw new Error(cError.message);
     }
-    //created by: 
+
     const creatorName = creatorData.name;
 
+    return (
+        <div className="sm:container max-w-7x1 mx-auto h-full pt-12">
+            <div>
+                <div className='flex items-center mb-4'>
+                    <Link href="/communities" className="flex items-center text-blue-600 hover:underline">
+                        <ArrowLeft className="mr-2 w-5 h-5" />
+                        <span>Return to Main Feed</span>
+                    </Link>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 py-6'>
+                    <ul className='flex flex-col col-span-2 space-y-6'>{children}</ul>
 
+                    {/* Info Sidebar */}
+                    <div className='hidden md:block overflow-hidden h-fit rounded-lg border border-gray-200 order-first md:order-last'>
+                        <div className='px-6 py-4'>
+                            <p className='font-semibold py-3'>About r/{subredditName}</p>
+                        </div>
 
-    // // Function to handle the button click and redirect
-    // const handleCreatePost = async () => {
-    //     redirect(`/r/${slug}/submit`);
-    // };
+                        <dl className="divide-y divide-gray-100 px-6 py-4 text-sm leading-6 bg-white">
+                            <div className='flex justify-between gap-x-4 py-3'>
+                                <dt className='text-gray-500'>Created</dt>
+                                <dd className='text-gray-700'>
+                                    <time dateTime={subredditCreatedDateTime}>
+                                        {format(new Date(subredditCreatedDateTime), 'MMMM d, yyyy')}
+                                    </time>
+                                </dd>
+                            </div>
 
+                            <div className='flex justify-between gap-x-4 py-3'>
+                                <dt className='text-gray-500'>Members</dt>
+                                <dd className='flex items-start gap-x-2'>
+                                    <SubscriptionCount subredditId={subredditId} />
+                                </dd>
+                            </div>
 
-    return (<div className="sm:container max-w-7x1 mx-auto h-full pt-12">
-        <div>
+                            <div className='flex justify-between gap-x-4 py-3'>
+                                <dt className='text-gray-500'>Created by: {creatorName}</dt>
+                            </div>
 
-            <div className='flex items-center mb-4'>
-                <Link href="/communities" className="flex items-center text-blue-600 hover:underline">
-                    <ArrowLeft className="mr-2 w-5 h-5" />
-                    <span>Return to Main Feed</span>
-                </Link>
-            </div>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 py-6'>
-                <ul className='flex flex-col col-span-2 space-y-6'>{children}</ul>
+                            <SubredditStateWrapper
+                                subredditId={subredditId}
+                                subredditName={subredditName}
+                                slug={slug}
+                            />
 
-                {/* info side bar */}
-                <div className='hidden md:block overflow-hidden h-fit rounded-lg border border-gray-200 order-first md:order-last'>
-                    <div className='px-6 py-4'>
-                        <p className='font-semibold py-3'>About r/{subredditName}</p>
+                            <CreatePostButton slug={subredditName} />
+                        </dl>
                     </div>
-
-                    <dl className="divide-y divide-gray-100 px-6 py-4 text-sm leading-6 bg-white">
-                        <div className='flex justify-between gap-x-4 py-3'>
-                            <dt className='text-gray-500'>Created</dt>
-                            <dd className='text-gray-700'>
-                                <time dateTime={subredditCreatedDateTime}>
-                                    {format(subredditCreatedDateTime, 'MMMM d, yyyy')}
-                                </time>
-                            </dd>
-                        </div>
-
-                        <div className='flex justify-between gap-x-4 py-3'>
-                            <dt className='text-gray-500'>Members</dt>
-                            <dd className='flex items-start gap-x-2'>
-                                <div className='text-gray-900'>
-                                    {/* Use SubscriptionCount component for live updates */}
-                                    <SubscriptionCount subredditId={subredditId} /></div>
-                            </dd>
-                        </div>
-                        <div className='flex justify-between gap-x-4 py-3'>
-                            <dt className='text-gray-500'>Created by: {creatorName}</dt>
-                        </div>
-
-                        <SubredditStateWrapper
-                            subredditId={subredditId}
-                            subredditName={subredditName.toString()}
-                            slug={slug.toString()}
-                        />
-
-                        {/* Button for creating a post */}
-                        {/* Use the CreatePostButton component */}
-                        <CreatePostButton slug={subredditName as string} />
-                    </dl>
                 </div>
             </div>
         </div>
-    </div >
-    )
-}
+    );
+};
 
-export default Layout
+export default Layout;

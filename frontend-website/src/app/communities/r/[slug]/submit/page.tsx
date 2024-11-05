@@ -6,6 +6,7 @@ import createClient from '@/utils/supabase/client';
 import { useUser } from '@clerk/clerk-react';
 import { notFound } from "next/navigation";
 import Editor from "@/components/Editor";
+import { unslugify } from "@/utils/slugify";
 
 interface PageProps {
     params: {
@@ -14,6 +15,7 @@ interface PageProps {
 }
 
 const Page: React.FC<PageProps> = ({ params }) => {
+    const subredditName = unslugify(params.slug)
     const { user } = useUser();
     const [subredditId, setSubredditId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
@@ -24,7 +26,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
             const { data: subredditData, error: srError } = await supabase
                 .from("subreddit")
                 .select("id")
-                .eq('name', params.slug)
+                .eq('name', subredditName)
                 .single();
 
             if (srError || !subredditData) {
@@ -36,7 +38,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
         };
 
         fetchData();
-    }, [params.slug]);
+    }, [subredditName]);
 
     if (loading) return <p>Loading...</p>;
 
@@ -49,13 +51,13 @@ const Page: React.FC<PageProps> = ({ params }) => {
                         Create Post
                     </h3>
                     <p className='ml-2 mt-1 truncate text-sm text-gray-500'>
-                        in r/{params.slug}
+                        in r/{subredditName}
                     </p>
                 </div>
             </div>
-
+        
             {/* Editor component (commented out if needed) */}
-            <Editor subredditId={subredditId as string} subredditName={params.slug} />
+            <Editor subredditId={subredditId as string} subredditName={subredditName} />
 
 
             <div className='w-full flex justify-end'>

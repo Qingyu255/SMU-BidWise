@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { INFINITE_SCROLL_PAGINATION_RESULTS } from '@/config';
 import MiniCreatePost from '@/components/communities/MiniCreatePost';
 import PostFeed from '@/components/communities/PostFeed';
+import { unslugify } from '@/utils/slugify';
 
 interface pageProps {
   params: {
@@ -13,7 +14,7 @@ interface pageProps {
 }
 
 const ClientSubredditPage = ({ params }: pageProps) => {
-  const subredditName = params.slug;
+  const subredditName = unslugify(params.slug);
   const { user } = useUser(); // Extract user data and loading states
   const supabase = createClient(); // Initialize Supabase client
   const [subredditId, setSubredditId] = useState<string>(''); // State to hold subreddit ID
