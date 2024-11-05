@@ -9,7 +9,7 @@ import { ExtendedPost } from "../../../../../../../types";
 import UpDownVote from "@/components/communities/UpDownVote";
 import CommentsSection from "@/components/communities/CommentsSection";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Separator } from "@radix-ui/react-separator";
+import { Spinner } from "@nextui-org/react";
 
 // Define your data interfaces with strict typing
 interface PostData {
@@ -147,7 +147,7 @@ const Page: FC<PageProps> = ({ params }) => {
         loadData();
     }, [postId]);
 
-    if (loading) return <div>Loading post...</div>;
+    if (loading) return <div><Spinner/></div>;
     if (error) return <div>Error: {error}</div>;
     if (!postData) return <div>No post found</div>;
 
