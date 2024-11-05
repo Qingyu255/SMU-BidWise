@@ -99,7 +99,7 @@ const Page = () => {
             // Insert into subscription
             const { error: subscriptionError } = await supabase
                 .from("subscriptions")
-                .insert([{ subreddit_id: subredditId, clerk_user_id: user?.id}]);
+                .insert([{ subreddit_id: subredditId, clerk_user_id: user?.id }]);
 
             if (subscriptionError) {
                 console.error("Subscription Error:", subscriptionError); // Log the entire error object
