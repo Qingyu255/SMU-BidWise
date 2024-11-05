@@ -15,9 +15,10 @@ interface UserAvatarProps extends AvatarProps {
         {image ? (
           <div className='relative aspect-square h-full w-full'>
             <Image
-              fill
               src={image} // Profile image URL
               alt='Profile picture'
+              fill // New Next.js prop for filling the container
+              objectFit="cover" // Ensures the image scales correctly
               referrerPolicy='no-referrer'
             />
           </div>
