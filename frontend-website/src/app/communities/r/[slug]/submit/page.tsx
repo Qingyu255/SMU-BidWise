@@ -42,6 +42,13 @@ const Page: React.FC<PageProps> = ({ params }) => {
 
     if (loading) return <p>Loading...</p>;
 
+    // Handle cancel action
+    const handleCancel = () => {
+        // Logic to handle cancellation (e.g., navigating away, clearing form, etc.)
+        // For example, you could redirect the user back to the subreddit:
+        window.history.back(); // This goes back to the previous page
+    };
+
     return (
         <div className='flex flex-col items-start gap-6'>
             {/* heading */}
@@ -55,12 +62,15 @@ const Page: React.FC<PageProps> = ({ params }) => {
                     </p>
                 </div>
             </div>
-        
+
             {/* Editor component (commented out if needed) */}
             <Editor subredditId={subredditId as string} subredditName={subredditName} />
 
 
-            <div className='w-full flex justify-end'>
+            <div className='w-full flex justify-end gap-4'>
+                <Button type='button' className='w-full bg-gray-200 text-gray-700 hover:bg-gray-300' onClick={handleCancel}>
+                    Cancel
+                </Button>
                 <Button type='submit' className='w-full' form='subreddit-post-form'>
                     Post
                 </Button>
