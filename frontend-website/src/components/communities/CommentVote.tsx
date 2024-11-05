@@ -87,13 +87,13 @@ const CommentVote = ({ commentId, initialVotes = [] }: CommentVoteProps) => {
                 onClick={() => handleVote(1)}
                 disabled={!user}
                 className={cn("flex items-center justify-center w-10 h-10 transition-all duration-200 bg-transparent outline-none", {
-                    'cursor-pointer hover:bg-gray-200': user,
+                    'cursor-pointer': user,
                     'cursor-default': !user
                 })}
                 aria-label="Upvote"
             >
                 <ArrowBigUp
-                    className={cn('h-5 w-5 text-zinc-700', {
+                    className={cn('h-5 w-5 text-zinc-700 hover:bg-gray-100 dark:hover:bg-gray-400 rounded-md', {
                         'text-emerald-500 fill-emerald-500': userVote === 1,
                     })}
                 />
@@ -103,13 +103,13 @@ const CommentVote = ({ commentId, initialVotes = [] }: CommentVoteProps) => {
                 onClick={() => handleVote(-1)}
                 disabled={!user}
                 className={cn("flex items-center justify-center w-10 h-10 transition-all duration-200 bg-transparent outline-none", {
-                    'cursor-pointer hover:bg-gray-200': user,
+                    'cursor-pointer': user,
                     'cursor-default': !user
                 })}
                 aria-label="Downvote"
             >
                 <ArrowBigDown
-                    className={cn('h-5 w-5 text-zinc-700', {
+                    className={cn('h-5 w-5 hover:bg-gray-100 dark:hover:bg-gray-400 rounded-md', {
                         'text-red-500 fill-red-500': userVote === -1,
                     })}
                 />

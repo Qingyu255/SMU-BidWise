@@ -33,7 +33,7 @@ const SubscriptionCount = ({ subredditId }: { subredditId: string }) => {
         return () => clearInterval(interval); // Cleanup on unmount
     }, [subredditId]);
 
-    return <div className='text-gray-900'>{subscriptionCount}</div>;
+    return <div>{subscriptionCount}</div>;
 };
 
 export default SubscriptionCount;

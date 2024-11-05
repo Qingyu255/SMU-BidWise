@@ -8,6 +8,8 @@ import Link from 'next/link';
 import { ExtendedPost } from "../../../../../../../types";
 import UpDownVote from "@/components/communities/UpDownVote";
 import CommentsSection from "@/components/communities/CommentsSection";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Separator } from "@radix-ui/react-separator";
 
 // Define your data interfaces with strict typing
 interface PostData {
@@ -150,49 +152,43 @@ const Page: FC<PageProps> = ({ params }) => {
     if (!postData) return <div>No post found</div>;
 
     return (
-        <div className='rounded-md bg-white shadow'>
+        <Card>
             {/* Post Content */}
-            <div className='px-6 py-4'>
+            <CardContent className='px-6 py-4'>
                 <div className='flex justify-between'>
                     <div className='w-0 flex-1'>
                         <div className='max-h-40 mt-1 text-xs text-gray-500'>
                             <Link
-                                className='underline text-zinc-900 text-sm underline-offset-2'
+                                className='underline text-zinc-900 dark:text-gray-300 text-sm underline-offset-2'
                                 href={`/communities/r/${postData.subreddit_name}`}>
                                 r/{postData.subreddit_name}
                             </Link>
                             <span className='px-1'>•</span>
                             <span>Posted by u/{postData.author_name}</span>
                         </div>
-                        <h1 className='text-lg font-semibold py-2 leading-6 text-gray-900'>
+                        <CardTitle className='text-lg font-semibold py-2 leading-6'>
                             {postData.title}
-                        </h1>
+                        </CardTitle>
                         <div className='relative text-sm max-h-40 w-full overflow-clip'>
                             <EditorOutput content={postData.content} />
                         </div>
                     </div>
                     <UpDownVote postId={postData.id} initialVotes={postData.votes} />
                 </div>
-            </div>
-    
-            {/* Divider */}
-            <hr className='border-gray-200' />
+            </CardContent>
     
             {/* Comment Count Section */}
-            <div className='bg-gray-50 z-20 text-sm px-4 py-4 sm:px-6'>
+            <div className='bg-gray-50 dark:bg-zinc-900 z-20 text-sm px-4 py-4 sm:px-6'>
                 <div className='w-fit flex items-center gap-2'>
                     <MessageSquare className='h-4 w-4' /> {postData.comments.length} comments
                 </div>
             </div>
     
-            {/* Divider */}
-            <hr className='border-gray-200' />
-    
             {/* Comments Section */}
             <div className='px-6 py-4'>
                 <CommentsSection postId={postData.id} />
             </div>
-        </div>
+        </Card>
     );
     
 }

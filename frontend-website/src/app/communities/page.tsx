@@ -6,6 +6,7 @@ import createClient from '@/utils/supabase/client';
 import { useUser } from "@clerk/clerk-react";
 import MyFeed from "@/components/communities/MyFeed";
 import SuggestSubreddits from "@/components/communities/SuggestSubreddits";
+import { Card } from "@/components/ui/card";
 
 export default function Page() {
     const { user, isLoaded, isSignedIn } = useUser(); // Extract user data and loading states
@@ -65,8 +66,8 @@ export default function Page() {
                 </div>
 
                 {/* Subreddit Info Section */}
-                <div className='overflow-hidden h-fit rounded-lg border border-gray-200 md:col-span-1'>
-                    <div className='bg-emerald-100 px-6 py-4'>
+                <Card className='overflow-hidden h-fit rounded-lg border md:col-span-1'>
+                    <div className='bg-gray-100 dark:bg-zinc-900 px-6 py-4'>
                         <p className='font-bold'>Welcome to SMUBidwise Community Threads</p>
                     </div>
                     <div className='-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6'>
@@ -90,7 +91,7 @@ export default function Page() {
                     <div className='md:col-span-1'>
                         <SuggestSubreddits />
                     </div>
-                </div>
+                </Card>
 
             </div>
         </>

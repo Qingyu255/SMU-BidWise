@@ -7,6 +7,7 @@ import CreatePostButton from "@/components/communities/CreatePostButton";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { unslugify } from "@/utils/slugify";
+import { Card, CardContent } from "@/components/ui/card";
 
 const Layout = async (
     { children, params: { slug } }:
@@ -49,7 +50,7 @@ const Layout = async (
     return (
         <div className="sm:container max-w-7x1 mx-auto h-full pt-12">
             <div>
-                <div className='flex items-center mb-4'>
+                <div className='flex items-center'>
                     <Link href="/communities" className="flex items-center text-blue-600 hover:underline">
                         <ArrowLeft className="mr-2 w-5 h-5" />
                         <span>Return to Main Feed</span>
@@ -59,15 +60,15 @@ const Layout = async (
                     <ul className='flex flex-col col-span-2 space-y-6'>{children}</ul>
 
                     {/* Info Sidebar */}
-                    <div className='hidden md:block overflow-hidden h-fit rounded-lg border border-gray-200 order-first md:order-last'>
+                    <Card className='hidden md:block overflow-hidden h-fit rounded-lg border order-first md:order-last'>
                         <div className='px-6 py-4'>
                             <p className='font-semibold py-3'>About r/{subredditName}</p>
                         </div>
 
-                        <dl className="divide-y divide-gray-100 px-6 py-4 text-sm leading-6 bg-white">
+                        <CardContent className="divide-y divide-gray-100 px-6 py-4 text-sm leading-6 dark:bg-zinc-900">
                             <div className='flex justify-between gap-x-4 py-3'>
                                 <dt className='text-gray-500'>Created</dt>
-                                <dd className='text-gray-700'>
+                                <dd>
                                     <time dateTime={subredditCreatedDateTime}>
                                         {format(new Date(subredditCreatedDateTime), 'MMMM d, yyyy')}
                                     </time>
@@ -92,8 +93,8 @@ const Layout = async (
                             />
 
                             <CreatePostButton slug={subredditName} />
-                        </dl>
-                    </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </div>

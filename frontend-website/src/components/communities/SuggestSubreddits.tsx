@@ -74,22 +74,24 @@ const SuggestSubreddits: FC = () => {
 
             {/* Display each subreddit as a clickable card */}
             {subreddits.map((subreddit) => (
-                <Link key={subreddit.id} href={`/communities/r/${subreddit.name}`} className="hover:shadow-lg transition-shadow relative mb-4">
-                    <Card className="cursor-pointer">
-                        <CardHeader>
-                            <CardTitle className="text-lg">r/{subreddit.name}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-xs text-zinc-500 mt-2">
-                                Created {new Date(subreddit.created_at).toLocaleDateString()}
-                            </p>
-                            <div className="absolute bottom-4 right-4 flex items-center text-blue-600">
-                                <span>Explore</span>
-                                <ArrowBigRight className="ml-1 w-4 h-4" />
-                            </div>
-                        </CardContent>
-                    </Card>
-                </Link>
+                <div key={subreddit.id} className='my-2'>
+                    <Link href={`/communities/r/${subreddit.name}`} className="hover:shadow-lg transition-shadow relative">
+                        <Card className="cursor-pointer">
+                            <CardHeader>
+                                <CardTitle className="text-lg">r/{subreddit.name}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-xs text-zinc-500 mt-2">
+                                    Created {new Date(subreddit.created_at).toLocaleDateString()}
+                                </p>
+                                <div className="absolute bottom-4 right-4 flex items-center text-blue-600">
+                                    <span>Explore</span>
+                                    <ArrowBigRight className="ml-1 w-4 h-4" />
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </Link>
+                </div>
             ))}
         </div>
     );

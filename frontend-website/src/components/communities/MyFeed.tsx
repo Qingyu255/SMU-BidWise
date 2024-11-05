@@ -274,7 +274,7 @@ const MyFeed: FC = () => {
             {hasMorePosts ? (
               <button
                 onClick={handleLoadMorePosts}
-                className="text-zinc-500 hover:text-zinc-600 transition"
+                className="text-zinc-500 hover:text-zinc-600 transition underline"
               >
                 Load More
               </button>

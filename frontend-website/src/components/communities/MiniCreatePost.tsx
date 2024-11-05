@@ -7,6 +7,7 @@ import { UserAvatar } from '../UserAvatar'
 import { useUser } from '@clerk/clerk-react'
 import { usePathname, useRouter } from 'next/navigation'
 import createClient from '@/utils/supabase/client'
+import { Card } from '../ui/card'
 
 interface MiniCreatePostProps {
     subredditID?: string;
@@ -76,7 +77,7 @@ const MiniCreatePost: FC<MiniCreatePostProps> = ({ subredditID }) => {
     }
   
     return (
-      <li className='overflow-hidden rounded-md bg-white shadow'>
+      <Card className='overflow-hidden rounded-md dark:bg-zinc-900'>
         <div className='h-full px-6 py-4 flex justify-between gap-6'>
           <div className='relative'>
             <UserAvatar
@@ -98,7 +99,7 @@ const MiniCreatePost: FC<MiniCreatePostProps> = ({ subredditID }) => {
             <Link2 className='text-zinc-600' />
           </Button>
         </div>
-      </li>
+      </Card>
     )
   }
   

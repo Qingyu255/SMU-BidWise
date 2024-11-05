@@ -2,7 +2,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 const CreatePostButton = ({ slug }: { slug: string }) => {
     const router = useRouter();
@@ -18,15 +18,13 @@ const CreatePostButton = ({ slug }: { slug: string }) => {
     };
 
     return (
-        <button
+        <Button
             onClick={handleCreatePost}
-            className={buttonVariants({
-                variant: "outline",
-                className: "w-full mb-6",
-            })}
+
+            className="w-full"
         >
             Create Post
-        </button>
+        </Button>
     );
 };
 
