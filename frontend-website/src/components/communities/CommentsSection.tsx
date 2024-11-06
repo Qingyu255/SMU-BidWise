@@ -83,7 +83,7 @@ const CommentSection: FC<CommentSectionProps> = ({ postId }) => {
 
     useEffect(() => {
         fetchComments();
-    
+
         // Set up real-time listener for new comments
         const channel = supabase
             .channel('realtime-comments')
@@ -113,14 +113,26 @@ const CommentSection: FC<CommentSectionProps> = ({ postId }) => {
                                     votes: [],
                                     replies: [],
                                 };
-    
-                                setComments((prevComments) => [extendedComment, ...prevComments]);
+
+                                setComments((prevComments) => {
+                                    if (newComment.reply_to_id) {
+                                        // If it's a reply, find the parent comment and add it to its replies
+                                        return prevComments.map(comment =>
+                                            comment.id === newComment.reply_to_id
+                                                ? { ...comment, replies: [extendedComment, ...comment.replies] }
+                                                : comment
+                                        );
+                                    } else {
+                                        // If it's a top-level comment, add it to the comments array
+                                        return [extendedComment, ...prevComments];
+                                    }
+                                })
                             }
                         });
                 }
             })
             .subscribe();
-    
+
         return () => {
             supabase.removeChannel(channel);
         };
@@ -134,7 +146,7 @@ const CommentSection: FC<CommentSectionProps> = ({ postId }) => {
             {/* Create Comment Section */}
             <CreateComment postId={postId} />
             <hr className="w-full h-px my-4" />
-    
+
             {/* Comments Section */}
             <div className="flex flex-col gap-y-6">
                 {comments.length > 0 ? (
@@ -157,7 +169,7 @@ const CommentSection: FC<CommentSectionProps> = ({ postId }) => {
             </div>
         </div>
     );
-    
+
 };
 
 export default CommentSection;
