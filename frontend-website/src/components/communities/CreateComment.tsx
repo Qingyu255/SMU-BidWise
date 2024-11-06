@@ -71,7 +71,6 @@ const handlePostComment = async () => {
 
     console.log('Comment posted successfully:', data);
     setInput('');
-    router.refresh(); 
 
   } catch (err) {
     console.error('Error posting comment:', err);

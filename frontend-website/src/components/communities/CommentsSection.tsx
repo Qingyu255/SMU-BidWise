@@ -83,6 +83,47 @@ const CommentSection: FC<CommentSectionProps> = ({ postId }) => {
 
     useEffect(() => {
         fetchComments();
+    
+        // Set up real-time listener for new comments
+        const channel = supabase
+            .channel('realtime-comments')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'comment' }, (payload) => {
+                const newComment = payload.new;
+                if (newComment.post_id === postId) {
+                    // Fetch author details
+                    supabase
+                        .from('user')
+                        .select('clerk_user_id, username, name, image')
+                        .eq('clerk_user_id', newComment.author_clerk)
+                        .single()
+                        .then(({ data: author }) => {
+                            if (author) {
+                                // Map clerk_user_id to id
+                                const extendedComment: ExtendedComment = {
+                                    id: newComment.id,
+                                    text: newComment.text,
+                                    createdAt: newComment.created_at,
+                                    author: {
+                                        id: author.clerk_user_id as string,  // Rename clerk_user_id to id
+                                        name: author.name as string,
+                                        image: author.image as string,
+                                        username: author.username as string,
+                                    },
+                                    replyToId: newComment.reply_to_id,
+                                    votes: [],
+                                    replies: [],
+                                };
+    
+                                setComments((prevComments) => [extendedComment, ...prevComments]);
+                            }
+                        });
+                }
+            })
+            .subscribe();
+    
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, [postId]);
 
     if (loading) return <p>Loading comments...</p>;

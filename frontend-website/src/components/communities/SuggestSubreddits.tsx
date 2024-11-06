@@ -67,11 +67,11 @@ const SuggestSubreddits: FC = () => {
 
 
     return (
-        <div className="space-y-6 p-4">
+        <div className="space-y-6 p-5 md:p-7 lg:p-9">
             <div className="text-center mb-4">
                 <h2 className="text-xl font-semibold mb-2">Users like you also subscribe to:</h2>
             </div>
-
+    
             {/* Display each subreddit as a clickable card */}
             {subreddits.map((subreddit) => (
                 <div key={subreddit.id} className='my-2'>
@@ -80,7 +80,7 @@ const SuggestSubreddits: FC = () => {
                             <CardHeader>
                                 <CardTitle className="text-lg">r/{subreddit.name}</CardTitle>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className="pb-8">
                                 <p className="text-xs text-zinc-500 mt-2">
                                     Created {new Date(subreddit.created_at).toLocaleDateString()}
                                 </p>
