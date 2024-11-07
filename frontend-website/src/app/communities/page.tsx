@@ -7,6 +7,7 @@ import { useUser } from "@clerk/clerk-react";
 import MyFeed from "@/components/communities/MyFeed";
 import SuggestSubreddits from "@/components/communities/SuggestSubreddits";
 import { Card } from "@/components/ui/card";
+import SearchBar from "@/components/communities/SearchBar";
 
 export default function Page() {
     const { user, isLoaded, isSignedIn } = useUser(); // Extract user data and loading states
@@ -62,6 +63,9 @@ export default function Page() {
             {/* Your Feed Section */}
             <div className='grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 py-6'>
                 <div className="md:col-span-2">
+                    <div className="flex justify-center py-4">
+                        <SearchBar />
+                    </div>
                     <MyFeed />
                 </div>
 

@@ -150,22 +150,27 @@ const PostComment: FC<PostCommentProps> = ({
                 </div>
             )}
     
+            {/* Modify this part to render replies in chronological order */}
             {comment.replies && comment.replies.length > 0 && (
                 <div className='ml-4 mt-2'>
-                    {comment.replies.map((reply: ExtendedComment) => (
-                        <PostComment
-                            key={reply.id}
-                            comment={reply}
-                            votesAmt={reply.votes.length}
-                            currentVote={reply.votes.find(vote => vote.user_clerk === user?.id)}
-                            postId={postId}
-                        />
-                    ))}
+                    {comment.replies
+                        .slice() // Create a shallow copy of the replies array
+                        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) // Sort replies by createdAt
+                        .map((reply: ExtendedComment) => (
+                            <PostComment
+                                key={reply.id}
+                                comment={reply}
+                                votesAmt={reply.votes.length}
+                                currentVote={reply.votes.find(vote => vote.user_clerk === user?.id)}
+                                postId={postId}
+                            />
+                        ))}
                 </div>
             )}
         </div>
     );
 };
+
 
 export default PostComment;
     
