@@ -3,7 +3,7 @@ import { useFormContext, useFieldArray } from 'react-hook-form';
 import { RoadmapFormData, ModuleOption, SemestersObj } from '@/types';
 import { Button } from '@/components/ui/button';
 import { useSupabaseClient } from '@/utils/supabase/authenticated/client';
-import SemesterComponent from '@/components/roadmap/SemesterComponent';
+import SemesterComponent from '../SemesterComponent';
 
 type SemestersFormProps = {
   setFormStep: React.Dispatch<React.SetStateAction<1 | 2>>;
