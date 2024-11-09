@@ -12,6 +12,14 @@ npm i # install packages
 npm run dev # run local dev server
 ```
 
+### Test user credentials
+```
+login using google account with clerk authentication
+Email: bidwiseuser@gmail.com
+Password: bidwiseUser24
+
+```
+
 ### To Install and run Selenium Scraper
 ```
 cd scrapers
