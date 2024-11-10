@@ -32,9 +32,13 @@ const Reviews = () => {
   const [rating, setRating] = useState(0);
 
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    // Only set window width if window is defined (i.e., in the browser)
+    if (typeof window !== "undefined") {
+      setWindowWidth(window.innerWidth); // Set initial window width
+      const handleResize = () => setWindowWidth(window.innerWidth);
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   // Fetch reviews from Supabase
