@@ -14,9 +14,11 @@ npm run dev # run local dev server
 
 ### Test user credentials
 ```
-login using google account with clerk authentication
-Email: bidwiseuser@gmail.com
+login using **google account** with clerk authentication
+Gmail: bidwiseuser@gmail.com
 Password: bidwiseUser24
+
+# OR: use your personal google account
 
 ```
 
