@@ -26,7 +26,8 @@ import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
 
 const About = () => {
-  const { theme } = useTheme(); // Get the current theme
+  const { theme, systemTheme } = useTheme(); // Get the current theme
+  const currentTheme = theme === 'system' ? systemTheme : theme;
 
   // Hook to handle window resizing
   const [windowWidth, setWindowWidth] = useState(0); // Initialize to 0 or any default value
@@ -54,7 +55,7 @@ const About = () => {
     letterSpacing: "0.1em",
   };
 
-  const carouselHeaderColor = theme === "dark" ? "#2C3531" : "#4b5563";
+  const carouselHeaderColor = currentTheme === "dark" ? "#2C3531" : "#4b5563";
 
   // Benefits section state and styles
   const [activeIndex, setActiveIndex] = useState(0);
@@ -75,7 +76,7 @@ const About = () => {
 
   const benefitsActiveNavLinkStyle: React.CSSProperties = {
     ...benefitsNavLinkStyle,
-    borderBottom: `3px solid ${theme === "dark" ? "white" : "black"}`,
+    borderBottom: `3px solid ${currentTheme === "dark" ? "white" : "black"}`,
     borderRadius: "5px",
   };
 
@@ -132,6 +133,7 @@ const About = () => {
               paddingLeft: "auto",
               paddingRight: "auto",
               justifyContent: "space-between",
+              border: "1px solid #D3D3D3"
             }}
           >
             {[
@@ -151,7 +153,7 @@ const About = () => {
                     : benefitsNavLinkStyle),
                   ...(hoverIndex === index
                     ? {
-                        color: theme === "dark" ? "#f3f4f6" : "#000",
+                        color: currentTheme === "dark" ? "#f3f4f6" : "#000",
                         transform: "scale(1.05)",
                       }
                     : {}),
@@ -167,20 +169,18 @@ const About = () => {
         </Card>
         {/* Custom carousel implementation */}
         <div id="carousel-content" style={{ marginTop: "1rem" }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              borderRadius: "1rem",
-              padding: "1rem",
-              alignItems: "center",
-              border: theme === "light" ? "2px solid black" : "2px solid transparent",
-              backgroundColor: theme === "dark" ? "#E8E8E8" : "#f9f9f9",
-              height: "auto",
-              minHeight: "300px", // Set your minimum height here
-              maxHeight: "900px", // Set your maximum height here
-            }}
-          >
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: "1rem",
+            padding: "1rem",
+            alignItems: "center",
+            border: currentTheme === "light" ? "2px solid black" : "2px solid transparent",
+            backgroundColor: currentTheme === "dark" ? "#E8E8E8" : "#f9f9f9",
+            height: "auto",
+            minHeight: "300px",
+            maxHeight: "900px",
+          }}>
             <div
               style={{
                 textAlign: "center",
@@ -266,13 +266,13 @@ const About = () => {
                         alignItems: "stretch", // Ensures cards stretch to equal height
                       }}
                     >
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Sync to Cloud</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             Access your schedule anytime, anywhere, with cloud
                             saving
                           </p>
@@ -280,13 +280,13 @@ const About = () => {
                         </CardContent>
                       </Card>
 
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Customise</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             Add or remove modules with just a few clicks,
                             keeping your schedule flexible and up-to-date
                           </p>
@@ -294,13 +294,13 @@ const About = () => {
                         </CardContent>
                       </Card>
 
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Timetable Summary</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             Instantly see a clear summary of all your added
                             modules
                           </p>
@@ -475,7 +475,7 @@ const About = () => {
                   {/* <p
                     style={{
                       fontSize: windowWidth >= 768 ? "16px" : "14px",
-                      color: theme === "dark" ? "#8c8c8c" : "#4b5563",
+                      color: currentTheme === "dark" ? "#8c8c8c" : "#4b5563",
                       marginBottom: "0.5rem",
                     }}
                   >
@@ -494,26 +494,26 @@ const About = () => {
                         alignItems: "stretch", // Ensures cards stretch to equal height
                       }}
                     >
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Filter Options</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             Easily filter courses based on various criteria
                           </p>
                           <img src="/images/filter.gif" alt="Filter" />
                         </CardContent>
                       </Card>
 
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Course Ratings</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             View practicality, workload and interest ratings for
                             each course
                           </p>
@@ -521,13 +521,13 @@ const About = () => {
                         </CardContent>
                       </Card>
 
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Course Information</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             Access course descriptions, the latest seating
                             availability and enrollment requirements in one view
                           </p>
@@ -681,7 +681,7 @@ const About = () => {
                   {/* <p
                     style={{
                       fontSize: windowWidth >= 768 ? "16px" : "14px",
-                      color: theme === "dark" ? "#8c8c8c" : "#4b5563",
+                      color: currentTheme === "dark" ? "#8c8c8c" : "#4b5563",
                       marginBottom: "0.5rem",
                     }}
                   >
@@ -699,13 +699,13 @@ const About = () => {
                         alignItems: "stretch", // Ensures cards stretch to equal height
                       }}
                     >
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Historical Bidding Trends</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             Gain insights into past bidding patterns to
                             determine your optimal bid amounts
                           </p>
@@ -716,13 +716,13 @@ const About = () => {
                         </CardContent>
                       </Card>
 
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Bid Smarter</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             Avoid the pitfalls of overbidding and underbidding
                             with our smart insights into bidding trends
                           </p>
@@ -853,7 +853,7 @@ const About = () => {
                   {/* <p
                     style={{
                       fontSize: windowWidth >= 768 ? "16px" : "14px",
-                      color: theme === "dark" ? "#8c8c8c" : "#4b5563",
+                      color: currentTheme === "dark" ? "#8c8c8c" : "#4b5563",
                       marginBottom: "0.5rem",
                     }}
                   >
@@ -871,13 +871,13 @@ const About = () => {
                         alignItems: "stretch", // Ensures cards stretch to equal height
                       }}
                     >
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Unlock Your Path to Success</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             Discover your senior&apos;s course selections and
                             strategies, empowering you to make informed
                             decisions and navigate your academic path with
@@ -988,13 +988,13 @@ const About = () => {
                         alignItems: "stretch", // Ensures cards stretch to equal height
                       }}
                     >
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Module Tracker</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             Record the modules you have already completed and
                             those you plan to take.
                           </p>
@@ -1005,13 +1005,13 @@ const About = () => {
                         </CardContent>
                       </Card>
 
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Visual Progress Overview</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             By incorporating the roadmap view, it emphasizes the
                             capacity to visually track progress clearly
                             alongside the roadmap
@@ -1150,7 +1150,7 @@ const About = () => {
                   {/* <p
                     style={{
                       fontSize: windowWidth >= 768 ? "16px" : "14px",
-                      color: theme === "dark" ? "#8c8c8c" : "#4b5563",
+                      color: currentTheme === "dark" ? "#8c8c8c" : "#4b5563",
                       marginBottom: "0.5rem",
                     }}
                   >
@@ -1169,13 +1169,13 @@ const About = () => {
                         alignItems: "stretch", // Ensures cards stretch to equal height
                       }}
                     >
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Share Insights</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             Gain valuable advice and tips from peers, helping
                             you make informed decisions
                           </p>
@@ -1183,13 +1183,13 @@ const About = () => {
                         </CardContent>
                       </Card>
 
-                      <Card className={`card ${theme}`}>
-                        <CardHeader className={`card-header ${theme}`}>
+                      <Card className={`card ${currentTheme}`}>
+                        <CardHeader className={`card-header ${currentTheme}`}>
                           <CardTitle>Collaborate</CardTitle>
                         </CardHeader>
                         <CardContent className="card-content">
-                          <p className={theme}>
-                            {/* Pass the theme for paragraph color */}
+                          <p className={currentTheme}>
+                            {/* Pass the currentTheme for paragraph color */}
                             Discuss challenges & exchange resources, boosting
                             your success
                           </p>
@@ -1293,8 +1293,8 @@ const About = () => {
                   disabled={activeIndex === 0}
                   style={{
                     padding: "10px 15px",
-                    backgroundColor: theme === "dark" ? "#4B5563" : "#E5E7EB",
-                    color: theme === "dark" ? "white" : "black",
+                    backgroundColor: currentTheme === "dark" ? "#4B5563" : "#E5E7EB",
+                    color: currentTheme === "dark" ? "white" : "black",
                     border: "none",
                     borderRadius: "5px",
                     cursor: "pointer",
@@ -1309,8 +1309,8 @@ const About = () => {
                   disabled={activeIndex === 5}
                   style={{
                     padding: "10px 15px",
-                    backgroundColor: theme === "dark" ? "#4B5563" : "#E5E7EB",
-                    color: theme === "dark" ? "white" : "black",
+                    backgroundColor: currentTheme === "dark" ? "#4B5563" : "#E5E7EB",
+                    color: currentTheme === "dark" ? "white" : "black",
                     border: "none",
                     borderRadius: "5px",
                     cursor: "pointer",

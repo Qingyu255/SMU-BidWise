@@ -21,7 +21,8 @@ type Review = {
 };
 
 const Reviews = () => {
-  const { theme } = useTheme(); // Get the current theme
+  const { theme, systemTheme } = useTheme(); // Get the current theme
+  const currentTheme = theme === 'system' ? systemTheme : theme;
   const [reviews, setReviews] = useState<Review[]>([]);
   const [showReviewForm, setShowReviewForm] = useState<boolean>(false);
   const [loading, setLoading] = useState(true); // Loading state
@@ -83,7 +84,7 @@ const Reviews = () => {
 
   const sectionSubTextStyle: React.CSSProperties = {
     fontSize: windowWidth >= 640 ? "18px" : "14px",
-    color: theme === "dark" ? "#6b7280" : "#333333",
+    color: currentTheme === "dark" ? "#6b7280" : "#333333",
     textTransform: "uppercase",
     letterSpacing: "0.1em",
   };
