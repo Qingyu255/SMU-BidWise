@@ -2,7 +2,6 @@
 
 import About from '../components/homepage/About';
 import WelcomeMessage from '../components/homepage/Welcome'; 
-import ReadReviews from '../components/homepage/Test';
 import Reviews from '../components/homepage/Reviews';
 
 export default function Home() {
