@@ -40,10 +40,29 @@ export async function GET(request: NextRequest) {
       .order('course_code');
     if (courseError) throw courseError;
 
+    const courseAreas = new Map<string, Set<string>>();
+    for (let index = 0; index < courseIds.length; index += 100) {
+      for (let offset = 0; ; offset += pageSize) {
+        const { data: areas, error: areaError } = await supabase.from('course_areas')
+          .select('course_id, area_name')
+          .in('course_id', courseIds.slice(index, index + 100))
+          .order('course_id')
+          .order('area_name')
+          .range(offset, offset + pageSize - 1);
+        if (areaError) throw areaError;
+        for (const area of areas || []) {
+          if (!courseAreas.has(area.course_id)) courseAreas.set(area.course_id, new Set());
+          if (area.area_name) courseAreas.get(area.course_id)!.add(area.area_name);
+        }
+        if (!areas || areas.length < pageSize) break;
+      }
+    }
+
     return NextResponse.json({
       term: term.term,
       courses: (courses || []).map(course => ({
         ...course,
+        areas: [...(courseAreas.get(course.id) || [])].sort((a, b) => a.localeCompare(b)),
         sections: sections.filter(section => section.course_id === course.id)
           .sort((a, b) => a.start_time.localeCompare(b.start_time) || a.section.localeCompare(b.section)),
       })),
