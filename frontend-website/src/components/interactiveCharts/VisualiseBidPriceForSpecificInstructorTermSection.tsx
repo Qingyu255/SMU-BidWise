@@ -113,13 +113,6 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
         }
     }
 
-    const scrollToDiv = (id: string) => {
-        const element = document.getElementById(id)
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' })
-        }
-    }
-
     // Note that we can only handle winding window after courseInstructorSelected is set
     const handleSectionSelect = async (section: string) => {
         setSection(section)
@@ -164,12 +157,6 @@ export default function VisualiseBidPriceForSpecificInstructorTermSection({cours
         fetchInstructorsWhoTeachCourseCode();
         fetchTermsIfInstructorSelected();
     }, [apiURL, courseCode])
-
-    useEffect(() => {
-        if (chartDataAcrossBiddingWindow) {
-            scrollToDiv("VisualiseBidPriceForSpecificInstructorTermSection")
-        }
-    }, [chartDataAcrossBiddingWindow])
 
     useEffect(() => {
         if (!courseInstructorSelected || !courseInstructorsDropdownArr) {

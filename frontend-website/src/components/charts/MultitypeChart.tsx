@@ -1,5 +1,5 @@
-"use client"
-import React from 'react'
+"use client";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,19 +8,13 @@ import {
   BarElement,
   PointElement,
   LineElement,
-  Title,
   Legend,
   LineController,
   BarController,
-  ChartOptions,
-  elements
-} from "chart.js"
-import { Chart }  from 'react-chartjs-2'
-import { ChartType } from 'chart.js'
-import { chartAttributes } from '@/types';
+} from "chart.js";
+import { Chart } from "react-chartjs-2";
+import { chartAttributes } from "@/types";
 
-
-// Register ChartJS components using ChartJS.register
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -28,84 +22,79 @@ ChartJS.register(
   LineElement,
   BarElement,
   Tooltip,
-  Title,
   Legend,
   LineController,
-  BarController
-)
+  BarController,
+);
 
-export default function MultitypeChart( {type, title, chartData, width, height} : chartAttributes ) {
+const colors = [
+  { line: "#4f46e5", fill: "#4f46e5" },
+  { line: "#0891b2", fill: "#0891b2" },
+  { line: "#a5b4fc", fill: "rgba(165,180,252,0.7)" },
+  { line: "#cbd5e1", fill: "rgba(203,213,225,0.7)" },
+];
 
-  chartData.datasets[0].borderColor = "#2463EB";
-  chartData.datasets[1].borderColor = "#60A8FB";
-  chartData.datasets[0].backgroundColor = "#2463EB";
-  chartData.datasets[1].backgroundColor = "#60A8FB";
+export default function MultitypeChart({ chartData }: chartAttributes) {
+  const data = {
+    ...chartData,
+    datasets: chartData.datasets.map((dataset, index) => ({
+      ...dataset,
+      borderColor: colors[index]?.line || "#64748b",
+      backgroundColor: colors[index]?.fill || "#94a3b8",
+      borderWidth: index < 2 ? 2.5 : 1,
+      tension: 0.32,
+      pointRadius: index < 2 ? 3 : 0,
+      pointHoverRadius: 5,
+    })),
+  };
 
-  const chartType: ChartType = "line" 
   const options = {
+    responsive: true,
     maintainAspectRatio: false,
-    elements: {
-      bar: {
-        borderRadius: 3
-      }
-    },
-    tooltips: {
-      enabled: true,
-      mode: 'label' as const,
-    },
+    interaction: { mode: "index" as const, intersect: false },
     plugins: {
-      stacked: false,
-      title: {
-        display: true,
-        text: title,
-        font: {
-          size: 16,
+      legend: {
+        position: "bottom" as const,
+        labels: {
+          usePointStyle: true,
+          boxWidth: 8,
+          padding: 18,
+          color: "#64748b",
+          font: { size: 11 },
         },
-      }
+      },
+      tooltip: { backgroundColor: "#17203c", padding: 12, cornerRadius: 10 },
     },
     scales: {
       x: {
-        ticks: {
-          font: {
-            size: 10
-          }
-        }
+        grid: { display: false },
+        border: { display: false },
+        ticks: { color: "#64748b", maxRotation: 45, font: { size: 11 } },
       },
       y: {
-        type: 'linear' as const,
-        display: true,
-        position: 'left' as const,
-        title: {
-          display: true,
-          text: "Median 'Median Bid' Price",
-          // color: 'rgb(0, 0, 0)',  // Color to match the line
-        },
-        ticks: {
-          // color: 'rgb(0, 0, 0)',  // Color to match the line
-        }
+        type: "linear" as const,
+        position: "left" as const,
+        beginAtZero: true,
+        border: { display: false },
+        grid: { color: "#e2e8f0" },
+        ticks: { color: "#64748b", font: { size: 11 } },
+        title: { display: true, text: "Bid price", color: "#64748b" },
       },
       y1: {
-        type: 'linear' as const,
-        display: true,
-        position: 'right' as const,
-        grid: {
-          drawOnChartArea: false,
-        },
-        title: {
-          display: true,
-          text: 'Vacancies',
-          // color: 'rgb(0, 0, 0)',  // Color to match the bar
-        },
-        ticks: {
-          color: 'rgb(255, 99, 132)',  // Color to match the bar
-        },
+        type: "linear" as const,
+        position: "right" as const,
+        beginAtZero: true,
+        border: { display: false },
+        grid: { drawOnChartArea: false },
+        ticks: { color: "#64748b", font: { size: 11 } },
+        title: { display: true, text: "Vacancies", color: "#64748b" },
       },
     },
-  }
+  };
 
   return (
-    <div className='flex flex-col justify-center items-center max-h-[750px]'>
-      <Chart type={chartType} data={chartData} options={options} width={width} height={height}/>
+    <div className="h-[380px] min-w-[360px] w-full sm:h-[440px]">
+      <Chart type="line" data={data} options={options} />
     </div>
-  )
+  );
 }
