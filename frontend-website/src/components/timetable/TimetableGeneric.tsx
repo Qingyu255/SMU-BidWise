@@ -13,6 +13,7 @@ import { CalendarPlus, CalendarMinus, Info } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
 import { Switch } from '../ui/switch';
+import { overlapsHour } from '@/lib/courseSchedule';
 
 export type TimetableProps = {
   classes: ClassItem[],
@@ -20,9 +21,10 @@ export type TimetableProps = {
   courseCode?: string, // for course info page only
   isTimetablePage?: boolean,
   allowAddRemoveSections? : boolean
+  onEmptySlotDoubleClick?: (day: string, hour: string) => void
 };
 
-export default function TimetableGeneric({ classes, onClassSelect, courseCode, isTimetablePage = false, allowAddRemoveSections = true }: TimetableProps) {
+export default function TimetableGeneric({ classes, onClassSelect, courseCode, isTimetablePage = false, allowAddRemoveSections = true, onEmptySlotDoubleClick }: TimetableProps) {
   const { selectedClasses } = useTimetable();
   const [viewTimetableSections, setViewTimetableSections] = useState<boolean>(false);
 
@@ -230,7 +232,7 @@ export default function TimetableGeneric({ classes, onClassSelect, courseCode, i
         <Info className='w-3 h-3 my-auto mr-2 text-sm text-muted-foreground'/>
         {(isTimetablePage) ? (
           <span className='text-xs text-muted-foreground'>
-            Click <CalendarMinus className='inline w-3 h-3'/> to remove section from timetable
+            Click <CalendarMinus className='inline w-3 h-3'/> to remove a section. Double-click an empty hour to find courses.
           </span>
         ) : (
           <span className='text-xs text-muted-foreground'>
@@ -283,17 +285,27 @@ export default function TimetableGeneric({ classes, onClassSelect, courseCode, i
 
         {/* Fill empty grid Cells */}
         {daysArr.map((day, dayIndex) =>
-          fixedTimeSlots.slice(0, -1).map((_, timeIndex) => (
+          fixedTimeSlots.slice(0, -1).map((hour, timeIndex) => {
+            const canSearch = !!onEmptySlotDoubleClick && !preparedClasses.some(classItem =>
+              classItem.dayName === day && overlapsHour(classItem.start_time, classItem.end_time, hour)
+            );
+            return (
             <div
               key={`cell-${dayIndex}-${timeIndex}`}
-              className={`${timeIndex % 2 === 0 ? 'bg-gray-300' : ''} bg-opacity-15`}
+              className={`${timeIndex % 2 === 0 ? 'bg-gray-300' : ''} bg-opacity-15 ${canSearch ? 'cursor-pointer hover:bg-sky-100 dark:hover:bg-sky-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-500' : ''}`}
+              onDoubleClick={canSearch ? () => onEmptySlotDoubleClick(day.slice(0, 3), hour) : undefined}
+              onKeyDown={canSearch ? event => { if (event.key === 'Enter') onEmptySlotDoubleClick(day.slice(0, 3), hour); } : undefined}
+              role={canSearch ? 'button' : undefined}
+              tabIndex={canSearch ? 0 : undefined}
+              aria-label={canSearch ? `Find courses on ${day} from ${hour} to ${fixedTimeSlots[timeIndex + 1]}` : undefined}
               style={{
                 gridColumn: `${dayIndex + 2} / ${dayIndex + 3}`,
                 gridRow: `${timeIndex + 2} / ${timeIndex + 3}`,
                 ...cellStyle,
               }}
             ></div>
-          ))
+            );
+          })
         )}
 
         {/* Fill Class Entries */}

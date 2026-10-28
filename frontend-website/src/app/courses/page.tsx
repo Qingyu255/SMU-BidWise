@@ -77,6 +77,8 @@ export default async function Page({ searchParams }: {
         area?: string;
         grading_basis?: string;
         units?: string;
+        days?: string;
+        times?: string;
     };
 }) {
     const { careerArr, grading_basisArr, unitsArr, areaArr } = await fetchFilterOptions();
@@ -86,13 +88,15 @@ export default async function Page({ searchParams }: {
     const area = searchParams?.area || '';
     const grading_basis = searchParams?.grading_basis || '';
     const units = searchParams?.units || '';
+    const days = searchParams?.days || '';
+    const times = searchParams?.times || '';
 
     return (
         <div>
             <SearchBar/>
             <Filters careerArr={careerArr} grading_basisArr={grading_basisArr} unitsArr={unitsArr} areaArr={areaArr}/>
             <Suspense fallback={<CourseSummaryCardSkeleton/>}>
-                <Courses query={query} page={page} career={career} grading_basis={grading_basis} units={units} area={area}/>  
+                <Courses query={query} page={page} career={career} grading_basis={grading_basis} units={units} area={area} days={days} times={times}/>
             </Suspense>
         </div>
     )

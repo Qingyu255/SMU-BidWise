@@ -5,7 +5,6 @@ import { courseInfo, NodeData } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link";
-import Rating from "@/components/Rating";
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 import {

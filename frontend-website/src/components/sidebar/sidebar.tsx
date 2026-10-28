@@ -3,10 +3,7 @@
 import {
   CalendarDays,
   ChartArea,
-  Users,
   LibraryBig,
-  Map,
-  Route,
   GraduationCap
 } from 'lucide-react';
 import { SidebarDesktop } from './sidebar-desktop';
@@ -33,19 +30,9 @@ const sidebarItems: SidebarItems = {
       icon: ChartArea 
     },
     {
-      label: 'Senior Roadmaps',
-      href: '/roadmaps',
-      icon: Route,
-    },
-    {
       label: 'Graduation Progress Tracker',
       href: '/graduation-progress-tracker',
       icon: GraduationCap,
-    },
-    {
-      label: 'Community Threads',
-      href: '/communities',
-      icon: Users,
     },
   ],
   // extras: (

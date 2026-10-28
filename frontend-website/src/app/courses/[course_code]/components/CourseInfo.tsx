@@ -16,7 +16,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ChartNoAxesCombined } from 'lucide-react';
-import RatingsCombined from "@/components/RatingsCombined";
 
 export interface CourseInfoProps {
   id: string;
@@ -103,11 +102,6 @@ export function CourseInfo({courseInfo, courseAreas, updated_at} : {courseInfo: 
           ))}
         </div>
 
-        <RatingsCombined 
-          courseId={courseInfo.id}
-          isRatingAllowed={true}
-        />
-        
       </CardContent>
       <CardFooter className="text-sm text-gray-500">
         {(updated_at || updated_at === "-")? (

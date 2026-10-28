@@ -22,19 +22,27 @@ Password: bidwiseUser24
 
 ```
 
-### To Install and run Selenium Scraper
+### Run the BOSS class scraper
 ```
 cd scrapers
 python -m venv env
-source env/bin/activate 
-# for windows machines: source env/Scripts/activate
+source env/bin/activate
 pip install -r requirements.txt
 
-cd scrapers/BOSS_scraper # scrapes course data from BOSS
-mkdir scrapedData
-python main.py <6-digit-authenticatorapp-code>
+cd BOSS_scraper
+python main.py --term 2610 --start 1000 --end 3001 --workers 4
 
 ```
+
+Log in manually in the Chrome window, leave it open until the class details page appears, then press Enter in the scraper terminal. Worker browsers run concurrently; `--end` is exclusive. JSON files go to `scrapedData/<term>/` by default. Use `--output-dir` to keep a run separate.
+
+To load files into Supabase while scraping, set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in `scrapers/.env.local`, then run this in another terminal from `scrapers/BOSS_scraper`:
+
+```
+../env/bin/python load_to_supabase_db.py --directory scrapedData/2610 --workers 4
+```
+
+The loader watches for new JSON files until Ctrl-C. Point `--directory` at the scraper's actual output folder if you use `--output-dir`.
 ### Architecture Diagram:
 ![architecture_diagram](readMeImages/architectureDiagram07112024.png)
 | **Component**               | **Description**                                                                                   |

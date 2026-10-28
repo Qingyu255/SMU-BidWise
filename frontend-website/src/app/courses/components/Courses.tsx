@@ -6,14 +6,17 @@ import { CourseSummaryCardProps } from './CourseSummaryCard';
 import PageToggle from './PageToggle';
 import { Separator } from '@/components/ui/separator';
 import NoResultCard from '@/components/NoResultCard';
+import { getMatchingCourseIds } from '@/lib/courseSchedule.server';
 
-export async function Courses({ query, page, career, grading_basis, units, area }: { 
+export async function Courses({ query, page, career, grading_basis, units, area, days, times }: {
     query: string, 
     page: number,
     career?: string,
     grading_basis?: string,
     units?: string,
-    area?: string 
+    area?: string,
+    days?: string,
+    times?: string
 }) {
 
     const supabase = createClient();
@@ -36,8 +39,17 @@ export async function Courses({ query, page, career, grading_basis, units, area 
         enrolment_requirements
         `, { count: 'exact' } // Fetch total count of records
     )
-    .or(`course_code.ilike.%${query}%,title.ilike.%${query}%,description.ilike.%${query}%`)
-    .range(from, to); // Pagination support
+    .or(`course_code.ilike.%${query}%,title.ilike.%${query}%,description.ilike.%${query}%`);
+
+    if (days || times) {
+        try {
+            const courseIds = await getMatchingCourseIds(days, times);
+            if (courseIds) filterQuery = filterQuery.in('id', courseIds.length ? courseIds : ['00000000-0000-0000-0000-000000000000']);
+        } catch (error) {
+            console.error('Error filtering course schedule:', error);
+            return <ErrorPopUp errorMessage="Could not load the current term's course schedule."/>;
+        }
+    }
 
     if (career) {
         filterQuery = filterQuery.eq('career', career)

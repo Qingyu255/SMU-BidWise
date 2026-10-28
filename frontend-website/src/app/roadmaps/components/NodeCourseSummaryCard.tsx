@@ -2,7 +2,6 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link";
-import RatingsCombined from "@/components/RatingsCombined";
 
 export interface CourseSummaryCardProps {
     course_id: string;
@@ -49,7 +48,6 @@ export default function NodeCourseSummaryCard({ course_id, course_code, title, c
                             </div>
                         </div>
                     </div>
-                    <RatingsCombined courseId={course_id}/>
                 </CardContent>
                 </div>
                 

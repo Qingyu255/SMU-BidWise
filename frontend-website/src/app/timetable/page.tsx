@@ -1,16 +1,18 @@
 "use client"
-import React from 'react';
+import React, { useState } from 'react';
 import { useTimetable } from '../../components/providers/timetableProvider';
 import TimetableGeneric from '../../components/timetable/TimetableGeneric';
 import { useToast } from "@/hooks/use-toast";
 import { TimetableSummaryTable } from './components/TimetableSummaryTable';
 import InfoCard from './components/InfoCard';
+import SlotCoursesDrawer from './components/SlotCoursesDrawer';
 
 export default function Page() {
 
   const { selectedClasses, addClass, removeClass } = useTimetable();
   const selectedClassItems: any = Array.from(selectedClasses.values());
   const { toast } = useToast();
+  const [slot, setSlot] = useState<{ day: string; hour: string } | null>(null);
 
   const handleClassSelect = (classItem: any) => {
     // here we will only be removing
@@ -31,7 +33,8 @@ export default function Page() {
     <div>
         <InfoCard/>
         {/* to  convert the selectedClasses map (Map<string, ClassItem>) to an array of ClassItem objects, you can use the Array.from() method  */}
-        <TimetableGeneric classes={selectedClassItems} onClassSelect={handleClassSelect} isTimetablePage={true}/>
+        <TimetableGeneric classes={selectedClassItems} onClassSelect={handleClassSelect} isTimetablePage={true} onEmptySlotDoubleClick={(day, hour) => setSlot({ day, hour })}/>
+        <SlotCoursesDrawer slot={slot} onClose={() => setSlot(null)}/>
         <TimetableSummaryTable sections={selectedClassItems}/>
     </div>
   );
