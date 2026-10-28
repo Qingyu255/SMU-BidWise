@@ -78,9 +78,9 @@ export function SearchBox() {
 
   return (
     <div ref={wrapperRef} className="relative">
-      <div className="flex h-14 items-center gap-3 rounded-2xl border border-white/30 bg-white px-4 text-slate-900 shadow-xl shadow-black/15 transition focus-within:ring-4 focus-within:ring-cyan-400/30 sm:h-16 sm:px-5">
+      <div className="flex h-12 items-center gap-3 rounded-lg border border-slate-300 bg-white px-4 text-slate-900 transition focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus-within:ring-blue-950">
         <Search
-          className="h-5 w-5 shrink-0 text-indigo-500"
+          className="h-4 w-4 shrink-0 text-blue-600"
           aria-hidden="true"
         />
         <input
@@ -116,17 +116,14 @@ export function SearchBox() {
               choose(matches[activeIndex]);
             }
           }}
-          className="min-w-0 flex-1 bg-transparent text-sm font-medium text-slate-900 outline-none placeholder:font-normal placeholder:text-slate-400 sm:text-base"
+          className="min-w-0 flex-1 bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100"
         />
-        <span className="hidden text-xs font-semibold text-slate-400 sm:inline">
-          Search courses
-        </span>
       </div>
       {open && (query || matches.length > 0) && (
         <div
           id="bid-course-results"
           role="listbox"
-          className="absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 text-slate-900 shadow-2xl shadow-slate-950/20"
+          className="absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-lg border border-slate-200 bg-white p-2 text-slate-900 shadow-lg dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
         >
           <p className="px-3 py-2 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">
             {query ? "Matching courses" : "In your timetable"}
@@ -146,9 +143,9 @@ export function SearchBox() {
                   aria-selected={index === activeIndex}
                   onMouseEnter={() => setActiveIndex(index)}
                   onClick={() => choose(course)}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition ${index === activeIndex ? "bg-indigo-50" : "hover:bg-slate-50"}`}
+                  className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left transition ${index === activeIndex ? "bg-blue-50 dark:bg-blue-950/40" : "hover:bg-slate-50 dark:hover:bg-slate-800"}`}
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
                     <BookOpen className="h-4 w-4" />
                   </span>
                   <span className="min-w-0 flex-1">

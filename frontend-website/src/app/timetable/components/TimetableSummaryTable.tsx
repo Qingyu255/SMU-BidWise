@@ -52,6 +52,10 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
   const groupedSections = groupSections(sections)
   const sortedGroupedSections = sortByCourseCode(groupedSections);
   const { selectedClasses, addClass, removeClass, updatePlannedBid } = useTimetable();
+  const plannedBidTotal = Array.from(selectedClasses.values()).reduce(
+    (total, section) => total + (Number(section.plannedBid) || 0),
+    0,
+  );
   const { toast } = useToast();
   
   const handleRemoveClass = (classItem: any) => {
@@ -73,8 +77,12 @@ export const TimetableSummaryTable = ({ sections }: TimetableSummaryTableProps) 
 
   return (
     <Card className="rounded-lg my-2">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between gap-4">
         <CardTitle className="text-xl xl:text-2xl font-semibold">Timetable Summary</CardTitle>
+        <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-right dark:border-blue-900 dark:bg-blue-950/30">
+          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">Planned bids total</p>
+          <p className="mt-0.5 text-lg font-semibold tabular-nums text-slate-900 dark:text-white">e$ {plannedBidTotal.toLocaleString("en-SG", { maximumFractionDigits: 2 })}</p>
+        </div>
       </CardHeader>    
       <CardContent>
         <Table className="w-full">

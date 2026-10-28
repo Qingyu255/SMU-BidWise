@@ -9,9 +9,7 @@ import {
   BookOpen,
   ExternalLink,
   Layers3,
-  Sparkles,
   TrendingUp,
-  Users,
 } from "lucide-react";
 import VisualiseTrendAcrossSemesters from "@/components/interactiveCharts/VisualiseTrendAcrossSemesters";
 import VisualiseTrendAcrossBiddingWindows from "@/components/interactiveCharts/VisualiseTrendAcrossBiddingWindows";
@@ -142,6 +140,7 @@ export default function Page() {
   const maxMedian = Math.max(1, ...rows.map((row) => row.median));
   const selectedInstructor =
     rows.find((row) => row.name === instructor)?.name || rows[0]?.name || "";
+  const selectedRow = rows.find((row) => row.name === selectedInstructor);
   const snapshot = !loading ? overview?.chartData.datasets[0]?.data || [] : [];
   const currentView = views.find((item) => item.id === view)!;
 
@@ -154,51 +153,19 @@ export default function Page() {
 
   return (
     <div className="mx-auto max-w-[1500px] space-y-6 pb-16 pt-2">
-      <section className="relative z-10 isolate rounded-[28px] bg-[#111a3a] px-6 py-9 text-white shadow-[0_24px_60px_-32px_rgba(28,37,88,0.7)] sm:px-9 lg:px-12 lg:py-11">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px]">
-          <div className="absolute -right-24 -top-32 h-96 w-96 rounded-full bg-indigo-500/25 blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 h-48 w-80 rounded-full bg-cyan-400/10 blur-3xl" />
-        </div>
-        <div className="relative grid gap-9 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-end">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.17em] text-cyan-100">
-              <Sparkles className="h-3.5 w-3.5" /> Bidding intelligence
-            </span>
-            <h1 className="mt-5 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl lg:text-[44px] lg:leading-[1.12]">
-              Bid with a clearer picture.
-            </h1>
-            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-300 sm:text-base">
-              Explore historical bid prices, compare instructors, and see how
-              vacancies changed across bidding windows.
-            </p>
-            <div className="relative z-20 mt-7 max-w-[650px]">
-              <SearchBox />
-            </div>
-          </div>
-          <div className="hidden rounded-2xl border border-white/15 bg-white/[0.07] p-6 backdrop-blur-sm lg:block">
-            <p className="text-xs font-bold uppercase tracking-[0.17em] text-cyan-200">
-              Explore in three ways
-            </p>
-            <div className="mt-5 space-y-4 text-sm text-slate-100">
-              <p className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-400/20">
-                  <Users className="h-4 w-4 text-indigo-200" />
-                </span>{" "}
-                Compare instructors
-              </p>
-              <p className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-400/20">
-                  <TrendingUp className="h-4 w-4 text-cyan-200" />
-                </span>{" "}
-                Follow historical trends
-              </p>
-              <p className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-400/20">
-                  <Layers3 className="h-4 w-4 text-emerald-200" />
-                </span>{" "}
-                Inspect each section
-              </p>
-            </div>
+      <section className="relative z-10 rounded-2xl border border-blue-200 bg-blue-50/70 px-6 py-6 dark:border-blue-900 dark:bg-blue-950/25 sm:px-8">
+        <div className="max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-wider text-blue-700 dark:text-blue-300">
+            Bid price analytics
+          </p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+            Past bid prices
+          </h1>
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">
+            Compare by instructor, term, and section.
+          </p>
+          <div className="relative mt-5 max-w-[650px]">
+            <SearchBox />
           </div>
         </div>
       </section>
@@ -213,14 +180,14 @@ export default function Page() {
         </div>
       ) : (
         <>
-          <section className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <section className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900 sm:flex-row sm:items-center sm:justify-between sm:p-6">
             <div className="flex min-w-0 items-start gap-4">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-300">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                 <BookOpen className="h-6 w-6" />
               </span>
               <div className="min-w-0">
-                <p className="text-xs font-bold uppercase tracking-[0.17em] text-indigo-600 dark:text-indigo-300">
-                  Course in focus
+                <p className="text-xs font-medium text-muted-foreground">
+                  Selected course
                 </p>
                 <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">
                   {courseCode}
@@ -232,7 +199,7 @@ export default function Page() {
             </div>
             <Link
               href={`/courses/${encodeURIComponent(courseCode)}`}
-              className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700 transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-indigo-500/10"
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg border border-slate-200 px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
             >
               Course details <ArrowRight className="h-4 w-4" />
             </Link>
@@ -247,13 +214,11 @@ export default function Page() {
                 label: "Typical median bid",
                 value: formatBid(snapshot[1]),
                 detail: "Median of median bids",
-                color: "bg-indigo-500",
               },
               {
                 label: "Average median bid",
                 value: formatBid(snapshot[2]),
                 detail: "Mean of median bids",
-                color: "bg-cyan-500",
               },
               {
                 label: "Observed range",
@@ -261,26 +226,21 @@ export default function Page() {
                   ? `${formatBid(snapshot[0])}–${formatBid(snapshot[3])}`
                   : "—",
                 detail: "Lowest to highest median",
-                color: "bg-violet-500",
               },
               {
                 label: "Instructors",
                 value: loading ? "—" : String(rows.length),
                 detail: "With historical bid data",
-                color: "bg-emerald-500",
               },
             ].map((metric) => (
               <div
                 key={metric.label}
-                className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900"
+                className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900"
               >
-                <span
-                  className={`absolute inset-x-0 top-0 h-1 ${metric.color}`}
-                />
-                <p className="text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
+                <p className="flex items-center gap-2 text-sm text-muted-foreground">
                   {metric.label}
                 </p>
-                <p className="mt-3 truncate text-2xl font-semibold tabular-nums tracking-tight sm:text-[28px]">
+                <p className="mt-2 truncate text-2xl font-semibold tabular-nums tracking-tight">
                   {metric.value}
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
@@ -294,22 +254,19 @@ export default function Page() {
             historical data.
           </p>
 
-          <div className="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,1fr)]">
-            <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
+          <div className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,1fr)]">
+            <section className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900 sm:p-6">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-indigo-600 dark:text-indigo-300">
+                  <h2 className="text-lg font-semibold tracking-tight">
                     Instructor comparison
-                  </p>
-                  <h2 className="mt-1 text-xl font-semibold tracking-tight">
-                    See how bids compare
                   </h2>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Median of median bids in Round 1 Window 1. Select an
-                    instructor to explore.
+                    Median bids in Round 1 Window 1. Select a row to update the
+                    charts.
                   </p>
                 </div>
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                <span className="text-xs text-muted-foreground">
                   {rows.length} instructors
                 </span>
               </div>
@@ -327,12 +284,10 @@ export default function Page() {
                     type="button"
                     onClick={() => chooseInstructor(row.name)}
                     aria-label={`Explore trends for ${row.name}`}
-                    className={`w-full rounded-xl px-3 py-3 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/70 ${row.name === selectedInstructor ? "bg-indigo-50/80 dark:bg-indigo-500/10" : ""}`}
+                    className={`w-full rounded-lg px-3 py-3 text-left transition hover:bg-blue-50/70 dark:hover:bg-blue-950/30 ${row.name === selectedInstructor ? "bg-blue-50 dark:bg-blue-950/40" : ""}`}
                   >
                     <div className="mb-2 flex items-center justify-between gap-3 text-sm">
-                      <span
-                        className={`min-w-0 truncate font-medium ${row.name === selectedInstructor ? "text-indigo-700 dark:text-indigo-300" : "text-slate-700 dark:text-slate-200"}`}
-                      >
+                      <span className="min-w-0 truncate font-medium text-slate-700 dark:text-slate-200">
                         {row.name}
                       </span>
                       <span className="shrink-0 font-semibold tabular-nums">
@@ -341,7 +296,7 @@ export default function Page() {
                     </div>
                     <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
                       <div
-                        className={`h-full rounded-full ${row.name === selectedInstructor ? "bg-gradient-to-r from-indigo-500 to-cyan-400" : "bg-indigo-300 dark:bg-indigo-600"}`}
+                        className={`h-full rounded-full ${row.name === selectedInstructor ? "bg-gradient-to-r from-blue-600 to-sky-400" : "bg-blue-200 dark:bg-blue-900"}`}
                         style={{
                           width: `${Math.max(3, (row.median / maxMedian) * 100)}%`,
                         }}
@@ -354,23 +309,20 @@ export default function Page() {
                 ))}
               </div>
             </section>
-            <section className="flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-cyan-600 dark:text-cyan-300">
-                Focus your research
-              </p>
-              <h2 className="mt-1 text-xl font-semibold tracking-tight">
-                Choose an instructor
+            <section className="flex flex-col rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+              <h2 className="text-lg font-semibold tracking-tight">
+                Selected instructor
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Your selection updates the trend charts below.
+                Choose an instructor to view their bid history.
               </p>
-              <label className="mt-6 block text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+              <label className="mt-6 block text-sm font-medium text-muted-foreground">
                 Instructor
                 <select
                   value={selectedInstructor}
                   onChange={(event) => chooseInstructor(event.target.value)}
                   disabled={rows.length === 0}
-                  className="mt-2 h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium normal-case tracking-normal text-slate-800 outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:ring-indigo-950"
+                  className="mt-2 h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium normal-case tracking-normal text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:ring-blue-950"
                 >
                   {rows.length === 0 && <option value="">Loading…</option>}
                   {rows.map((row) => (
@@ -385,35 +337,40 @@ export default function Page() {
                   href={`https://www.afterclass.io/professor/smu-${selectedInstructor.replace(".", "").split(" ").join("-").toLowerCase()}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-300"
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-blue-700 hover:underline dark:text-blue-300"
                 >
-                  See Afterclass reviews <ExternalLink className="h-3.5 w-3.5" />
+                  See Afterclass reviews{" "}
+                  <ExternalLink className="h-3.5 w-3.5" />
                 </a>
               )}
-              <div className="mt-auto pt-6">
-                <div className="rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-600 dark:bg-slate-800/70 dark:text-slate-300">
-                  <span className="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
-                    A useful starting point
+              <div className="mt-6 divide-y divide-slate-200 border-t border-slate-200 text-sm dark:divide-slate-800 dark:border-slate-800">
+                <div className="flex items-center justify-between gap-4 py-3">
+                  <span className="text-muted-foreground">
+                    Median of median bids
                   </span>
-                  Start with semester trends, then check the bidding windows for
-                  a recent term. Section detail shows how individual classes
-                  differ.
+                  <span className="font-semibold tabular-nums">
+                    {formatBid(selectedRow?.median)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-4 py-3">
+                  <span className="text-muted-foreground">
+                    Mean of median bids
+                  </span>
+                  <span className="font-semibold tabular-nums">
+                    {formatBid(selectedRow?.mean)}
+                  </span>
                 </div>
               </div>
             </section>
           </div>
 
-          <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <div className="border-b border-slate-200 p-5 dark:border-slate-800 sm:p-7">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-indigo-600 dark:text-indigo-300">
-                Historical trends
-              </p>
-              <h2 className="mt-1 text-xl font-semibold tracking-tight">
-                Explore the bidding story
+          <section className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <div className="border-b border-slate-200 p-5 dark:border-slate-800 sm:p-6">
+              <h2 className="text-lg font-semibold tracking-tight">
+                Bid trends
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Choose a view, then refine the term, window, or section in the
-                chart.
+                Compare prices and vacancies by semester, window, or section.
               </p>
               <div
                 role="group"
@@ -428,7 +385,7 @@ export default function Page() {
                       type="button"
                       onClick={() => setView(item.id)}
                       aria-pressed={view === item.id}
-                      className={`flex items-center gap-2 rounded-xl px-4 py-3 text-left text-sm font-semibold transition ${view === item.id ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20" : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"}`}
+                      className={`flex items-center gap-2 rounded-lg border px-4 py-2.5 text-left text-sm font-medium transition ${view === item.id ? "border-blue-600 bg-blue-600 text-white dark:border-blue-500 dark:bg-blue-600" : "border-transparent bg-slate-50 text-slate-600 hover:border-blue-200 hover:bg-blue-50 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-900 dark:hover:bg-blue-950/30"}`}
                     >
                       <Icon className="h-4 w-4 shrink-0" />
                       {item.title}
@@ -437,13 +394,13 @@ export default function Page() {
                 })}
               </div>
             </div>
-            <div className="p-5 sm:p-7">
+            <div className="p-5 sm:p-6">
               <h3 className="text-lg font-semibold">{currentView.title}</h3>
               <p className="mt-1 text-sm text-muted-foreground">
                 {currentView.description}
               </p>
               <div
-                className="bid-analytics-explorer mt-6 min-w-0 overflow-x-auto rounded-2xl border border-slate-100 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/40 sm:p-6 [&>h1]:hidden"
+                className="bid-analytics-explorer mt-6 min-w-0 overflow-x-auto rounded-lg border border-slate-200 p-4 dark:border-slate-800 sm:p-6 [&>h1]:hidden"
                 key={`${courseCode}-${selectedInstructor}-${view}`}
               >
                 {loading || !selectedInstructor ? (

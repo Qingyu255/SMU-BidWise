@@ -28,10 +28,10 @@ ChartJS.register(
 );
 
 const colors = [
-  { line: "#4f46e5", fill: "#4f46e5" },
-  { line: "#0891b2", fill: "#0891b2" },
-  { line: "#a5b4fc", fill: "rgba(165,180,252,0.7)" },
-  { line: "#cbd5e1", fill: "rgba(203,213,225,0.7)" },
+  { line: "#2563eb", fill: "#2563eb" },
+  { line: "#0ea5e9", fill: "#0ea5e9" },
+  { line: "#93c5fd", fill: "rgba(147,197,253,0.75)" },
+  { line: "#bae6fd", fill: "rgba(186,230,253,0.8)" },
 ];
 
 export default function MultitypeChart({ chartData }: chartAttributes) {
@@ -42,6 +42,7 @@ export default function MultitypeChart({ chartData }: chartAttributes) {
       borderColor: colors[index]?.line || "#64748b",
       backgroundColor: colors[index]?.fill || "#94a3b8",
       borderWidth: index < 2 ? 2.5 : 1,
+      borderDash: index === 1 ? [5, 4] : [],
       tension: 0.32,
       pointRadius: index < 2 ? 3 : 0,
       pointHoverRadius: 5,
